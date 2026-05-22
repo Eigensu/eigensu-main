@@ -1,8 +1,8 @@
 ﻿"use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import Navbar from "./components/Navigation";
-import LetsTalkDrawer from "./components/LetsTalkModal"; // ← right-side drawer
+import { useModal, useTheme } from "./components/PageShell";
 
 /* ─── rest of the file is identical until the CTAs section ─── */
 
@@ -287,15 +287,9 @@ function DashboardPreview({ theme }: { theme: Theme }) {
    HERO SECTION  (root export)
 ───────────────────────────────────────────── */
 export default function HeroSection() {
-  const [theme, setTheme] = useState<Theme>("dark");
-  const toggle = useCallback(() => setTheme((t) => (t === "dark" ? "light" : "dark")), []);
+  const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
-
-  // ── Modal state ──────────────────────────────
-  const [modalOpen, setModalOpen] = useState(false);
-  const openModal  = useCallback(() => setModalOpen(true),  []);
-  const closeModal = useCallback(() => setModalOpen(false), []);
-  // ─────────────────────────────────────────────
+  const { openModal } = useModal();
 
   const sectionBg = isDark
     ? "radial-gradient(ellipse at 50% 0%,#0a1a20 0%,#060d12 50%,#020608 100%)"
@@ -339,7 +333,7 @@ export default function HeroSection() {
       <SunRay    visible={!isDark} />
       <GlowArcs  theme={theme} />
 
-      <div className="anim-1"><Navbar theme={theme} onToggle={toggle} /></div>
+      <div className="anim-1"><Navbar theme={theme} onContact={openModal} setTheme={setTheme} /></div>
 
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-12 pb-0 flex-1">
 
@@ -385,8 +379,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ── Modal ─────────────────────────────── */}
-      <LetsTalkDrawer open={modalOpen} onClose={closeModal} theme={theme} />
     </section>
   );
 }

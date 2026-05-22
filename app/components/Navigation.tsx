@@ -2,7 +2,7 @@
 
 type Theme = "dark" | "light";
 
-export default function Navbar({ theme, onToggle }: { theme: Theme; onToggle: () => void }) {
+export default function Navbar({ theme, onContact, setTheme }: { theme: Theme; onContact: () => void; setTheme?: (t: Theme) => void }) {
   const isDark = theme === "dark";
   const accent = isDark ? "#00f0c3" : "#2dd4bf";
   const logoTxt = isDark ? "#ffffff" : "#0f172a";
@@ -11,7 +11,7 @@ export default function Navbar({ theme, onToggle }: { theme: Theme; onToggle: ()
   const linkHoverBg = isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.06)";
   const activeLinkClr = isDark ? "#ffffff" : "#0f172a";
 
-  const navLinks = ["Home", "Work", "Services", "About", "Blog"];
+  const navLinks = ["Home", "Work", "Services", "About", "Blog", "Process"];
 
   return (
     <nav className="relative z-50 w-full border-b" style={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)", background: navBg, position: "sticky", top: 0 }}>
@@ -30,45 +30,56 @@ export default function Navbar({ theme, onToggle }: { theme: Theme; onToggle: ()
           </span>
         </div>
 
-        {/* Center: Light/Dark Toggle */}
-        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 px-2 py-1 rounded-full"
-          style={{ background: isDark ? "rgba(0,0,0,0.3)" : "rgba(255,255,255,0.7)", backdropFilter: "blur(12px)" }}>
-          <button
-            onClick={() => { if (isDark) onToggle(); }}
-            className="text-xs font-semibold px-3 py-1.5 rounded-lg transition duration-200"
-            style={{
-              color: !isDark ? "#0f172a" : "rgba(255,255,255,0.6)",
-              background: !isDark ? "#e8f3f1" : "transparent",
-              cursor: !isDark ? "default" : "pointer"
-            }}>
-            Light
-          </button>
-          <button
-            onClick={() => { if (!isDark) onToggle(); }}
-            className="text-xs font-semibold px-3 py-1.5 rounded-lg transition duration-200"
-            style={{
-              color: isDark ? "#0f172a" : "#0f172a",
-              background: isDark ? "#ffffff" : "transparent",
-              cursor: isDark ? "default" : "pointer"
-            }}>
-            Dark
-          </button>
-        </div>
+        {/* Center: (theme controlled centrally) */}
 
         {/* Right: Nav Links + Contact */}
         <div className="flex items-center gap-6">
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((item) => (
-              <a key={item} href="#" className="text-sm px-3 py-2 rounded transition duration-200"
-                style={{ color: linkClr }}
-                onMouseEnter={(e) => e.currentTarget.style.background = linkHoverBg}
-                onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
-                {item}
-              </a>
-            ))}
+            {navLinks.map((item) => {
+              const href = item === "Home" ? "/" : item === "Process" ? "/process" : `/${item.toLowerCase()}`;
+              return (
+                <a key={item} href={href} className="text-sm px-3 py-2 rounded transition duration-200"
+                  style={{ color: linkClr }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = linkHoverBg}
+                  onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
+                  {item}
+                </a>
+              );
+            })}
+          </div>
+
+          {/* Theme Toggle */}
+          <div className="flex items-center gap-2 text-sm" style={{ color: linkClr, borderLeft: `1px solid ${isDark ? "rgba(255,255,255,0.12)" : "rgba(15,23,42,0.12)"}`, paddingLeft: 16 }}>
+            <button
+              onClick={() => setTheme?.("light")}
+              className="px-2 py-1 rounded transition duration-200"
+              style={{
+                background: theme === "light" ? (isDark ? "rgba(255,255,255,0.12)" : "rgba(15,23,42,0.08)") : "transparent",
+                color: theme === "light" ? activeLinkClr : linkClr,
+                cursor: setTheme ? "pointer" : "default",
+              }}
+              onMouseEnter={(e) => { if (theme !== "light" && setTheme) e.currentTarget.style.background = linkHoverBg; }}
+              onMouseLeave={(e) => { if (theme !== "light") e.currentTarget.style.background = "transparent"; }}
+            >
+              Light
+            </button>
+            <span style={{ color: "currentColor", opacity: 0.3 }}>|</span>
+            <button
+              onClick={() => setTheme?.("dark")}
+              className="px-2 py-1 rounded transition duration-200"
+              style={{
+                background: theme === "dark" ? (isDark ? "rgba(255,255,255,0.12)" : "rgba(15,23,42,0.08)") : "transparent",
+                color: theme === "dark" ? activeLinkClr : linkClr,
+                cursor: setTheme ? "pointer" : "default",
+              }}
+              onMouseEnter={(e) => { if (theme !== "dark" && setTheme) e.currentTarget.style.background = linkHoverBg; }}
+              onMouseLeave={(e) => { if (theme !== "dark") e.currentTarget.style.background = "transparent"; }}
+            >
+              Dark
+            </button>
           </div>
           
-          <button className="text-sm px-4 py-2 rounded transition duration-200"
+          <button type="button" onClick={onContact} className="text-sm px-4 py-2 rounded transition duration-200"
             style={{ color: linkClr, border: `1px solid ${isDark ? "rgba(255,255,255,0.12)" : "rgba(15,23,42,0.12)"}`, background: isDark ? "rgba(255,255,255,0.04)" : "transparent" }}>
             Contact
           </button>
