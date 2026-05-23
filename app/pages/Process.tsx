@@ -473,7 +473,7 @@ export default function ProcessPage() {
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".1em", color: ac, background: tagB, borderRadius: 100, padding: "4px 12px", fontFamily: "'Syne', sans-serif", color: tagT }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".1em", background: tagB, borderRadius: 100, padding: "4px 12px", fontFamily: "'Syne', sans-serif", color: tagT }}>
                     Step {step.num}
                   </span>
                   <div style={{ width: 36, height: 36, background: activeStep === i ? tagB : pill, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: ac, transition: "background .2s" }}>
