@@ -1,7 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useRef, useCallback } from "react";
-import Navbar from "./components/Navigation";
+import { useEffect, useRef } from "react";
 import { useModal, useTheme } from "./components/PageShell";
 
 /* ─── rest of the file is identical until the CTAs section ─── */
@@ -287,7 +286,7 @@ function DashboardPreview({ theme }: { theme: Theme }) {
    HERO SECTION  (root export)
 ───────────────────────────────────────────── */
 export default function HeroSection() {
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const isDark = theme === "dark";
   const { openModal } = useModal();
 
@@ -309,10 +308,9 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-screen overflow-hidden flex flex-col"
-      style={{ background: sectionBg, fontFamily:"'Syne','DM Sans',sans-serif", transition:"background 0.65s ease" }}>
+      style={{ background: sectionBg, transition:"background 0.65s ease" }}>
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
         @keyframes fadeInUp   { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
         @keyframes pulseDark  { 0%,100%{box-shadow:0 0 0 0 rgba(0,200,180,.25)} 50%{box-shadow:0 0 0 8px rgba(0,200,180,0)} }
@@ -333,8 +331,6 @@ export default function HeroSection() {
       <SunRay    visible={!isDark} />
       <GlowArcs  theme={theme} />
 
-      <div className="anim-1"><Navbar theme={theme} onContact={openModal} setTheme={setTheme} /></div>
-
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-12 pb-0 flex-1">
 
         <div className="anim-2">
@@ -346,14 +342,14 @@ export default function HeroSection() {
         </div>
 
         <h1 className="anim-3 text-3xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6"
-          style={{ fontFamily:"'Syne',sans-serif", letterSpacing:"-0.03em" }}>
+          style={{ letterSpacing:"-0.03em" }}>
           <span style={{ color: headlineTop }}>Enterprise-grade IT,</span>
           <br />
           <span style={{ color: headlineTop }}>delivered without friction.</span>
         </h1>
 
         <p className="anim-4 text-base md:text-lg max-w-xl leading-relaxed mb-10"
-          style={{ fontFamily:"'DM Sans',sans-serif", color: subClr }}>
+          style={{ color: subClr }}>
           From cloud and security to managed services—Eigensu keeps your stack fast, safe, and scalable.
         </p>
 

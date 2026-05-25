@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Theme = "dark" | "light";
 
@@ -12,7 +12,6 @@ interface LetsTalkDrawerProps {
 
 export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTalkDrawerProps) {
   const isDark = theme === "dark";
-  const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
 
@@ -23,14 +22,26 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
+    let openFrame = 0;
+    let closeFrame = 0;
+    let closeTimer: ReturnType<typeof setTimeout> | undefined;
+
     if (open) {
-      setMounted(true);
-      requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)));
+      openFrame = requestAnimationFrame(() => {
+        closeFrame = requestAnimationFrame(() => setVisible(true));
+      });
     } else {
-      setVisible(false);
-      const t = setTimeout(() => { setMounted(false); setSubmitted(false); }, 480);
-      return () => clearTimeout(t);
+      openFrame = requestAnimationFrame(() => {
+        setVisible(false);
+        closeTimer = setTimeout(() => { setSubmitted(false); }, 480);
+      });
     }
+
+    return () => {
+      cancelAnimationFrame(openFrame);
+      cancelAnimationFrame(closeFrame);
+      if (closeTimer) clearTimeout(closeTimer);
+    };
   }, [open]);
 
   useEffect(() => {
@@ -72,7 +83,6 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
   const heading    = isDark ? "#ffffff"               : "#0a0a0a";
   const subtext    = isDark ? "rgba(255,255,255,.42)" : "rgba(10,10,10,.50)";
   const divider    = isDark ? "rgba(255,255,255,.08)" : "rgba(0,0,0,.08)";
-  const inputBg    = "transparent";
   const inputBdr   = isDark ? "rgba(255,255,255,.13)" : "rgba(0,0,0,.14)";
   const inputClr   = isDark ? "#ffffff"               : "#0a0a0a";
   const labelClr   = isDark ? "rgba(255,255,255,.38)" : "rgba(0,0,0,.42)";
@@ -86,13 +96,11 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
   const overlayBg  = isDark ? "rgba(0,0,0,.55)"       : "rgba(0,0,0,.35)";
   const closeBg    = isDark ? "rgba(255,255,255,.10)"  : "rgba(0,0,0,.08)";
 
-  if (!mounted) return null;
+  if (!open && !visible) return null;
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
-
         @keyframes ltOverIn  { from { opacity:0 } to { opacity:1 } }
         @keyframes ltOverOut { from { opacity:1 } to { opacity:0 } }
         @keyframes ltDrawIn  { from { transform: translateX(100%) } to { transform: translateX(0) } }
@@ -123,7 +131,6 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
           padding: 0 0 12px 0;
           border: none;
           border-bottom: 1px solid;
-          font-family: 'DM Sans', sans-serif;
           font-size: 15px;
           outline: none;
           background: transparent;
@@ -141,7 +148,7 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
         .lt-sendbtn {
           display: inline-flex; align-items: center; gap: 10px;
           padding: 15px 28px; border-radius: 100px;
-          font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+          font-size: 15px; font-weight: 600;
           cursor: pointer; border: none;
           transition: transform .18s, box-shadow .2s;
           background: ${btnBg}; color: ${btnTxt};
@@ -182,13 +189,13 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
         {/* Close */}
         <button className="lt-closebtn" onClick={onClose} aria-label="Close">✕</button>
 
-        <div style={{ padding: "52px 44px 48px", fontFamily: "'DM Sans', sans-serif" }}>
+        <div style={{ padding: "52px 44px 48px" }}>
 
           {submitted ? (
             /* ── Success ── */
             <div className="lt-success" style={{ paddingTop: 60, textAlign: "center" }}>
               <div style={{ fontSize: 64, marginBottom: 24 }}>🎉</div>
-              <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: 38, fontWeight: 800, color: heading, marginBottom: 14, letterSpacing: "-0.03em" }}>
+              <h2 style={{ fontSize: 38, fontWeight: 800, color: heading, marginBottom: 14, letterSpacing: "-0.03em" }}>
                 We&apos;ll be in touch!
               </h2>
               <p style={{ color: subtext, fontSize: 15, lineHeight: 1.7, maxWidth: 340, margin: "0 auto 36px" }}>
@@ -200,7 +207,6 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
             <>
               {/* Heading */}
               <h2 style={{
-                fontFamily: "'Syne', sans-serif",
                 fontWeight: 800,
                 fontSize: "clamp(46px, 9vw, 70px)",
                 lineHeight: 0.95,

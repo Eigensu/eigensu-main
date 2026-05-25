@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-primary);
+  --font-mono: var(--font-primary);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +22,36 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Make input/textarea placeholders visible across themes */
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+  color: inherit;
+  opacity: 0.6; /* visible but subdued */
+}
+
+/* Improve focus visibility for form controls */
+input:focus, textarea:focus, select:focus, button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(34,197,94,0.08);
+}
+
+/* Improve form responsiveness: prevent flex overflow and limit horizontal resizing */
+input, textarea, select {
+  min-width: 0;
+  resize: vertical;
 }

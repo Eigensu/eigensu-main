@@ -1,5 +1,8 @@
 ﻿"use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 type Theme = "dark" | "light";
 
 export default function Navbar({ theme, onContact, setTheme }: { theme: Theme; onContact: () => void; setTheme?: (t: Theme) => void }) {
@@ -10,11 +13,20 @@ export default function Navbar({ theme, onContact, setTheme }: { theme: Theme; o
   const linkClr = isDark ? "rgba(255,255,255,0.72)" : "rgba(15,23,42,0.72)";
   const linkHoverBg = isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.06)";
   const activeLinkClr = isDark ? "#ffffff" : "#0f172a";
+  const pathname = usePathname();
 
-  const navLinks = ["Home", "Work", "Services", "About", "Blog", "Process"];
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Work", href: "/work" },
+    { label: "Services", href: "/services" },
+    { label: "Process", href: "/process" },
+    { label: "About", href: "/about" },
+    { label: "Blog", href: "/blog" },
+    { label: "Careers", href: "/careers" },
+  ];
 
   return (
-    <nav className="relative z-50 w-full border-b" style={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)", background: navBg, position: "sticky", top: 0 }}>
+    <nav className="sticky top-0 z-50 w-full border-b backdrop-blur-md" style={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)", background: navBg }}>
       <div className="flex items-center justify-between px-8 py-4 max-w-full">
         
         {/* Left: Logo */}
@@ -36,14 +48,17 @@ export default function Navbar({ theme, onContact, setTheme }: { theme: Theme; o
         <div className="flex items-center gap-6">
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((item) => {
-              const href = item === "Home" ? "/" : item === "Process" ? "/process" : `/${item.toLowerCase()}`;
+              const isActive = pathname === item.href;
               return (
-                <a key={item} href={href} className="text-sm px-3 py-2 rounded transition duration-200"
-                  style={{ color: linkClr }}
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="text-sm px-3 py-2 rounded transition duration-200"
+                  style={{ color: isActive ? activeLinkClr : linkClr, background: isActive ? linkHoverBg : "transparent" }}
                   onMouseEnter={(e) => e.currentTarget.style.background = linkHoverBg}
                   onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
-                  {item}
-                </a>
+                  {item.label}
+                </Link>
               );
             })}
           </div>

@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useState } from "react";
 import Footer from "./Footer";
+import Navigation from "./Navigation";
 import LetsTalkDrawer from "./LetsTalkModal";
 
 type ModalContextValue = {
@@ -43,6 +44,7 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <ModalContext.Provider value={{ openModal, closeModal, isModalOpen }}>
         <div className="min-h-screen flex flex-col">
+          <Navigation theme={theme} onContact={openModal} setTheme={setTheme} />
           <div className="flex-1">{children}</div>
           <Footer onOpenModal={openModal} />
           <LetsTalkDrawer open={isModalOpen} onClose={closeModal} theme={theme} />

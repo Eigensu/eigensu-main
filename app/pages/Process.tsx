@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useTheme } from "../components/PageShell";
-import Navigation from "../components/Navigation";
 
-declare global { interface Window { THREE: any } }
+type ThreeGlobal = typeof import("three");
+
+declare global { interface Window { THREE?: ThreeGlobal } }
 
 /* ─────────────────────────────────────
    CONSTANTS
@@ -181,7 +182,7 @@ function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
    MAIN COMPONENT
 ───────────────────────────────────── */
 export default function ProcessPage() {
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const dark = theme === "dark";
   const [activeStep, setActiveStep] = useState(0);
   const [deg, setDeg] = useState(0);
@@ -330,18 +331,12 @@ export default function ProcessPage() {
   const pill = dark ? "rgba(240,237,232,0.06)" : "rgba(15,14,12,0.05)";
   const tagB = dark ? "rgba(91,158,245,0.12)" : "#EEF4FD";
   const tagT = dark ? "#7AB3F8" : "#185FA5";
-  const togB = dark ? "#2A2B35" : "#E8E5DF";
   const glow = dark
     ? "radial-gradient(circle, rgba(91,158,245,0.25) 0%, transparent 68%)"
     : "radial-gradient(circle, rgba(26,111,232,0.15) 0%, transparent 68%)";
 
   return (
-    <div style={{ background: bg, color: tp, minHeight: "100vh", fontFamily: "'DM Sans', sans-serif", transition: "background .3s, color .3s", overflowX: "hidden" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
-      `}</style>
-
-      <Navigation theme={theme} onContact={() => {}} setTheme={setTheme} />
+    <div style={{ background: bg, color: tp, minHeight: "100vh", transition: "background .3s, color .3s", overflowX: "hidden" }}>
 
       {/* ── FLOATING GLOBE (fixed, repositioned by JS) ── */}
       <div
@@ -371,7 +366,7 @@ export default function ProcessPage() {
         {/* degree badge */}
         <div style={{
           position: "absolute", bottom: 12, right: 12,
-          fontFamily: "'Syne', sans-serif", fontSize: 11, fontWeight: 700,
+          fontSize: 11, fontWeight: 700,
           letterSpacing: "0.08em", color: ac, opacity: .65,
         }}>
           {deg}°
@@ -395,7 +390,7 @@ export default function ProcessPage() {
             <div style={{ flex: 1, height: 2, background: br, borderRadius: 2, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${((activeStep + 1) / STEPS.length) * 100}%`, background: ac, borderRadius: 2, transition: "width .35s ease" }} />
             </div>
-            <span style={{ fontFamily: "'Syne', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: ".06em", color: tm, minWidth: 32, textAlign: "right" }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".06em", color: tm, minWidth: 32, textAlign: "right" }}>
               {activeStep + 1}/{STEPS.length}
             </span>
           </div>
@@ -424,11 +419,11 @@ export default function ProcessPage() {
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: ac, display: "inline-block" }} />
             How we work
           </div>
-          <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: "clamp(38px,4.2vw,60px)", fontWeight: 800, letterSpacing: "-.03em", lineHeight: 1.06, marginBottom: 20 }}>
+          <h1 style={{ fontSize: "clamp(38px,4.2vw,60px)", fontWeight: 800, letterSpacing: "-.03em", lineHeight: 1.06, marginBottom: 20 }}>
             From <em style={{ fontStyle: "normal", color: ac }}>complexity</em><br />to clarity
           </h1>
           <p style={{ fontSize: 16, fontWeight: 300, color: ts, maxWidth: 400, lineHeight: 1.65, marginBottom: 36 }}>
-            Six deliberate steps that turn infrastructure challenges into a stack that's fast, secure, and built to scale.
+            Six deliberate steps that turn infrastructure challenges into a stack that&apos;s fast, secure, and built to scale.
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 11, fontWeight: 500, letterSpacing: ".1em", textTransform: "uppercase", color: tm, opacity: .6 }}>
             <span style={{ width: 28, height: 1, background: ac, display: "block" }} />
@@ -442,7 +437,7 @@ export default function ProcessPage() {
         <div style={{ display: "flex", background: card, border: `1px solid ${br}`, borderRadius: 16, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04)", transition: "background .3s" }}>
           {STATS.map((s, i) => (
             <div key={i} style={{ flex: 1, padding: "28px 24px", textAlign: "center", borderRight: i < STATS.length - 1 ? `1px solid ${br}` : "none" }}>
-              <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 32, fontWeight: 800, letterSpacing: "-.03em", color: tp, lineHeight: 1, marginBottom: 4 }}>{s.num}</div>
+              <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-.03em", color: tp, lineHeight: 1, marginBottom: 4 }}>{s.num}</div>
               <div style={{ fontSize: 12, color: tm }}>{s.label}</div>
             </div>
           ))}
@@ -473,18 +468,18 @@ export default function ProcessPage() {
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".1em", background: tagB, borderRadius: 100, padding: "4px 12px", fontFamily: "'Syne', sans-serif", color: tagT }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".1em", background: tagB, borderRadius: 100, padding: "4px 12px", color: tagT }}>
                     Step {step.num}
                   </span>
                   <div style={{ width: 36, height: 36, background: activeStep === i ? tagB : pill, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: ac, transition: "background .2s" }}>
                     {step.icon}
                   </div>
                 </div>
-                <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: 26, fontWeight: 700, letterSpacing: "-.02em", color: tp, marginBottom: 10, lineHeight: 1.2 }}>
+                <h3 style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-.02em", color: tp, marginBottom: 10, lineHeight: 1.2 }}>
                   {step.label}
                 </h3>
-                <p style={{ fontSize: 15, fontWeight: 300, color: ts, lineHeight: 1.65, maxWidth: 440, marginBottom: 18 }}>
-                  {step.desc}
+                  <p style={{ fontSize: 15, fontWeight: 300, color: ts, lineHeight: 1.65, maxWidth: 440, marginBottom: 18 }}>
+                    {step.desc}
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
                   {step.tags.map(t => (
@@ -536,7 +531,7 @@ export default function ProcessPage() {
                 {i === 1 && <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />}
                 {i === 2 && <><circle cx="12" cy="12" r="10" /><path d="M12 8v4l3 3" /></>}
               </svg>
-              <h4 style={{ fontFamily: "'Syne', sans-serif", fontSize: 15, fontWeight: 700, color: tp, marginBottom: 8 }}>{p.title}</h4>
+              <h4 style={{ fontSize: 15, fontWeight: 700, color: tp, marginBottom: 8 }}>{p.title}</h4>
               <p style={{ fontSize: 13, fontWeight: 300, color: ts, lineHeight: 1.6 }}>{p.body}</p>
             </div>
           ))}
@@ -548,11 +543,11 @@ export default function ProcessPage() {
         <div style={{ background: dark ? "#1A2A42" : "#0A2540", borderRadius: 24, padding: "64px 56px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 32, position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: -60, right: -60, width: 240, height: 240, borderRadius: "50%", background: "rgba(26,111,232,0.13)" }} />
           <div style={{ position: "relative", zIndex: 1 }}>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: 28, fontWeight: 800, letterSpacing: "-.03em", color: "#fff", marginBottom: 8 }}>Ready to get started?</h2>
+            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-.03em", color: "#fff", marginBottom: 8 }}>Ready to get started?</h2>
             <p style={{ fontSize: 14, fontWeight: 300, color: "rgba(255,255,255,.6)" }}>Book a 30-minute discovery call — no slides, just an honest conversation.</p>
           </div>
           <button
-            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: "#0A2540", background: "#fff", border: "none", borderRadius: 100, padding: "14px 32px", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, position: "relative", zIndex: 1, flexShrink: 0, transition: "opacity .2s, transform .2s" }}
+            style={{ fontSize: 14, fontWeight: 500, color: "#0A2540", background: "#fff", border: "none", borderRadius: 100, padding: "14px 32px", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, position: "relative", zIndex: 1, flexShrink: 0, transition: "opacity .2s, transform .2s" }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = ".88"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.transform = ""; }}
           >
