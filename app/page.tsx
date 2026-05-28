@@ -1,11 +1,18 @@
 ﻿"use client";
 
+import { Roboto } from "next/font/google";
 import { useEffect, useRef } from "react";
 import { useModal, useTheme } from "./components/PageShell";
 
 /* ─── rest of the file is identical until the CTAs section ─── */
 
 type Theme = "dark" | "light";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 
 function Starfield({ visible }: { visible: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -341,8 +348,10 @@ export default function HeroSection() {
           </span>
         </div>
 
-        <h1 className="anim-3 text-3xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6"
-          style={{ letterSpacing:"-0.03em" }}>
+        <h1
+          className={`${roboto.className} anim-3 text-3xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6`}
+          style={{ letterSpacing:"-0.03em" }}
+        >
           <span style={{ color: headlineTop }}>Enterprise-grade IT,</span>
           <br />
           <span style={{ color: headlineTop }}>delivered without friction.</span>

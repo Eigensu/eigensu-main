@@ -18,6 +18,7 @@ export default function Navbar({ theme, onContact, setTheme }: { theme: Theme; o
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Work", href: "/work" },
+    { label: "Projects", href: "/projects" },
     { label: "Services", href: "/services" },
     { label: "Process", href: "/process" },
     { label: "About", href: "/about" },
