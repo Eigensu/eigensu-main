@@ -121,10 +121,58 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
           z-index: 9999;
           overflow-y: auto; overflow-x: hidden;
           scrollbar-width: none;
+          font-family: var(--font-lora), Georgia, "Times New Roman", serif;
           animation: ltDrawIn .48s cubic-bezier(.22,1,.36,1) both;
         }
         .lt-drawer.out { animation: ltDrawOut .42s cubic-bezier(.4,0,1,1) both; }
         .lt-drawer::-webkit-scrollbar { display: none; }
+
+        .lt-drawer h2 {
+          font-family: var(--font-bebas), "Arial Narrow", sans-serif;
+          font-weight: 400;
+          letter-spacing: 0.02em;
+        }
+
+        .lt-body,
+        .lt-input,
+        .lt-textarea,
+        .lt-sendbtn,
+        .lt-closebtn,
+        .lt-field-label,
+        .lt-field-hint,
+        .lt-card-eyebrow,
+        .lt-card-value {
+          font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+        }
+
+        .lt-body {
+          font-size: 14px;
+          line-height: 1.7;
+        }
+
+        .lt-field-label {
+          font-size: 12px;
+          font-weight: 500;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        .lt-field-hint {
+          font-size: 11px;
+          font-weight: 400;
+        }
+
+        .lt-card-eyebrow {
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .lt-card-value {
+          font-size: 14px;
+          line-height: 1.65;
+        }
 
         .lt-input {
           width: 100%;
@@ -132,6 +180,7 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
           border: none;
           border-bottom: 1px solid;
           font-size: 15px;
+          font-weight: 400;
           outline: none;
           background: transparent;
           transition: border-color .2s;
@@ -148,11 +197,12 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
         .lt-sendbtn {
           display: inline-flex; align-items: center; gap: 10px;
           padding: 15px 28px; border-radius: 100px;
-          font-size: 15px; font-weight: 600;
+          font-size: 15px;
+          font-weight: 600;
           cursor: pointer; border: none;
           transition: transform .18s, box-shadow .2s;
           background: ${btnBg}; color: ${btnTxt};
-          letter-spacing: .01em;
+          letter-spacing: 0.01em;
         }
         .lt-sendbtn:hover { transform: scale(1.04); box-shadow: 0 0 28px rgba(198,255,0,.38); }
         .lt-sendbtn:active { transform: scale(.97); }
@@ -161,7 +211,9 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
           position: absolute; top: 24px; right: 24px;
           width: 36px; height: 36px; border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
-          cursor: pointer; border: none; font-size: 15px; font-weight: 700;
+          cursor: pointer; border: none;
+          font-size: 15px;
+          font-weight: 500;
           transition: background .18s, transform .18s;
           z-index: 10;
           background: ${closeBg}; color: ${heading};
@@ -195,10 +247,10 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
             /* ── Success ── */
             <div className="lt-success" style={{ paddingTop: 60, textAlign: "center" }}>
               <div style={{ fontSize: 64, marginBottom: 24 }}>🎉</div>
-              <h2 style={{ fontSize: 38, fontWeight: 800, color: heading, marginBottom: 14, letterSpacing: "-0.03em" }}>
+              <h2 style={{ fontSize: 38, color: heading, marginBottom: 14 }}>
                 We&apos;ll be in touch!
               </h2>
-              <p style={{ color: subtext, fontSize: 15, lineHeight: 1.7, maxWidth: 340, margin: "0 auto 36px" }}>
+              <p className="lt-body" style={{ color: subtext, fontSize: 15, maxWidth: 340, margin: "0 auto 36px" }}>
                 Thanks for reaching out. Expect to hear from us within 24 hours.
               </p>
               <button className="lt-sendbtn" onClick={onClose}>Back to site →</button>
@@ -206,19 +258,20 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
           ) : (
             <>
               {/* Heading */}
-              <h2 style={{
-                fontWeight: 800,
-                fontSize: "clamp(46px, 9vw, 70px)",
-                lineHeight: 0.95,
-                letterSpacing: "-0.04em",
-                color: heading,
-                marginBottom: 20,
-                marginTop: 8,
-              }}>
+              <h2
+              className="font-heading"
+                style={{
+                  fontSize: "clamp(46px, 9vw, 70px)",
+                  lineHeight: 0.95,
+                  color: heading,
+                  marginBottom: 20,
+                  marginTop: 8,
+                }}
+              >
                 LET&apos;S<br />TALK
               </h2>
 
-              <p style={{ color: subtext, fontSize: 14, lineHeight: 1.7, marginBottom: 32, maxWidth: 400 }}>
+              <p className="lt-body" style={{ color: subtext, marginBottom: 32, maxWidth: 400 }}>
                 Leave your contact info and expect to hear from us within 24&nbsp;hours. We&apos;ll help clarify your
                 needs, shape the requirements, and identify the best solution for you.
               </p>
@@ -232,8 +285,8 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
                 <div className="lt-row">
                   <div>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 12, color: labelClr, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 500 }}>First name</span>
-                      <span style={{ fontSize: 11, color: errors.firstName ? errClr : reqClr }}>{errors.firstName || "Required"}</span>
+                      <span className="lt-field-label" style={{ color: labelClr }}>First name</span>
+                      <span className="lt-field-hint" style={{ color: errors.firstName ? errClr : reqClr }}>{errors.firstName || "Required"}</span>
                     </div>
                     <input
                       className={`lt-input${errors.firstName ? " err" : ""}`}
@@ -246,8 +299,8 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
                   </div>
                   <div>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 12, color: labelClr, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 500 }}>Last name</span>
-                      <span style={{ fontSize: 11, color: errors.lastName ? errClr : reqClr }}>{errors.lastName || "Required"}</span>
+                      <span className="lt-field-label" style={{ color: labelClr }}>Last name</span>
+                      <span className="lt-field-hint" style={{ color: errors.lastName ? errClr : reqClr }}>{errors.lastName || "Required"}</span>
                     </div>
                     <input
                       className={`lt-input${errors.lastName ? " err" : ""}`}
@@ -264,8 +317,8 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
                 <div className="lt-row">
                   <div>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 12, color: labelClr, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 500 }}>Email address</span>
-                      <span style={{ fontSize: 11, color: errors.email ? errClr : reqClr }}>{errors.email || "Required"}</span>
+                      <span className="lt-field-label" style={{ color: labelClr }}>Email address</span>
+                      <span className="lt-field-hint" style={{ color: errors.email ? errClr : reqClr }}>{errors.email || "Required"}</span>
                     </div>
                     <input
                       className={`lt-input${errors.email ? " err" : ""}`}
@@ -278,8 +331,8 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
                   </div>
                   <div>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                      <span style={{ fontSize: 12, color: labelClr, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 500 }}>Phone number</span>
-                      <span style={{ fontSize: 11, color: errors.phone ? errClr : reqClr }}>{errors.phone || "Required"}</span>
+                      <span className="lt-field-label" style={{ color: labelClr }}>Phone number</span>
+                      <span className="lt-field-hint" style={{ color: errors.phone ? errClr : reqClr }}>{errors.phone || "Required"}</span>
                     </div>
                     <input
                       className={`lt-input${errors.phone ? " err" : ""}`}
@@ -295,8 +348,8 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
                 {/* Message */}
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                    <span style={{ fontSize: 12, color: labelClr, textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 500 }}>Message</span>
-                    <span style={{ fontSize: 11, color: errors.message ? errClr : reqClr }}>{errors.message || "Required"}</span>
+                    <span className="lt-field-label" style={{ color: labelClr }}>Message</span>
+                    <span className="lt-field-hint" style={{ color: errors.message ? errClr : reqClr }}>{errors.message || "Required"}</span>
                   </div>
                   <textarea
                     className={`lt-input lt-textarea${errors.message ? " err" : ""}`}
@@ -309,7 +362,7 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
                 </div>
 
                 {/* Legal */}
-                <p style={{ fontSize: 11.5, color: subtext, lineHeight: 1.65, marginTop: -8 }}>
+                <p className="lt-body" style={{ fontSize: 11.5, color: subtext, lineHeight: 1.65, marginTop: -8 }}>
                   By submitting this form, I hereby declare that I have read and understood the{" "}
                   <a href="#" style={{ color: isDark ? "#00c8b4" : "#d4a017", textDecoration: "underline" }}>Privacy Policy</a>{" "}
                   and the terms governing the processing of my personal data by Eigensu as the data controller.
@@ -332,19 +385,19 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
               {/* Info cards */}
               <div className="lt-cards">
                 <div style={{ background: cardBg, border: `1px solid ${cardBdr}`, borderRadius: 14, padding: "20px 22px" }}>
-                  <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: ".1em", color: subtext, marginBottom: 10, textTransform: "uppercase" }}>
+                  <p className="lt-card-eyebrow" style={{ color: subtext, marginBottom: 10 }}>
                     Want to visit us?
                   </p>
-                  <p style={{ fontSize: 14, color: heading, lineHeight: 1.65 }}>
+                  <p className="lt-card-value" style={{ color: heading }}>
                     123 Enterprise Ave<br />
                     San Francisco, CA 94105
                   </p>
                 </div>
                 <div style={{ background: cardBg, border: `1px solid ${cardBdr}`, borderRadius: 14, padding: "20px 22px" }}>
-                  <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: ".1em", color: subtext, marginBottom: 10, textTransform: "uppercase" }}>
+                  <p className="lt-card-eyebrow" style={{ color: subtext, marginBottom: 10 }}>
                     Want to ask something?
                   </p>
-                  <p style={{ fontSize: 14, color: heading, lineHeight: 1.65 }}>
+                  <p className="lt-card-value" style={{ color: heading }}>
                     hello@eigensu.com<br />
                     +1 (415) 000-0000
                   </p>

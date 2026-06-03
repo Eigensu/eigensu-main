@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-primary);
-  --font-mono: var(--font-primary);
+  --font-sans: var(--font-lora), Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,14 +22,65 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-bebas), "Arial Narrow", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Bebas only has one weight — don't let Tailwind utilities fake bold titles */
+h1.font-semibold,
+h1.font-bold,
+h1.font-medium,
+h2.font-semibold,
+h2.font-bold,
+h2.font-medium,
+h3.font-semibold,
+h3.font-bold,
+h3.font-medium,
+h4.font-semibold,
+h4.font-bold,
+h4.font-medium,
+h5.font-semibold,
+h5.font-bold,
+h5.font-medium,
+h6.font-semibold,
+h6.font-bold,
+h6.font-medium {
+  font-weight: 400;
+}
+
+.font-heading {
+  font-family: var(--font-bebas), "Arial Narrow", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.font-body {
+  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+}
+
+/* Form / UI labels that use heading tags but should stay in Lora */
+h3.font-body,
+h4.font-body {
+  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
 }
 
 button,
 input,
 textarea,
 select {
-  font: inherit;
+  font-family: inherit;
 }
 
 * {
@@ -41,17 +92,22 @@ input::placeholder,
 textarea::placeholder,
 select::placeholder {
   color: inherit;
-  opacity: 0.6; /* visible but subdued */
+  opacity: 0.6;
 }
 
 /* Improve focus visibility for form controls */
-input:focus, textarea:focus, select:focus, button:focus {
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(34,197,94,0.08);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08);
 }
 
 /* Improve form responsiveness: prevent flex overflow and limit horizontal resizing */
-input, textarea, select {
+input,
+textarea,
+select {
   min-width: 0;
   resize: vertical;
 }

@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../components/PageShell";
+import { ThemeHeroSection } from "../components/ThemeHero";
+import { getThemeTokens } from "../lib/themeTokens";
 
 interface Project {
   id: number;
@@ -254,8 +256,7 @@ function Ticker() {
           <span
             key={index}
             style={{
-              fontFamily: "inherit",
-              fontStyle: "italic",
+fontStyle: "italic",
               fontSize: 13,
               letterSpacing: "0.08em",
               color: "var(--text-muted)",
@@ -302,9 +303,8 @@ function StatBlock({ stat, statUnit, kpiLabel, accent, on }: { stat: string; sta
       }}
     >
       <div
+        className="font-heading"
         style={{
-          fontFamily: "inherit",
-          fontWeight: 800,
           fontSize: "clamp(3.2rem,6vw,5.2rem)",
           lineHeight: 1,
           letterSpacing: "-0.04em",
@@ -316,8 +316,7 @@ function StatBlock({ stat, statUnit, kpiLabel, accent, on }: { stat: string; sta
       </div>
       <div
         style={{
-          fontFamily: "inherit",
-          fontStyle: "italic",
+fontStyle: "italic",
           fontSize: 13,
           letterSpacing: "0.05em",
           color: "var(--text-muted)",
@@ -365,13 +364,12 @@ function ProjectSection({ project, index }: { project: Project; index: number })
       />
 
       <span
+        className="font-heading"
         style={{
           position: "absolute",
           [isEven ? "right" : "left"]: "3vw",
           top: "50%",
           transform: "translateY(-50%) rotate(90deg)",
-          fontFamily: "inherit",
-          fontWeight: 900,
           fontSize: "clamp(7rem,16vw,13rem)",
           color: project.accent,
           opacity: on ? 0.055 : 0,
@@ -404,8 +402,7 @@ function ProjectSection({ project, index }: { project: Project; index: number })
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28, overflow: "hidden" }}>
             <span
               style={{
-                fontFamily: "inherit",
-                fontStyle: "italic",
+  fontStyle: "italic",
                 fontSize: 12,
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
@@ -432,8 +429,6 @@ function ProjectSection({ project, index }: { project: Project; index: number })
 
           <h2
             style={{
-              fontFamily: "inherit",
-              fontWeight: 900,
               fontSize: "clamp(3rem,5.5vw,5rem)",
               letterSpacing: "-0.035em",
               lineHeight: 1,
@@ -448,8 +443,8 @@ function ProjectSection({ project, index }: { project: Project; index: number })
           </h2>
 
           <p
+            className="font-body"
             style={{
-              fontFamily: "inherit",
               fontStyle: "italic",
               fontSize: "clamp(1rem,1.8vw,1.25rem)",
               color: project.accent,
@@ -468,8 +463,8 @@ function ProjectSection({ project, index }: { project: Project; index: number })
           </div>
 
           <p
+            className="font-body"
             style={{
-              fontFamily: "inherit",
               fontSize: "clamp(0.9rem,1.4vw,1rem)",
               lineHeight: 1.85,
               color: "var(--text-secondary)",
@@ -497,8 +492,7 @@ function ProjectSection({ project, index }: { project: Project; index: number })
               <span
                 key={chip}
                 style={{
-                  fontFamily: "inherit",
-                  fontStyle: "italic",
+    fontStyle: "italic",
                   fontSize: 11,
                   letterSpacing: "0.1em",
                   color: project.accent,
@@ -524,9 +518,8 @@ function ProjectSection({ project, index }: { project: Project; index: number })
           }}
         >
           <div
+            className="font-heading"
             style={{
-              fontFamily: "inherit",
-              fontWeight: 800,
               fontSize: "clamp(6rem,12vw,10rem)",
               lineHeight: 1,
               letterSpacing: "-0.06em",
@@ -572,7 +565,6 @@ function ProjectSection({ project, index }: { project: Project; index: number })
 
 function Hero() {
   const contentRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -582,10 +574,6 @@ function Hero() {
         contentRef.current.style.transform = `translateY(${y * 0.44}px)`;
         contentRef.current.style.opacity = String(Math.max(0, 1 - y / 520));
       }
-
-      if (gridRef.current) {
-        gridRef.current.style.transform = `translateY(${y * 0.14}px)`;
-      }
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -593,89 +581,57 @@ function Hero() {
   }, []);
 
   return (
-    <section
-      style={{
-        position: "relative",
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden",
-        background: "var(--hero-bg)",
-      }}
-    >
-      <div
-        ref={gridRef}
-        style={{
-          position: "absolute",
-          inset: "-20%",
-          backgroundImage: "linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div ref={contentRef} style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 24px" }}>
+    <ThemeHeroSection fullScreen align="center" contentClassName="relative !pb-0 justify-center">
+      <div ref={contentRef} className="relative z-10 w-full px-6" style={{ textAlign: "center" }}>
         <p
+          className="hero-anim-2 font-body"
           style={{
-            fontFamily: "inherit",
             fontStyle: "italic",
             fontSize: 13,
             letterSpacing: "0.32em",
             color: "var(--accent-hero)",
             textTransform: "uppercase",
             marginBottom: 24,
-            animation: "heroFade 0.9s ease 0.2s both",
           }}
         >
           Eigensu — Selected Work
         </p>
 
         <h1
+          className="hero-anim-3"
           style={{
-            fontFamily: "inherit",
-            fontWeight: 900,
             fontSize: "clamp(3.8rem,9vw,8.5rem)",
-            letterSpacing: "-0.04em",
+            letterSpacing: "0.02em",
             lineHeight: 0.95,
             color: "var(--text-primary)",
             margin: "0 0 24px",
-            animation: "heroFade 0.9s ease 0.4s both",
           }}
         >
-          Projects<br />
-          <em style={{ fontStyle: "italic", color: "var(--accent-hero)", letterSpacing: "-0.02em" }}>& Partnerships</em>
+          Projects
+          <br />
+          <em style={{ fontStyle: "italic", color: "var(--accent-hero)", letterSpacing: "0.01em" }}>& Partnerships</em>
         </h1>
 
         <p
+          className="hero-anim-4 font-body"
           style={{
-            fontFamily: "inherit",
             fontStyle: "italic",
             fontSize: "clamp(0.9rem,1.7vw,1.05rem)",
             color: "var(--text-secondary)",
             maxWidth: 500,
             margin: "0 auto 56px",
             lineHeight: 1.85,
-            animation: "heroFade 0.9s ease 0.6s both",
           }}
         >
           Enterprise-grade outcomes delivered at scale — cloud, security, software engineering, and managed services.
         </p>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 20,
-            animation: "heroFade 0.9s ease 0.8s both",
-          }}
-        >
+        <div className="hero-anim-5 flex items-center justify-center gap-5">
           {["05 Projects", "03 Years", "14+ Clients"].map((item, index) => (
             <span
               key={item}
+              className="font-body"
               style={{
-                fontFamily: "inherit",
                 fontSize: 12,
                 letterSpacing: "0.18em",
                 color: "var(--text-muted)",
@@ -689,13 +645,13 @@ function Hero() {
         </div>
 
         <div
+          className="hero-anim-5"
           style={{
             marginTop: 60,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: 10,
-            animation: "heroFade 0.9s ease 1.1s both",
           }}
         >
           <svg width="18" height="36" viewBox="0 0 18 36" fill="none">
@@ -706,7 +662,7 @@ function Hero() {
       </div>
 
       <Ticker />
-    </section>
+    </ThemeHeroSection>
   );
 }
 
@@ -714,6 +670,7 @@ function Hero() {
 export default function ProjectsPage() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const t = getThemeTokens(theme);
 
   return (
     <div>
@@ -721,32 +678,26 @@ export default function ProjectsPage() {
         main *, main *::before, main *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
 
-        /* Page-scoped navbar overrides (Projects only) */
-        nav.sticky.top-0 {
-          background: var(--nav-bg) !important;
-          border-bottom-color: var(--nav-border) !important;
-          backdrop-filter: blur(12px);
-        }
-
-        /* Make contact button slightly bolder on this page */
-        nav.sticky.top-0 button[type="button"] { font-weight: 600; }
-
         :root {
-          --hero-bg: ${isDark ? "#050b10" : "#fffaf0"};
-          --section-bg: ${isDark ? "#020608" : "#fff7e8"};
-          --footer-bg: ${isDark ? "#050b10" : "#fffaf0"};
-          --ticker-bg: ${isDark ? "rgba(5,11,16,0.92)" : "rgba(255,250,240,0.92)"};
-          --text-primary: ${isDark ? "#ffffff" : "#0f172a"};
-          --text-secondary: ${isDark ? "rgba(255,255,255,0.72)" : "rgba(15,23,42,0.72)"};
-          --text-muted: ${isDark ? "rgba(255,255,255,0.46)" : "rgba(15,23,42,0.52)"};
-          --border: ${isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"};
+          --hero-bg: ${t.pageBg};
+          --section-bg: ${t.contentBg};
+          --footer-bg: ${t.pageBg};
+          --ticker-bg: ${isDark ? "rgba(2,6,8,0.92)" : "rgba(255,250,240,0.92)"};
+          --text-primary: ${t.heading};
+          --text-secondary: ${t.body};
+          --text-muted: ${t.muted};
+          --border: ${t.border};
           --grid-line: ${isDark ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.06)"};
-          --accent-hero: ${isDark ? "#00c8b4" : "#f59e0b"};
+          --accent-hero: ${t.accent};
           --nav-bg: ${isDark ? "rgba(5,11,16,0.86)" : "rgba(255,250,240,0.88)"};
-          --nav-border: ${isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"};
+          --nav-border: ${t.border};
         }
 
-        body { background: var(--hero-bg); color: var(--text-primary); overflow-x: hidden; font-family: var(--font-sans); }
+        body { background: var(--section-bg); color: var(--text-primary); overflow-x: hidden; }
+        main h1, main h2, main h3, main h4, main h5, main h6 {
+          font-family: var(--font-bebas), "Arial Narrow", sans-serif;
+          font-weight: 400;
+        }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-thumb { background: var(--accent-hero); border-radius: 2px; }
 

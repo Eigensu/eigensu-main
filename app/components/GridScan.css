@@ -19,7 +19,7 @@
   color: #fff;
   font-size: 12px;
   line-height: 1.2;
-  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
   pointer-events: none;
 }
 

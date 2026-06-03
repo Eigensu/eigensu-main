@@ -3,157 +3,308 @@
 import Link from "next/link";
 import { useTheme } from "./PageShell";
 
+const NAV_COLUMNS = [
+  {
+    heading: "Company",
+    links: [
+      { label: "Home", href: "/" },
+      { label: "About", href: "/about" },
+      { label: "Careers", href: "/careers" },
+    ],
+  },
+  {
+    heading: "Services",
+    links: [
+      { label: "Our process", href: "/process" },
+      { label: "Case studies", href: "/cases" },
+      { label: "Pricing", href: "/pricing" },
+    ],
+  },
+  {
+    heading: "Connect",
+    links: [
+      { label: "LinkedIn", href: "#" },
+      { label: "Twitter / X", href: "#" },
+      { label: "GitHub", href: "#" },
+    ],
+  },
+];
+
+const LEGAL_LINKS = ["Privacy policy", "Terms of service", "Cookie settings"];
+
+function IconMail() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <rect x="1" y="2.5" width="12" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M1 4l6 4.5L13 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconArrow() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// Each letter: filled=solid accent, outline=stroke only (matching the reference image style)
+const BREAKER_LETTERS: { char: string; filled: boolean }[] = [
+  { char: "E", filled: false },
+  { char: "I", filled: true  },
+  { char: "G", filled: false },
+  { char: "E", filled: true  },
+  { char: "N", filled: false },
+  { char: "S", filled: false },
+  { char: "U", filled: true  },
+];
+
+function FooterBreaker({ isDark }: { isDark: boolean }) {
+  const bg     = isDark ? "#060d12" : "#f5f0e8";
+  const accent = isDark ? "#00c8b4" : "#e8847a";
+
+  return (
+    <div
+      aria-hidden="true"
+      className="relative w-full overflow-hidden select-none"
+      style={{
+        background: bg,
+        // Fixed height so letters bleed top+bottom — framed like the reference
+        height: "clamp(110px, 16vw, 200px)",
+        transition: "background 0.65s ease",
+      }}
+    >
+      {/*
+        The trick: letters are MUCH taller than the container.
+        We centre them vertically so the top and bottom are clipped,
+        leaving only the middle band visible — exactly like the reference.
+      */}
+      <div
+        className="absolute inset-0 flex items-center justify-between"
+        style={{ padding: "0" }}
+      >
+        {BREAKER_LETTERS.map(({ char, filled }, index) => (
+          <span
+            key={`${char}-${index}`}
+            className="flex-1 text-center leading-none"
+            style={{
+              fontFamily: "var(--font-bebas), 'Arial Narrow', Impact, sans-serif",
+              // Much taller than the wrapper — bleeds top & bottom
+              fontSize: "clamp(14rem, 30vw, 30rem)",
+              lineHeight: 1,
+              color: filled ? accent : "transparent",
+              WebkitTextStroke: filled ? "0" : `2px ${accent}`,
+              paintOrder: "stroke fill",
+              // Slight negative margin creates letter overlap
+              marginLeft: index === 0 ? 0 : "-0.04em",
+              zIndex: filled ? 2 : 1,
+              position: "relative",
+            }}
+          >
+            {char}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
+  const t = {
+    pageBg:        isDark ? "#020608"                     : "#ffffff",
+    ctaSectionBg:  isDark ? "#0b1520"                     : "#f8fafc",
+    ctaCardBg:     isDark ? "rgba(255,255,255,0.04)"      : "#ffffff",
+    btnBg:         isDark ? "rgba(255,255,255,0.06)"      : "#f8fafc",
+
+    sectionBorder: isDark ? "rgba(255,255,255,0.07)"      : "rgba(15,23,42,0.08)",
+    cardBorder:    isDark ? "rgba(255,255,255,0.08)"      : "rgba(15,23,42,0.08)",
+    btnBorder:     isDark ? "rgba(255,255,255,0.12)"      : "rgba(15,23,42,0.12)",
+    divider:       isDark ? "rgba(255,255,255,0.07)"      : "rgba(15,23,42,0.08)",
+
+    textPrimary:   isDark ? "#f1f5f9"                     : "#0f172a",
+    textMuted:     isDark ? "rgba(241,245,249,0.55)"      : "rgba(15,23,42,0.55)",
+    textFaint:     isDark ? "rgba(241,245,249,0.30)"      : "rgba(15,23,42,0.35)",
+    textDimmer:    isDark ? "rgba(241,245,249,0.28)"      : "rgba(15,23,42,0.35)",
+
+    badgeBorder:   isDark ? "rgba(29,158,117,0.35)"       : "rgba(15,118,110,0.25)",
+    badgeBg:       isDark ? "rgba(29,158,117,0.08)"       : "#f0fdf9",
+    badgeText:     isDark ? "#5DCAA5"                     : "#0F6E56",
+    dotGrid:       isDark
+      ? "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)"
+      : "radial-gradient(circle, rgba(15,23,42,0.06) 1px, transparent 1px)",
+  };
+
   return (
     <>
-      <div className={`${isDark ? "bg-[#020608]" : "bg-white"} px-4 md:px-10 pt-10 pb-0 transition-colors duration-500`} />
-      <footer
-        className={`relative w-full overflow-hidden rounded-3xl transition-colors duration-500 ${isDark ? "bg-[#060d12]" : "bg-[#fffbeb]"
-          }`}
+      {/* spacer bridge */}
+      <div
+        className="px-4 md:px-10 pt-10 pb-0 transition-colors duration-500"
+        style={{ background: t.pageBg }}
+      />
+
+      {/* ══ CTA SECTION ════════════════════════════════════════ */}
+      <section
+        aria-label="Call to action"
+        className="relative w-full overflow-hidden transition-colors duration-500"
+        style={{
+          background: t.ctaSectionBg,
+          // Sharp corners — no border-radius
+          border: `0.5px solid ${t.sectionBorder}`,
+          borderRadius: 0,
+        }}
       >
+        {/* dot-grid texture */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: isDark
-              ? "radial-gradient(circle at 20% 20%, rgba(0,200,180,0.12), transparent 28%), radial-gradient(circle at 80% 10%, rgba(0,153,204,0.10), transparent 24%), linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0))"
-              : "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.12), transparent 28%), radial-gradient(circle at 80% 10%, rgba(245,158,11,0.08), transparent 24%), linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0))",
-            backgroundSize: "100% 100%",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: isDark
-              ? "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)"
-              : "linear-gradient(rgba(15,23,42,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.04) 1px, transparent 1px)",
-            backgroundSize: "56px 56px",
-            opacity: 0.55,
-          }}
+          className="pointer-events-none absolute inset-0"
+          style={{ backgroundImage: t.dotGrid, backgroundSize: "24px 24px" }}
         />
 
-        {/* Subtle overlay for text contrast */}
-        <div className={`absolute inset-0 z-1 ${isDark ? "bg-black/15" : "bg-white/75"}`} />
+        <div className="relative z-10 mx-auto max-w-6xl px-8 py-16 md:px-14 md:py-20">
+          <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
 
-        {/* Content */}
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div className="max-w-2xl">
+            {/* left copy */}
+            <div>
               <div
-                className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium uppercase tracking-[0.18em]"
-                style={{ borderColor: isDark ? "rgba(0,200,180,0.25)" : "rgba(245,158,11,0.25)", color: isDark ? "#00c8b4" : "#b45309", background: isDark ? "rgba(0,200,180,0.08)" : "rgba(245,158,11,0.10)" }}
+                className="mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
+                style={{ borderColor: t.badgeBorder, background: t.badgeBg }}
               >
-                Ready to start
+                <span className="block h-1.5 w-1.5 rounded-full" style={{ background: "#1D9E75" }} />
+                <span className="text-xs font-medium uppercase tracking-widest" style={{ color: t.badgeText }}>
+                  Available for new projects
+                </span>
               </div>
+
+              {/* No line break, no curves — plain straight heading */}
               <h2
-                className="mt-6 text-4xl font-semibold leading-tight tracking-tight md:text-5xl lg:text-6xl"
+                className="text-4xl md:text-5xl"
                 style={{
-                  letterSpacing: '-0.03em',
-                  color: isDark ? '#ffffff' : '#0f172a',
+                  color: t.textPrimary,
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1.18,
                 }}
               >
                 Ready for a website that actually works?
               </h2>
 
-              <p
-                className="mt-5 max-w-xl text-base leading-7 md:text-lg"
-                style={{
-                  color: isDark ? 'rgba(255, 255, 255, 0.72)' : 'rgba(15, 23, 42, 0.72)',
-                }}
-              >
-                Tell us about your project. We respond quickly, and we&apos;ll tell you straight whether we&apos;re the right fit.
+              <p className="mt-5 max-w-md text-base leading-7" style={{ color: t.textMuted }}>
+                Tell us about your project. We respond quickly, and we&apos;ll tell
+                you straight whether we&apos;re the right fit.
               </p>
             </div>
 
-            <div className="rounded-[28px] border p-5 md:p-6" style={{ background: isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.68)", borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)", boxShadow: isDark ? "0 20px 70px rgba(0,0,0,0.22)" : "0 20px 70px rgba(15,23,42,0.06)" }}>
-              <p className="text-sm leading-7" style={{ color: isDark ? 'rgba(255,255,255,0.68)' : 'rgba(15,23,42,0.68)' }}>
-                We build systems for teams that want clear communication, fast delivery, and long-term reliability.
+            {/* right card */}
+            <div
+              className="rounded-2xl p-7"
+              style={{ background: t.ctaCardBg, border: `0.5px solid ${t.cardBorder}` }}
+            >
+              <p className="text-sm leading-7" style={{ color: t.textMuted }}>
+                We build systems for teams that want clear communication, fast
+                delivery, and long-term reliability — not just a vendor.
               </p>
+
               <button
                 type="button"
                 onClick={onOpenModal}
-                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                style={{
-                  background: isDark ? 'linear-gradient(135deg, #00c8b4, #0099cc)' : 'linear-gradient(135deg, #fbbf24, #f59e0b)',
-                  boxShadow: isDark ? '0 6px 24px rgba(0, 200, 180, 0.28)' : '0 6px 24px rgba(251, 191, 36, 0.28)',
-                }}
+                className="mt-6 inline-flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-medium transition-all duration-150 hover:opacity-80 active:scale-[0.98]"
+                style={{ color: t.textPrimary, background: t.btnBg, borderColor: t.btnBorder }}
               >
-                <span>Let&apos;s Talk</span>
-                <span>»</span>
+                <IconArrow />
+                Start a conversation
               </button>
             </div>
+
           </div>
         </div>
-      </footer>
+      </section>
 
-      {/* Footer Bottom Section */}
-      <div className={`border-t transition-colors duration-500 ${isDark ? "bg-[#020608] border-slate-800/60" : "bg-white border-slate-200/30"}`}>
-        <div className="mx-auto max-w-7xl px-6 md:px-12 py-12 md:py-16">
-          {/* Top section: Info, Nav, Badges */}
-          <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 pb-8 border-b ${isDark ? "border-slate-800/60" : "border-slate-200/30"}`}>
-            {/* Left: Company Info */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2" style={{ color: isDark ? '#ffffff' : '#0f172a' }}>
-                eigensu<span style={{ color: '#00c8b4' }}>.in</span>
+      {/* ══ BREAKER — framed like reference image ══════════════ */}
+      <FooterBreaker isDark={isDark} />
+
+      {/* ══ FOOTER BOTTOM ══════════════════════════════════════ */}
+      <footer
+        className="transition-colors duration-500"
+        style={{ background: t.pageBg }}
+      >
+        <div className="mx-auto max-w-7xl px-6 md:px-12 py-14 md:py-16">
+
+          {/* 4-column grid */}
+          <div className="mb-12 grid grid-cols-2 gap-10 md:grid-cols-4 md:gap-8">
+
+            {/* brand */}
+            <div className="col-span-2 md:col-span-1">
+              <h3 className="mb-2 text-base" style={{ color: t.textPrimary }}>
+                eigensu<span style={{ color: "#1D9E75" }}>.in</span>
               </h3>
-              <p className={`text-sm mb-2 transition-colors duration-500 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
-                Enterprise-grade IT solutions.
+              <p className="mb-4 text-sm leading-6" style={{ color: t.textMuted }}>
+                Enterprise-grade IT solutions,
+                <br />
+                built for teams that move fast.
               </p>
-              <p className={`text-sm mb-1 transition-colors duration-500 ${isDark ? "text-slate-500" : "text-slate-500"}`}>
+              <a
+                href="mailto:hello@eigensu.in"
+                className="inline-flex items-center gap-1.5 text-sm transition-opacity hover:opacity-70"
+                style={{ color: t.textMuted }}
+              >
+                <IconMail />
                 hello@eigensu.in
-              </p>
+              </a>
             </div>
 
-            {/* Center: Navigation Links */}
-            <div>
-              <nav className="flex flex-wrap gap-6 md:justify-center">
-                {[
-                  { label: 'Home', href: '/' },
-                  { label: 'Process', href: '/process' },
-                  { label: 'About', href: '/about' },
-                  { label: 'Careers', href: '/careers' },
-                ].map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className={`text-sm transition-colors duration-500 ${isDark ? "text-slate-400 hover:text-white" : "text-slate-600 hover:text-slate-900"}`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-
-            {/* Right: Badges/Awards */}
-            <div className="flex justify-end gap-4">
-              {/* Placeholder for award badges */}
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xs transition-colors duration-500 ${isDark ? "bg-slate-800/40 text-slate-500" : "bg-slate-100 text-slate-400"}`}>
-                ⭐
+            {/* nav columns */}
+            {NAV_COLUMNS.map((col) => (
+              <div key={col.heading}>
+                <h4
+                  className="mb-4 text-xs font-medium uppercase tracking-widest"
+                  style={{ color: t.textFaint }}
+                >
+                  {col.heading}
+                </h4>
+                <ul className="flex flex-col gap-2.5">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="text-sm transition-opacity hover:opacity-70"
+                        style={{ color: t.textMuted }}
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xs transition-colors duration-500 ${isDark ? "bg-slate-800/40 text-slate-500" : "bg-slate-100 text-slate-400"}`}>
-                ⭐
-              </div>
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xs transition-colors duration-500 ${isDark ? "bg-slate-800/40 text-slate-500" : "bg-slate-100 text-slate-400"}`}>
-                ⭐
-              </div>
-            </div>
+            ))}
           </div>
 
-          {/* Bottom section: Copyright and Privacy */}
-          <div className={`flex flex-col md:flex-row items-center justify-between text-xs transition-colors duration-500 ${isDark ? "text-slate-500" : "text-slate-500"}`}>
-            <p>
+          {/* divider */}
+          <div style={{ height: "0.5px", background: t.divider, marginBottom: "20px" }} />
+
+          {/* bottom bar */}
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <p className="text-xs" style={{ color: t.textDimmer }}>
               &copy; {new Date().getFullYear()} eigensu.in. All rights reserved.
             </p>
-            <a href="#" className={`transition-colors mt-4 md:mt-0 ${isDark ? "text-slate-400 hover:text-white" : "text-slate-600 hover:text-slate-900"}`}>
-              Privacy Policy
-            </a>
+            <div className="flex flex-wrap gap-5">
+              {LEGAL_LINKS.map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="text-xs transition-opacity hover:opacity-70"
+                  style={{ color: t.textDimmer }}
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
           </div>
+
         </div>
-      </div>
+      </footer>
     </>
   );
 }

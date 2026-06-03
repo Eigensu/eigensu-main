@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans } from "next/font/google";
+import { Bebas_Neue, Lora } from "next/font/google";
 import "./globals.css";
 import PageShell from "./components/PageShell";
 import ClientOnly from "./components/ClientOnly";
 
-const ibmPlexSans = IBM_Plex_Sans({
-  variable: "--font-primary",
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+const lora = Lora({
+  variable: "--font-lora",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -23,9 +30,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmPlexSans.variable} h-full antialiased`}
+      className={`${bebasNeue.variable} ${lora.variable} h-full antialiased`}
     >
-      <body className="min-h-full">
+      <body className={`${lora.className} min-h-full`}>
         <ClientOnly>
           <PageShell>{children}</PageShell>
         </ClientOnly>

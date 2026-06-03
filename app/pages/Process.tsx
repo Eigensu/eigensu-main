@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useTheme } from "../components/PageShell";
+import { ThemeHeroSection } from "../components/ThemeHero";
+import { getThemeTokens } from "../lib/themeTokens";
 
 type ThreeGlobal = typeof import("three");
 
@@ -61,15 +63,16 @@ const STATS = [
    GLOBE INIT (runs after Three.js loads)
 ───────────────────────────────────── */
 function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
-  const THREE = window.THREE;
+  if (!window.THREE) throw new Error("THREE.js is not loaded");
+  const T: ThreeGlobal = window.THREE;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  const renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(GLOBE_SIZE, GLOBE_SIZE, false); // false = don't set CSS size
   renderer.setClearColor(0x000000, 0);
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  const scene = new T.Scene();
+  const camera = new T.PerspectiveCamera(42, 1, 0.1, 100);
   camera.position.z = 2.65;
 
   /* ── Texture builder ── */
@@ -116,19 +119,19 @@ function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
         ctx.beginPath(); ctx.arc(px, py, 1.5 * sc, 0, Math.PI * 2); ctx.fill();
       }
     }
-    return new THREE.CanvasTexture(tc);
+    return new T.CanvasTexture(tc);
   }
 
   /* ── Sphere ── */
-  const geo = new THREE.SphereGeometry(1, 64, 64);
-  const mat = new THREE.MeshStandardMaterial({ map: makeTexture(dark), roughness: 0.8, metalness: 0.05 });
-  const globe = new THREE.Mesh(geo, mat);
+  const geo = new T.SphereGeometry(1, 64, 64);
+  const mat = new T.MeshStandardMaterial({ map: makeTexture(dark), roughness: 0.8, metalness: 0.05 });
+  const globe = new T.Mesh(geo, mat);
   scene.add(globe);
 
   // atmosphere shell
-  scene.add(new THREE.Mesh(
-    new THREE.SphereGeometry(1.06, 64, 64),
-    new THREE.MeshBasicMaterial({ color: 0x1A6FE8, transparent: true, opacity: 0.05, side: THREE.BackSide })
+  scene.add(new T.Mesh(
+    new T.SphereGeometry(1.06, 64, 64),
+    new T.MeshBasicMaterial({ color: 0x1A6FE8, transparent: true, opacity: 0.05, side: T.BackSide })
   ));
 
   /* ── City dots ── */
@@ -143,19 +146,19 @@ function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
       const phi = (90 - lat) * (Math.PI / 180), theta = (lon + 180) * (Math.PI / 180);
       pts.push(Math.sin(phi) * Math.cos(theta), Math.cos(phi), Math.sin(phi) * Math.sin(theta));
     });
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
-    return new THREE.Points(g, new THREE.PointsMaterial({ color: d ? 0x6ab0ff : 0x1A6FE8, size: 0.026, sizeAttenuation: true }));
+    const g = new T.BufferGeometry();
+    g.setAttribute("position", new T.Float32BufferAttribute(pts, 3));
+    return new T.Points(g, new T.PointsMaterial({ color: d ? 0x6ab0ff : 0x1A6FE8, size: 0.026, sizeAttenuation: true }));
   }
   let cityDots = makeCityDots(dark);
   scene.add(cityDots);
 
   /* ── Lights ── */
-  const ambient = new THREE.AmbientLight(0xffffff, dark ? 0.7 : 1.0);
+  const ambient = new T.AmbientLight(0xffffff, dark ? 0.7 : 1.0);
   scene.add(ambient);
-  const dir = new THREE.DirectionalLight(0x4488ff, dark ? 1.1 : 0.6);
+  const dir = new T.DirectionalLight(0x4488ff, dark ? 1.1 : 0.6);
   dir.position.set(3, 2, 3); scene.add(dir);
-  const rim = new THREE.DirectionalLight(0x1a6fe8, 0.3);
+  const rim = new T.DirectionalLight(0x1a6fe8, 0.3);
   rim.position.set(-3, -1, -2); scene.add(rim);
 
   /* ── Theme update ── */
@@ -319,24 +322,24 @@ export default function ProcessPage() {
     };
   }, [reposition]);
 
-  /* ── Theme colours ── */
-  const ac = dark ? "#5B9EF5" : "#1A6FE8";
-  const bg = dark ? "#0C0D10" : "#F5F3EE";
-  const card = dark ? "#1C1E27" : "#FFFFFF";
-  const tp = dark ? "#F0EDE8" : "#0F0E0C";
-  const ts = dark ? "#9A9590" : "#5A5650";
-  const tm = dark ? "#5A5650" : "#9B958E";
-  const br = dark ? "rgba(240,237,232,0.07)" : "rgba(15,14,12,0.08)";
-  const brs = dark ? "rgba(240,237,232,0.14)" : "rgba(15,14,12,0.16)";
-  const pill = dark ? "rgba(240,237,232,0.06)" : "rgba(15,14,12,0.05)";
-  const tagB = dark ? "rgba(91,158,245,0.12)" : "#EEF4FD";
-  const tagT = dark ? "#7AB3F8" : "#185FA5";
+  const t = getThemeTokens(theme);
+  const ac = t.accent;
+  const bg = t.contentBg;
+  const card = dark ? "rgba(255,255,255,0.05)" : "#FFFFFF";
+  const tp = t.heading;
+  const ts = t.body;
+  const tm = t.muted;
+  const br = t.border;
+  const brs = dark ? "rgba(255,255,255,0.14)" : "rgba(15,23,42,0.16)";
+  const pill = dark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.05)";
+  const tagB = t.accentSoft;
+  const tagT = ac;
   const glow = dark
-    ? "radial-gradient(circle, rgba(91,158,245,0.25) 0%, transparent 68%)"
-    : "radial-gradient(circle, rgba(26,111,232,0.15) 0%, transparent 68%)";
+    ? "radial-gradient(circle, rgba(0,200,180,0.25) 0%, transparent 68%)"
+    : "radial-gradient(circle, rgba(251,191,36,0.18) 0%, transparent 68%)";
 
   return (
-    <div style={{ background: bg, color: tp, minHeight: "100vh", transition: "background .3s, color .3s", overflowX: "hidden" }}>
+    <div style={{ background: bg, color: tp, minHeight: "100vh", transition: "background .65s ease, color .3s", overflowX: "hidden" }}>
 
       {/* ── FLOATING GLOBE (fixed, repositioned by JS) ── */}
       <div
@@ -402,42 +405,58 @@ export default function ProcessPage() {
 
       {/* theme is controlled centrally via PageShell */}
 
-      {/* ═══════════════ HERO ═══════════════ */}
-      <section style={{
-        maxWidth: 1200, margin: "0 auto", padding: "100px 5vw 80px",
-        display: "flex", alignItems: "center", gap: 60, minHeight: "92vh",
-      }}>
-        {/* LEFT — invisible placeholder: globe floats exactly here */}
-        <div
-          ref={heroSlotRef}
-          style={{ flex: `0 0 ${GLOBE_SIZE}px`, height: GLOBE_SIZE, borderRadius: "50%", flexShrink: 0 }}
-        />
+      <ThemeHeroSection contentClassName="mx-auto w-full max-w-[1200px] px-[5vw]">
+        <section
+          className="hero-anim-3 flex items-center gap-[60px]"
+          style={{ minHeight: "72vh" }}
+        >
+          <div
+            ref={heroSlotRef}
+            style={{ flex: `0 0 ${GLOBE_SIZE}px`, height: GLOBE_SIZE, borderRadius: "50%", flexShrink: 0 }}
+          />
 
-        {/* RIGHT — hero copy */}
-        <div style={{ flex: 1 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 500, letterSpacing: ".12em", textTransform: "uppercase", color: ac, background: tagB, borderRadius: 100, padding: "5px 14px", marginBottom: 24 }}>
-            <span style={{ width: 5, height: 5, borderRadius: "50%", background: ac, display: "inline-block" }} />
-            How we work
+          <div style={{ flex: 1 }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: ".12em",
+                textTransform: "uppercase",
+                color: ac,
+                background: tagB,
+                borderRadius: 100,
+                padding: "5px 14px",
+                marginBottom: 24,
+              }}
+            >
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: ac, display: "inline-block" }} />
+              How we work
+            </div>
+            <h1 style={{ fontSize: "clamp(38px,4.2vw,72px)", letterSpacing: "0.02em", lineHeight: 1.06, marginBottom: 20, color: tp }}>
+              From <em style={{ fontStyle: "normal", color: ac }}>complexity</em>
+              <br />
+              to clarity
+            </h1>
+            <p style={{ fontSize: 16, color: ts, maxWidth: 400, lineHeight: 1.65, marginBottom: 36 }}>
+              Six deliberate steps that turn infrastructure challenges into a stack that&apos;s fast, secure, and built to scale.
+            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 11, fontWeight: 500, letterSpacing: ".1em", textTransform: "uppercase", color: tm, opacity: 0.6 }}>
+              <span style={{ width: 28, height: 1, background: ac, display: "block" }} />
+              Scroll — globe moves right
+            </div>
           </div>
-          <h1 style={{ fontSize: "clamp(38px,4.2vw,60px)", fontWeight: 800, letterSpacing: "-.03em", lineHeight: 1.06, marginBottom: 20 }}>
-            From <em style={{ fontStyle: "normal", color: ac }}>complexity</em><br />to clarity
-          </h1>
-          <p style={{ fontSize: 16, fontWeight: 300, color: ts, maxWidth: 400, lineHeight: 1.65, marginBottom: 36 }}>
-            Six deliberate steps that turn infrastructure challenges into a stack that&apos;s fast, secure, and built to scale.
-          </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 11, fontWeight: 500, letterSpacing: ".1em", textTransform: "uppercase", color: tm, opacity: .6 }}>
-            <span style={{ width: 28, height: 1, background: ac, display: "block" }} />
-            Scroll — globe moves right
-          </div>
-        </div>
-      </section>
+        </section>
+      </ThemeHeroSection>
 
       {/* ═══════════════ STATS ═══════════════ */}
       <div style={{ maxWidth: 1200, margin: "0 auto 80px", padding: "0 5vw" }}>
         <div style={{ display: "flex", background: card, border: `1px solid ${br}`, borderRadius: 16, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04)", transition: "background .3s" }}>
           {STATS.map((s, i) => (
             <div key={i} style={{ flex: 1, padding: "28px 24px", textAlign: "center", borderRight: i < STATS.length - 1 ? `1px solid ${br}` : "none" }}>
-              <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-.03em", color: tp, lineHeight: 1, marginBottom: 4 }}>{s.num}</div>
+              <div className="font-heading" style={{ fontSize: 32, letterSpacing: "0.02em", color: tp, lineHeight: 1, marginBottom: 4 }}>{s.num}</div>
               <div style={{ fontSize: 12, color: tm }}>{s.label}</div>
             </div>
           ))}
@@ -475,7 +494,7 @@ export default function ProcessPage() {
                     {step.icon}
                   </div>
                 </div>
-                <h3 style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-.02em", color: tp, marginBottom: 10, lineHeight: 1.2 }}>
+                <h3 style={{ fontSize: 26, letterSpacing: "0.02em", color: tp, marginBottom: 10, lineHeight: 1.2 }}>
                   {step.label}
                 </h3>
                   <p style={{ fontSize: 15, fontWeight: 300, color: ts, lineHeight: 1.65, maxWidth: 440, marginBottom: 18 }}>
@@ -510,8 +529,8 @@ export default function ProcessPage() {
 
       {/* ═══════════════ PRINCIPLES ═══════════════ */}
       <div style={{ maxWidth: 1200, margin: "0 auto 80px", padding: "0 5vw" }}>
-        <div style={{ fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", fontWeight: 500, color: tm, marginBottom: 48, display: "flex", alignItems: "center", gap: 12 }}>
-          What guides every engagement
+        <div className="font-heading" style={{ fontSize: 11, textTransform: "uppercase", fontWeight: 500, color: tm, marginBottom: 48, display: "flex", alignItems: "center", gap: 12 }}>
+          {/* What guides every engagement */}
           <span style={{ flex: 1, height: 1, background: br, display: "block" }} />
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
@@ -531,35 +550,12 @@ export default function ProcessPage() {
                 {i === 1 && <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />}
                 {i === 2 && <><circle cx="12" cy="12" r="10" /><path d="M12 8v4l3 3" /></>}
               </svg>
-              <h4 style={{ fontSize: 15, fontWeight: 700, color: tp, marginBottom: 8 }}>{p.title}</h4>
+              <h4 style={{ fontSize: 15, color: tp, marginBottom: 8 }}>{p.title}</h4>
               <p style={{ fontSize: 13, fontWeight: 300, color: ts, lineHeight: 1.6 }}>{p.body}</p>
             </div>
           ))}
         </div>
       </div>
-
-      {/* ═══════════════ CTA ═══════════════ */}
-      <div style={{ maxWidth: 1200, margin: "0 auto 48px", padding: "0 5vw" }}>
-        <div style={{ background: dark ? "#1A2A42" : "#0A2540", borderRadius: 24, padding: "64px 56px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 32, position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", top: -60, right: -60, width: 240, height: 240, borderRadius: "50%", background: "rgba(26,111,232,0.13)" }} />
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-.03em", color: "#fff", marginBottom: 8 }}>Ready to get started?</h2>
-            <p style={{ fontSize: 14, fontWeight: 300, color: "rgba(255,255,255,.6)" }}>Book a 30-minute discovery call — no slides, just an honest conversation.</p>
-          </div>
-          <button
-            style={{ fontSize: 14, fontWeight: 500, color: "#0A2540", background: "#fff", border: "none", borderRadius: 100, padding: "14px 32px", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, position: "relative", zIndex: 1, flexShrink: 0, transition: "opacity .2s, transform .2s" }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = ".88"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.transform = ""; }}
-          >
-            Start discovery
-            <svg viewBox="0 0 24 24" fill="none" stroke="#0A2540" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16 }}><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-          </button>
-        </div>
-      </div>
-
-      <p style={{ textAlign: "center", paddingBottom: 48, fontSize: 12, color: tm, fontWeight: 300 }}>
-        © 2025 Eigensu. Enterprise IT solutions delivered without friction.
-      </p>
     </div>
   );
 }
