@@ -30,7 +30,7 @@ export default function AboutPage() {
   const t = getThemeTokens(theme);
 
   return (
-    <main className="min-h-screen" style={{ transition: "background 0.65s ease" }}>
+    <div className="min-h-screen" style={{ transition: "background 0.65s ease" }}>
       <ThemeHeroSection contentClassName="mx-auto w-full max-w-7xl">
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
@@ -98,10 +98,10 @@ export default function AboutPage() {
       </ThemeHeroSection>
 
       <section
-        className="mx-auto w-full max-w-7xl px-6 pb-16 md:px-10 md:pb-24"
+        className="w-full px-4 pb-16 md:px-6 md:pb-24"
         style={{ background: t.contentBg, transition: "background 0.65s ease" }}
       >
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid w-full gap-4 md:grid-cols-3 md:gap-6">
           {pillars.map((pillar, index) => (
             <article
               key={pillar.title}
@@ -133,6 +133,6 @@ export default function AboutPage() {
           ))}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

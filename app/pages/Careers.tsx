@@ -204,7 +204,7 @@ export default function CareersPage() {
   };
 
   return (
-    <main className="min-h-screen">
+    <div className="min-h-screen">
       {/* ── Hero ── */}
       <ThemeHeroSection contentClassName="mx-auto w-full max-w-7xl">
         <div
@@ -456,6 +456,6 @@ export default function CareersPage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

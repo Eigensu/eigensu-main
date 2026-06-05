@@ -164,7 +164,7 @@ export default function HeroSection() {
   const secTxt = isDark ? "rgba(255,255,255,.80)" : "rgba(15,23,42,.70)";
 
   return (
-    <ThemeHeroSection fullScreen align="center" contentClassName="pb-0">
+    <ThemeHeroSection fullScreen align="center" contentClassName="pb-0 mt-14">
       <HeroBadge className="mb-8">Building the future of enterprise IT</HeroBadge>
 
       <h1

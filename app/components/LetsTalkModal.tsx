@@ -91,8 +91,11 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
   const cardBg     = isDark ? "rgba(255,255,255,.04)" : "rgba(0,0,0,.04)";
   const cardBdr    = isDark ? "rgba(255,255,255,.07)" : "rgba(0,0,0,.07)";
   const errClr     = "#ff5757";
-  const btnBg      = "#c6ff00";
-  const btnTxt     = "#0a0a0a";
+  const linkAccent = isDark ? "#00c8b4" : "#d4a017";
+  const btnBg      = linkAccent;
+  const btnTxt     = isDark ? "#020608" : "#ffffff";
+  const btnHoverShadow = isDark ? "rgba(0,200,180,.38)" : "rgba(212,160,23,.35)";
+  const btnIconBg  = isDark ? "rgba(2,6,8,0.14)" : "rgba(255,255,255,0.22)";
   const overlayBg  = isDark ? "rgba(0,0,0,.55)"       : "rgba(0,0,0,.35)";
   const closeBg    = isDark ? "rgba(255,255,255,.10)"  : "rgba(0,0,0,.08)";
 
@@ -204,7 +207,7 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
           background: ${btnBg}; color: ${btnTxt};
           letter-spacing: 0.01em;
         }
-        .lt-sendbtn:hover { transform: scale(1.04); box-shadow: 0 0 28px rgba(198,255,0,.38); }
+        .lt-sendbtn:hover { transform: scale(1.04); box-shadow: 0 0 28px ${btnHoverShadow}; }
         .lt-sendbtn:active { transform: scale(.97); }
 
         .lt-closebtn {
@@ -364,7 +367,7 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
                 {/* Legal */}
                 <p className="lt-body" style={{ fontSize: 11.5, color: subtext, lineHeight: 1.65, marginTop: -8 }}>
                   By submitting this form, I hereby declare that I have read and understood the{" "}
-                  <a href="#" style={{ color: isDark ? "#00c8b4" : "#d4a017", textDecoration: "underline" }}>Privacy Policy</a>{" "}
+                  <a href="#" style={{ color: linkAccent, textDecoration: "underline" }}>Privacy Policy</a>{" "}
                   and the terms governing the processing of my personal data by Eigensu as the data controller.
                 </p>
 
@@ -374,7 +377,7 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
                     Send request
                     <span style={{
                       width: 32, height: 32, borderRadius: "50%",
-                      background: "rgba(0,0,0,0.14)",
+                      background: btnIconBg,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       fontSize: 16,
                     }}>→</span>

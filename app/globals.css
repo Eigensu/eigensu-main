@@ -3,6 +3,27 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Fixed nav: top-4 + 60px bar + breathing room */
+  --nav-top: 1.5rem;
+  --nav-height: 60px;
+  --nav-gap: 0.75rem;
+  --page-offset-top: calc(var(--nav-top) + var(--nav-height) + var(--nav-gap));
+  /* Center of the gap between viewport top and the nav bar */
+  --celestial-top: calc(var(--nav-top) / 2);
+  /* Space for fixed nav + sun/moon rays before hero copy */
+  --hero-content-top: calc(var(--page-offset-top) + 3.5rem);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-top: 1.5rem; /* matches md:top-6 */
+    --hero-content-top: calc(var(--page-offset-top) + 4rem);
+  }
+}
+
+/* Pages / sections without ThemeHero */
+.page-offset-top {
+  padding-top: var(--page-offset-top);
 }
 
 @theme inline {

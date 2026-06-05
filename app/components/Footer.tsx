@@ -62,7 +62,7 @@ const BREAKER_LETTERS: { char: string; filled: boolean }[] = [
 
 function FooterBreaker({ isDark }: { isDark: boolean }) {
   const bg     = isDark ? "#060d12" : "#f5f0e8";
-  const accent = isDark ? "#00c8b4" : "#e8847a";
+  const accent = isDark ? "#00c8b4" : "#f59e0b";
 
   return (
     <div
@@ -169,16 +169,6 @@ export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
 
             {/* left copy */}
             <div>
-              <div
-                className="mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
-                style={{ borderColor: t.badgeBorder, background: t.badgeBg }}
-              >
-                <span className="block h-1.5 w-1.5 rounded-full" style={{ background: "#1D9E75" }} />
-                <span className="text-xs font-medium uppercase tracking-widest" style={{ color: t.badgeText }}>
-                  Available for new projects
-                </span>
-              </div>
-
               {/* No line break, no curves — plain straight heading */}
               <h2
                 className="text-4xl md:text-5xl"

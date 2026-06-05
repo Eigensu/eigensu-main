@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { useTheme } from "./PageShell";
 import { getThemeTokens, type Theme } from "../lib/themeTokens";
 
@@ -56,7 +56,19 @@ function Starfield({ visible }: { visible: boolean }) {
   );
 }
 
-function MoonRay({ visible }: { visible: boolean }) {
+const CELESTIAL_STYLE: CSSProperties = {
+  position: "fixed",
+  /* Sit in the strip above the nav bar (nav begins at --nav-top) */
+  top: 0,
+  left: "50%",
+  transform: "translateX(-50%) scale(0.44)",
+  transformOrigin: "top center",
+  width: "min(900px, 100vw)",
+  zIndex: 85,
+  pointerEvents: "none",
+};
+
+function MoonRay({ visible, fixed = false }: { visible: boolean; fixed?: boolean }) {
   const RAYS = [
     { angle: -62, w: 9 }, { angle: -48, w: 14 }, { angle: -36, w: 10 },
     { angle: -24, w: 18 }, { angle: -14, w: 12 }, { angle: -5, w: 20 },
@@ -68,15 +80,20 @@ function MoonRay({ visible }: { visible: boolean }) {
   const len = 480;
   return (
     <div
-      className="pointer-events-none absolute flex justify-center"
+      className="flex justify-center"
       style={{
-        top: "-6%",
-        left: "50%",
-        transform: "translateX(-50%)",
-        width: "100%",
-        zIndex: 2,
+        ...(fixed ? CELESTIAL_STYLE : {
+          position: "absolute",
+          top: "-6%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "100%",
+          zIndex: 2,
+          pointerEvents: "none",
+        }),
         opacity: visible ? 1 : 0,
-        transition: "opacity 0.8s ease",
+        visibility: visible ? "visible" : "hidden",
+        transition: "opacity 0.8s ease, visibility 0.8s ease",
       }}
     >
       <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 900, overflow: "visible" }}>
@@ -129,7 +146,7 @@ function MoonRay({ visible }: { visible: boolean }) {
   );
 }
 
-function SunRay({ visible }: { visible: boolean }) {
+function SunRay({ visible, fixed = false }: { visible: boolean; fixed?: boolean }) {
   const RAYS = Array.from({ length: 16 }, (_, i) => ({
     angle: i * 22.5,
     w: i % 2 === 0 ? 22 : 12,
@@ -139,15 +156,20 @@ function SunRay({ visible }: { visible: boolean }) {
   const cy = 48;
   return (
     <div
-      className="pointer-events-none absolute flex justify-center"
+      className="flex justify-center"
       style={{
-        top: "-6%",
-        left: "50%",
-        transform: "translateX(-50%)",
-        width: "100%",
-        zIndex: 2,
+        ...(fixed ? CELESTIAL_STYLE : {
+          position: "absolute",
+          top: "-6%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "100%",
+          zIndex: 2,
+          pointerEvents: "none",
+        }),
         opacity: visible ? 1 : 0,
-        transition: "opacity 0.8s ease",
+        visibility: visible ? "visible" : "hidden",
+        transition: "opacity 0.8s ease, visibility 0.8s ease",
       }}
     >
       <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 900, overflow: "visible" }}>
@@ -290,6 +312,17 @@ const HERO_ANIM_STYLES = `
   .badge-light{animation:pulseLight 2.5s infinite}
 `;
 
+/** Fixed sun/moon above the nav bar — rendered from PageShell. */
+export function CelestialLayer({ theme }: { theme: Theme }) {
+  const isDark = theme === "dark";
+  return (
+    <>
+      <MoonRay visible={isDark} fixed />
+      <SunRay visible={!isDark} fixed />
+    </>
+  );
+}
+
 type ThemeHeroSectionProps = {
   children: ReactNode;
   className?: string;
@@ -316,11 +349,9 @@ export function ThemeHeroSection({
     >
       <style>{HERO_ANIM_STYLES}</style>
       <Starfield visible={isDark} />
-      <MoonRay visible={isDark} />
-      <SunRay visible={!isDark} />
       <GlowArcs theme={theme} />
       <div
-        className={`relative z-10 flex flex-1 flex-col px-6 pb-16 pt-10 md:px-10 md:pb-20 md:pt-12 ${
+        className={`relative z-10 flex flex-1 flex-col px-6 pb-16 pt-[var(--hero-content-top)] md:px-10 md:pb-20 ${
           align === "center" ? "items-center text-center" : ""
         } ${contentClassName}`}
       >

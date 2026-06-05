@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { GoArrowUpRight } from "react-icons/go";
 
@@ -47,145 +47,236 @@ function CardNav({
   topActions,
   ease = "power3.out",
 }: CardNavProps) {
-  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const isOpenRef = useRef(false);
+  const isAnimatingRef = useRef(false);
+  const collapseTlRef = useRef<gsap.core.Timeline | null>(null);
 
-  const calculateHeight = () => {
+  const COLLAPSED_HEIGHT = 60;
+
+  const getCardElements = () => cardsRef.current.filter(Boolean);
+
+  const calculateHeight = useCallback(() => {
     const navEl = navRef.current;
     if (!navEl) return 260;
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    if (isMobile) {
-      const contentEl = navEl.querySelector(".card-nav-content") as HTMLElement;
-      if (contentEl) {
-        const wasVisible = contentEl.style.visibility;
-        const wasPointerEvents = contentEl.style.pointerEvents;
-        const wasPosition = contentEl.style.position;
-        const wasHeight = contentEl.style.height;
+    if (!isMobile) return 260;
 
-        contentEl.style.visibility = "visible";
-        contentEl.style.pointerEvents = "auto";
-        contentEl.style.position = "static";
-        contentEl.style.height = "auto";
-        contentEl.offsetHeight;
+    const contentEl = navEl.querySelector(".card-nav-content") as HTMLElement;
+    if (!contentEl) return 260;
 
-        const topBar = 60;
-        const padding = 16;
-        const contentHeight = contentEl.scrollHeight;
+    const cards = getCardElements();
 
-        contentEl.style.visibility = wasVisible;
-        contentEl.style.pointerEvents = wasPointerEvents;
-        contentEl.style.position = wasPosition;
-        contentEl.style.height = wasHeight;
+    // Save current styles
+    const savedContent = {
+      visibility: contentEl.style.visibility,
+      position: contentEl.style.position,
+      height: contentEl.style.height,
+      opacity: contentEl.style.opacity,
+      overflow: contentEl.style.overflow,
+      pointerEvents: contentEl.style.pointerEvents,
+    };
 
-        return topBar + contentHeight + padding;
-      }
-    }
-    return 260;
-  };
+    const savedCards = cards.map((c) => ({
+      transform: c.style.transform,
+      opacity: c.style.opacity,
+    }));
 
-  const createTimeline = () => {
+    // Force everything visible for measurement
+    contentEl.style.visibility = "visible";
+    contentEl.style.position = "static";
+    contentEl.style.height = "auto";
+    contentEl.style.opacity = "1";
+    contentEl.style.overflow = "visible";
+    contentEl.style.pointerEvents = "auto";
+    cards.forEach((c) => {
+      c.style.transform = "none";
+      c.style.opacity = "1";
+    });
+
+    // Force reflow
+    void contentEl.offsetHeight;
+
+    const contentHeight = contentEl.scrollHeight;
+
+    // Restore
+    Object.assign(contentEl.style, savedContent);
+    cards.forEach((c, i) => {
+      c.style.transform = savedCards[i].transform;
+      c.style.opacity = savedCards[i].opacity;
+    });
+
+    return COLLAPSED_HEIGHT + contentHeight + 16;
+  }, []);
+
+  const createTimeline = useCallback(() => {
     const navEl = navRef.current;
     if (!navEl) return null;
 
-    gsap.set(navEl, { height: 60, overflow: "hidden" });
-    gsap.set(cardsRef.current, { y: 50, opacity: 0 });
+    const expandedHeight = calculateHeight();
+    const cards = getCardElements();
+
+    gsap.set(navEl, { height: COLLAPSED_HEIGHT, overflow: "hidden" });
+    gsap.set(cards, { y: 50, opacity: 0 });
 
     const tl = gsap.timeline({ paused: true });
 
-    tl.to(navEl, {
-      height: calculateHeight,
-      duration: 0.4,
-      ease,
-    });
-
-    tl.to(cardsRef.current, { y: 0, opacity: 1, duration: 0.4, ease, stagger: 0.08 }, "-=0.1");
+    tl.to(navEl, { height: expandedHeight, duration: 0.4, ease });
+    tl.to(cards, { y: 0, opacity: 1, duration: 0.4, ease, stagger: 0.08 }, "-=0.1");
 
     return tl;
+  }, [calculateHeight, ease]);
+
+  const clearTimelineCallbacks = (tl: gsap.core.Timeline) => {
+    tl.eventCallback("onComplete", null);
+    tl.eventCallback("onReverseComplete", null);
   };
 
-  useLayoutEffect(() => {
-    const tl = createTimeline();
-    tlRef.current = tl;
+  const applyOpenState = useCallback(
+    (tl: gsap.core.Timeline) => {
+      const navEl = navRef.current;
+      if (!navEl) return;
+      gsap.set(navEl, { height: calculateHeight(), overflow: "hidden" });
+      gsap.set(getCardElements(), { y: 0, opacity: 1 });
+      tl.progress(1);
+    },
+    [calculateHeight]
+  );
 
+  const applyClosedState = useCallback((tl: gsap.core.Timeline) => {
+    const navEl = navRef.current;
+    if (!navEl) return;
+    gsap.set(navEl, { height: COLLAPSED_HEIGHT, overflow: "hidden" });
+    gsap.set(getCardElements(), { y: 50, opacity: 0 });
+    tl.progress(0);
+  }, []);
+
+  const rebuildTimeline = useCallback(
+    (keepOpen: boolean) => {
+      tlRef.current?.kill();
+      const tl = createTimeline();
+      tlRef.current = tl;
+      if (!tl) return null;
+      if (keepOpen) applyOpenState(tl);
+      else applyClosedState(tl);
+      return tl;
+    },
+    [applyClosedState, applyOpenState, createTimeline]
+  );
+
+  useLayoutEffect(() => {
+    rebuildTimeline(isOpenRef.current);
     return () => {
-      tl?.kill();
+      collapseTlRef.current?.kill();
+      collapseTlRef.current = null;
+      tlRef.current?.kill();
       tlRef.current = null;
     };
-  }, [ease, items]);
+  }, [rebuildTimeline]);
 
   useLayoutEffect(() => {
     const handleResize = () => {
-      if (!tlRef.current) return;
-
-      if (isExpanded) {
-        const newHeight = calculateHeight();
-        gsap.set(navRef.current, { height: newHeight });
-        tlRef.current.kill();
-        const newTl = createTimeline();
-        if (newTl) {
-          newTl.progress(1);
-          tlRef.current = newTl;
-        }
-      } else {
-        tlRef.current.kill();
-        const newTl = createTimeline();
-        if (newTl) {
-          tlRef.current = newTl;
-        }
-      }
+      const tl = tlRef.current;
+      if (!tl) return;
+      if (isOpenRef.current) applyOpenState(tl);
+      else applyClosedState(tl);
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [isExpanded]);
+  }, [applyOpenState, applyClosedState]);
 
-  const toggleMenu = () => {
-    const tl = tlRef.current;
+  const openMenu = useCallback(() => {
+    if (isOpenRef.current || isAnimatingRef.current) return;
+    const navEl = navRef.current;
+    if (!navEl) return;
+
+    // Rebuild timeline fresh so it measures correct height
+    const tl = rebuildTimeline(false);
     if (!tl) return;
+    tlRef.current = tl;
 
-    if (!isExpanded) {
-      setIsHamburgerOpen(true);
-      setIsExpanded(true);
-      tl.play(0);
-    } else {
-      setIsHamburgerOpen(false);
-      tl.eventCallback("onReverseComplete", () => setIsExpanded(false));
-      tl.reverse();
-    }
-  };
+    collapseTlRef.current?.kill();
+    collapseTlRef.current = null;
+
+    isAnimatingRef.current = true;
+    isOpenRef.current = true;
+    setIsOpen(true);
+    clearTimelineCallbacks(tl);
+
+    tl.eventCallback("onComplete", () => {
+      isAnimatingRef.current = false;
+      clearTimelineCallbacks(tl);
+    });
+    tl.play(0);
+  }, [rebuildTimeline]);
+
+  const closeMenu = useCallback(() => {
+    if (!isOpenRef.current || isAnimatingRef.current) return;
+    const navEl = navRef.current;
+    const tl = tlRef.current;
+    if (!navEl || !tl) return;
+
+    isAnimatingRef.current = true;
+    isOpenRef.current = false;
+    setIsOpen(false);
+    clearTimelineCallbacks(tl);
+    tl.pause();
+    tl.progress(1);
+
+    collapseTlRef.current?.kill();
+    const cards = getCardElements();
+
+    collapseTlRef.current = gsap.timeline({
+      onComplete: () => {
+        isAnimatingRef.current = false;
+        applyClosedState(tl);
+        collapseTlRef.current = null;
+      },
+    });
+
+    collapseTlRef.current
+      .to(cards, { y: 30, opacity: 0, duration: 0.2, ease, stagger: 0.04 }, 0)
+      .to(navEl, { height: COLLAPSED_HEIGHT, duration: 0.35, ease }, 0.05);
+  }, [applyClosedState, ease]);
+
+  const toggleMenu = useCallback(() => {
+    if (isOpenRef.current) closeMenu();
+    else openMenu();
+  }, [closeMenu, openMenu]);
 
   const setCardRef = (i: number) => (el: HTMLDivElement | null) => {
     if (el) cardsRef.current[i] = el;
   };
 
   return (
-    <div className="card-nav-container fixed left-1/2 z-[100] top-4 w-[92%] max-w-[860px] -translate-x-1/2 md:top-6">
+    <div className="card-nav-container fixed left-1/2 z-[90] top-6 w-[92%] max-w-[860px] -translate-x-1/2">
       <nav
         ref={navRef}
-        className={`card-nav ${isExpanded ? "open" : ""} relative block h-[60px] overflow-hidden rounded-xl p-0 shadow-lg will-change-[height]`}
+        className={`card-nav ${isOpen ? "open" : ""} relative block overflow-hidden rounded-xl p-0 shadow-lg will-change-[height]`}
         style={{ backgroundColor: baseColor }}
       >
         <div className="card-nav-top absolute inset-x-0 top-0 z-[2] flex h-[60px] items-center justify-between p-2 pl-[1.1rem]">
           <button
             type="button"
-            className={`hamburger-menu group order-2 flex h-full cursor-pointer flex-col items-center justify-center gap-[6px] md:order-none ${isHamburgerOpen ? "open" : ""}`}
+            className={`hamburger-menu group order-2 flex h-full cursor-pointer flex-col items-center justify-center gap-[6px] md:order-none ${isOpen ? "open" : ""}`}
             onClick={toggleMenu}
-            aria-label={isExpanded ? "Close menu" : "Open menu"}
-            aria-expanded={isExpanded}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
             style={{ color: menuColor }}
           >
             <span
               className={`hamburger-line h-[2px] w-[30px] bg-current transition-[transform,opacity,margin] duration-300 ease-linear [transform-origin:50%_50%] ${
-                isHamburgerOpen ? "translate-y-[4px] rotate-45" : ""
+                isOpen ? "translate-y-[4px] rotate-45" : ""
               }`}
             />
             <span
               className={`hamburger-line h-[2px] w-[30px] bg-current transition-[transform,opacity,margin] duration-300 ease-linear [transform-origin:50%_50%] ${
-                isHamburgerOpen ? "-translate-y-[4px] -rotate-45" : ""
+                isOpen ? "-translate-y-[4px] -rotate-45" : ""
               }`}
             />
           </button>
@@ -208,10 +299,8 @@ function CardNav({
         </div>
 
         <div
-          className={`card-nav-content absolute top-[60px] right-0 bottom-0 left-0 z-[1] flex flex-col items-stretch justify-start gap-2 p-2 ${
-            isExpanded ? "visible pointer-events-auto" : "invisible pointer-events-none"
-          } md:flex-row md:items-end md:gap-3`}
-          aria-hidden={!isExpanded}
+          className="card-nav-content absolute top-[60px] right-0 bottom-0 left-0 z-[1] flex flex-col items-stretch justify-start gap-2 p-2 md:flex-row md:items-end md:gap-3"
+          aria-hidden={!isOpen}
         >
           {items.slice(0, 3).map((item, idx) => (
             <div
@@ -230,7 +319,7 @@ function CardNav({
                     aria-label={lnk.ariaLabel}
                     onClick={(event) => {
                       onLinkClick?.(lnk, event);
-                      if (isExpanded) toggleMenu();
+                      if (isOpenRef.current) closeMenu();
                     }}
                   >
                     <GoArrowUpRight className="shrink-0" aria-hidden="true" />
@@ -247,28 +336,43 @@ function CardNav({
 }
 
 function EigensuLogo({ isDark }: { isDark: boolean }) {
-  const accent = isDark ? "#00f0c3" : "#0d9488";
-  const text = isDark ? "#ffffff" : "#0f172a";
+  const text = isDark ? "#ffffff" : "#f59e0b";
 
   return (
-    <Link href="/" className=" flex items-center gap-2 text-sm tracking-wide no-underline" style={{ color: text }}>
-      <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-        <rect x="2" y="2" width="10" height="10" rx="2" fill={accent} />
-        <rect x="16" y="2" width="10" height="10" rx="2" fill={accent} fillOpacity="0.4" />
-        <rect x="2" y="16" width="10" height="10" rx="2" fill={accent} fillOpacity="0.4" />
-        <rect x="16" y="16" width="10" height="10" rx="2" fill={accent} fillOpacity="0.15" />
-      </svg>
-      eigensu.in
+    <Link href="/" className="flex items-center gap-2 text-sm tracking-wide no-underline" style={{ color: text }}>
+      eigensu
     </Link>
   );
 }
 
+function SunIcon({ color }: { color: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" fill={color} />
+      <path
+        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+        stroke={color}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function MoonIcon({ color }: { color: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M20 14.5A8.5 8.5 0 0 1 9.5 4 7 7 0 1 0 20 14.5Z"
+        fill={color}
+      />
+    </svg>
+  );
+}
+
 function ThemeToggle({
-  theme,
   setTheme,
   isDark,
-  menuColor,
-  linkHoverBg,
 }: {
   theme: Theme;
   setTheme?: (t: Theme) => void;
@@ -276,50 +380,50 @@ function ThemeToggle({
   menuColor: string;
   linkHoverBg: string;
 }) {
-  const activeClr = isDark ? "#ffffff" : "#0f172a";
-  const mutedClr = isDark ? "rgba(255,255,255,0.65)" : "rgba(15,23,42,0.6)";
+  const accent = isDark ? "#00c8b4" : "#f59e0b";
+  const track = isDark ? "rgba(255,255,255,0.10)" : "rgba(15,23,42,0.06)";
+  const border = isDark ? "rgba(255,255,255,0.14)" : "rgba(15,23,42,0.12)";
+  const knobBg = isDark ? "#0a1418" : "#fffaf0";
 
   return (
-    <div
-      className="font-body hidden items-center gap-1 rounded-lg border px-1 py-0.5 text-xs md:flex"
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isDark}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      disabled={!setTheme}
+      onClick={() => setTheme?.(isDark ? "light" : "dark")}
+      className="relative inline-flex h-7 w-[54px] shrink-0 items-center rounded-full border p-0.5 transition-colors duration-300"
       style={{
-        color: menuColor,
-        borderColor: isDark ? "rgba(255,255,255,0.14)" : "rgba(15,23,42,0.12)",
+        borderColor: border,
+        background: track,
+        cursor: setTheme ? "pointer" : "default",
       }}
     >
-      <button
-        type="button"
-        onClick={() => setTheme?.("light")}
-        className="rounded px-2 py-1 transition"
+      <span className="pointer-events-none absolute left-1 top-1/2 -translate-y-1/2 opacity-70">
+        <SunIcon color={isDark ? "rgba(255,255,255,0.35)" : accent} />
+      </span>
+      <span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 opacity-70">
+        <MoonIcon color={isDark ? accent : "rgba(15,23,42,0.35)"} />
+      </span>
+      <span
+        className="absolute top-0.5 left-0.5 flex h-6 w-6 items-center justify-center rounded-full transition-transform duration-300 ease-out"
         style={{
-          background: theme === "light" ? linkHoverBg : "transparent",
-          color: theme === "light" ? activeClr : mutedClr,
-          cursor: setTheme ? "pointer" : "default",
+          transform: isDark ? "translateX(26px)" : "translateX(0)",
+          background: knobBg,
+          boxShadow: isDark ? "0 0 10px rgba(0,200,180,0.35)" : "0 0 10px rgba(245,158,11,0.35)",
         }}
       >
-        Light
-      </button>
-      <span style={{ opacity: 0.35 }}>|</span>
-      <button
-        type="button"
-        onClick={() => setTheme?.("dark")}
-        className="rounded px-2 py-1 transition"
-        style={{
-          background: theme === "dark" ? linkHoverBg : "transparent",
-          color: theme === "dark" ? activeClr : mutedClr,
-          cursor: setTheme ? "pointer" : "default",
-        }}
-      >
-        Dark
-      </button>
-    </div>
+        {isDark ? <MoonIcon color={accent} /> : <SunIcon color={accent} />}
+      </span>
+    </button>
   );
 }
 
 function buildNavItems(isDark: boolean): CardNavItem[] {
-  const cardA = isDark ? "rgba(0,200,180,0.14)" : "rgba(251,191,36,0.16)";
-  const cardB = isDark ? "rgba(0,153,204,0.14)" : "rgba(245,158,11,0.14)";
-  const cardC = isDark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.05)";
+  const cardA = isDark ? "#0f2e2a" : "#fef3c7";
+  const cardB = isDark ? "#122a38" : "#ffedd5";
+  const cardC = isDark ? "#1a2230" : "#f1f5f9";
   const text = isDark ? "#f8fafc" : "#0f172a";
 
   return [
@@ -329,7 +433,6 @@ function buildNavItems(isDark: boolean): CardNavItem[] {
       textColor: text,
       links: [
         { label: "Home", href: "/", ariaLabel: "Go to home" },
-        // { label: "Solutions", href: "/solutions", ariaLabel: "View solutions" },
         { label: "Process", href: "/process", ariaLabel: "Our process" },
       ],
     },
@@ -393,21 +496,7 @@ export default function Navigation({
         }
       }}
       topActions={
-        <>
-          <ThemeToggle theme={theme} setTheme={setTheme} isDark={isDark} menuColor={menuColor} linkHoverBg={linkHoverBg} />
-          <button
-            type="button"
-            className="font-body rounded-lg border px-3 py-1.5 text-xs font-medium md:hidden"
-            style={{
-              color: menuColor,
-              borderColor: isDark ? "rgba(255,255,255,0.14)" : "rgba(15,23,42,0.12)",
-              background: linkHoverBg,
-            }}
-            onClick={() => setTheme?.(isDark ? "light" : "dark")}
-          >
-            {isDark ? "Light" : "Dark"}
-          </button>
-        </>
+        <ThemeToggle theme={theme} setTheme={setTheme} isDark={isDark} menuColor={menuColor} linkHoverBg={linkHoverBg} />
       }
     />
   );
