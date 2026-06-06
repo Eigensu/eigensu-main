@@ -455,7 +455,6 @@ function buildNavItems(isDark: boolean): CardNavItem[] {
         { label: "About", href: "/about", ariaLabel: "About eigensu" },
         { label: "Careers", href: "/careers", ariaLabel: "Careers at eigensu" },
         { label: "Blog", href: "/blog", ariaLabel: "View blog" },
-        { label: "Contact", href: "#", ariaLabel: "Contact eigensu" },
       ],
     },
   ];
