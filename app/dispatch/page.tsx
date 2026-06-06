@@ -302,7 +302,7 @@ export default function DispatchPage() {
         <div
           ref={heroRef}
           className="w-full rounded-[24px] p-8 md:p-12 relative overflow-hidden"
-          style={{ background: heroBg }}
+          // style={{ background: heroBg }}
         >
           {/* Eyebrow */}
           <div
@@ -350,7 +350,9 @@ export default function DispatchPage() {
             style={{ opacity: heroOn ? 1 : 0, transition: "opacity 0.9s ease 0.3s" }}
           >
             <button
-              className="px-6 py-3 rounded-xl text-[14px] flex items-center gap-2 border transition-colors duration-200"
+              type="button"
+              onClick={() => setDemoOpen(true)}
+              className="px-6 py-3 rounded-xl text-[14px] flex items-center gap-2 border transition-colors duration-200 hover:border-white/40"
               style={{
                 background: "transparent",
                 color: "rgba(255,255,255,0.75)",
@@ -497,6 +499,8 @@ export default function DispatchPage() {
 
         </div>
       </section>
+
+      <DemoSlideshow open={demoOpen} onClose={() => setDemoOpen(false)} />
     </div>
   );
 }
