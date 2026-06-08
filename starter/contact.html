@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eigensu — Contact</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="logo"><span class="dot"></span>EIGENSU</a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="onboard.html" class="btn btn--primary btn--sm">Start a Project</a>
+      <button class="nav__burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a><a href="services.html">Services</a><a href="projects.html">Projects</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  <a href="onboard.html" class="btn btn--primary">Start a Project</a>
+</div>
+
+<!-- PAGE HEAD -->
+<section class="page-head">
+  <div class="glow"></div>
+  <div class="wrap">
+    <span class="eyebrow">Contact // let's talk</span>
+    <h1 class="h-xl" style="max-width:14ch;">Start a <span class="accent-word">conversation</span>.</h1>
+    <p class="lead">Whether it's a quick question or a full project, we read everything that comes in.</p>
+  </div>
+</section>
+
+<!-- CONTACT GRID -->
+<section class="section--tight">
+  <div class="wrap">
+    <div class="grid-2" style="gap:56px;align-items:start;">
+      <!-- info -->
+      <div class="reveal">
+        <div class="avail" style="margin-bottom:34px;"><span class="pulse"></span>Currently accepting new projects</div>
+        <div class="contact-info">
+          <div class="info-item">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg></div>
+            <div><div class="k">Email</div><div class="v">hello@eigensu.in</div></div>
+          </div>
+          <div class="info-item">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 9h.01M7 13h5"/></svg></div>
+            <div><div class="k">LinkedIn</div><div class="v">/company/eigensu</div></div>
+          </div>
+          <div class="info-item">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+            <div><div class="k">Location</div><div class="v">Mumbai, Maharashtra, India</div></div>
+          </div>
+          <div class="info-item">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <div><div class="k">Response time</div><div class="v">Within 24 hours, on business days</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- form -->
+      <div class="card reveal" data-contact-form style="padding:32px;">
+        <div class="field-row">
+          <div class="field"><label>Name</label><input class="input" type="text" placeholder="Jane Doe"></div>
+          <div class="field"><label>Company</label><input class="input" type="text" placeholder="Acme Inc."></div>
+        </div>
+        <div class="field"><label>Email</label><input class="input" type="email" placeholder="jane@acme.com"></div>
+        <div class="field"><label>What do you need?</label><textarea class="textarea" placeholder="Tell us about the process or product you have in mind..."></textarea></div>
+        <button class="btn btn--primary" data-send style="width:100%;justify-content:center;">Send message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand"><a href="index.html" class="logo"><span class="dot"></span>EIGENSU</a><p>Tailored systems and products for internal management and operations optimisation.</p></div>
+      <div class="footer__col"><h5>Solutions</h5><a href="services.html">Operations Automation</a><a href="services.html">Internal Tooling</a><a href="services.html">Systems Integration</a></div>
+      <div class="footer__col"><h5>Company</h5><a href="about.html">About</a><a href="projects.html">Projects</a><a href="contact.html">Contact</a></div>
+      <div class="footer__col"><h5>Connect</h5><a href="#">LinkedIn</a><a href="#">X / Twitter</a><a href="#">GitHub</a></div>
+    </div>
+    <div class="footer__bottom"><p>© 2025 Eigensu. All rights reserved.</p><span class="status"><span class="pulse"></span>All systems operational</span></div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

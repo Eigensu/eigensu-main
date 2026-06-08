@@ -1,134 +1,189 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  /* Fixed nav: top-4 + 60px bar + breathing room */
-  --nav-top: 1.5rem;
-  --nav-height: 60px;
-  --nav-gap: 0.75rem;
-  --page-offset-top: calc(var(--nav-top) + var(--nav-height) + var(--nav-gap));
-  /* Center of the gap between viewport top and the nav bar */
-  --celestial-top: calc(var(--nav-top) / 2);
-  /* Space for fixed nav + sun/moon rays before hero copy */
-  --hero-content-top: calc(var(--page-offset-top) + 3.5rem);
+  /* Surfaces */
+  --bg:            #000000;
+  --bg-elev:       #08090b;
+  --bg-elev-2:     #0e1014;
+  --bg-elev-3:     #14171c;
+
+  /* Lines */
+  --border:        rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Text */
+  --text:          #f3f4f6;
+  --text-muted:    #8b919c;
+  --text-dim:      #565c66;
+
+  /* Accent palette — electric blue primary + 4 functional accents */
+  --accent:        #3b82f6;
+  --accent-2:      #38e8b0;
+  --accent-3:      #ffb224;
+  --accent-4:      #a78bfa;
+  --accent-5:      #ff6b6b;
+  --accent-soft:   rgba(59, 130, 246, 0.12);
+  --accent-line:   rgba(59, 130, 246, 0.35);
+
+  /* Nav layout */
+  --nav-top:            1.5rem;
+  --nav-height:         60px;
+  --nav-gap:            0.75rem;
+  --page-offset-top:    calc(var(--nav-top) + var(--nav-height) + var(--nav-gap));
+  --celestial-top:      calc(var(--nav-top) / 2);
+  --hero-content-top:   calc(var(--page-offset-top) + 3.5rem);
+
+  /* Radius */
+  --radius:    14px;
+  --radius-sm: 9px;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (min-width: 768px) {
   :root {
-    --nav-top: 1.5rem; /* matches md:top-6 */
     --hero-content-top: calc(var(--page-offset-top) + 4rem);
   }
 }
 
-/* Pages / sections without ThemeHero */
 .page-offset-top {
   padding-top: var(--page-offset-top);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-lora), Georgia, "Times New Roman", serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: var(--font-body), "Hanken Grotesk", sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), "Hanken Grotesk", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.1px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-bebas), "Arial Narrow", sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.02em;
+/* Faint graph-paper grid behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse 100% 70% at 50% 0%, #000 30%, transparent 80%);
 }
 
-/* Bebas only has one weight — don't let Tailwind utilities fake bold titles */
-h1.font-semibold,
-h1.font-bold,
-h1.font-medium,
-h2.font-semibold,
-h2.font-bold,
-h2.font-medium,
-h3.font-semibold,
-h3.font-bold,
-h3.font-medium,
-h4.font-semibold,
-h4.font-bold,
-h4.font-medium,
-h5.font-semibold,
-h5.font-bold,
-h5.font-medium,
-h6.font-semibold,
-h6.font-bold,
-h6.font-medium {
-  font-weight: 400;
+/* Subtle vignette */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 120% 80% at 50% -10%, transparent 55%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-head), "Sora", sans-serif;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }
 
 .font-heading {
-  font-family: var(--font-bebas), "Arial Narrow", sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.02em;
+  font-family: var(--font-head), "Sora", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .font-body {
-  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+  font-family: var(--font-body), "Hanken Grotesk", sans-serif;
 }
 
-/* Form / UI labels that use heading tags but should stay in Lora */
-h3.font-body,
-h4.font-body {
-  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+.font-mono {
+  font-family: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
 }
 
-button,
-input,
-textarea,
-select {
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+ul { list-style: none; }
+
+input, textarea, select {
   font-family: inherit;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-/* Make input/textarea placeholders visible across themes */
-input::placeholder,
-textarea::placeholder,
-select::placeholder {
-  color: inherit;
-  opacity: 0.6;
-}
-
-/* Improve focus visibility for form controls */
-input:focus,
-textarea:focus,
-select:focus,
-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08);
-}
-
-/* Improve form responsiveness: prevent flex overflow and limit horizontal resizing */
-input,
-textarea,
-select {
   min-width: 0;
   resize: vertical;
 }
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-dim);
+  opacity: 1;
+}
+
+input:focus, textarea:focus, select:focus, button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* ── Responsive Layout Utilities ──────────────────────────────────────────── */
+
+/* Page-width container */
+.pg   { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+.pg-n { width: 100%; max-width:  780px; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+
+/* Section vertical rhythm */
+.sp    { padding-block: clamp(3.5rem, 8vw, 6rem); position: relative; z-index: 1; }
+.sp-sm { padding-block: clamp(2rem, 5vw, 4rem);   position: relative; z-index: 1; }
+
+/* Horizontal rule between sections */
+.sd { border-top: 1px solid rgba(255,255,255,0.06); }
+
+/* Hero 2-col: single column on mobile, 1.05/0.95 split at ≥900px */
+.g2-hero { display: grid; gap: clamp(2rem, 5vw, 3.5rem); grid-template-columns: 1fr; }
+@media (min-width: 900px) { .g2-hero { grid-template-columns: 1.05fr 0.95fr; align-items: center; } }
+
+/* Equal 2-col: stacks below 700px */
+.g2 { display: grid; gap: clamp(1.5rem, 4vw, 3.5rem); grid-template-columns: 1fr; }
+@media (min-width: 700px) { .g2 { grid-template-columns: 1fr 1fr; align-items: start; } }
+.g2-center { display: grid; gap: clamp(1.5rem, 4vw, 3.5rem); grid-template-columns: 1fr; }
+@media (min-width: 700px) { .g2-center { grid-template-columns: 1fr 1fr; align-items: center; } }
+
+/* 3-col: 1 → 2 → 3 */
+.g3 { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 560px) { .g3 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 960px) { .g3 { grid-template-columns: repeat(3, 1fr); } }
+
+/* 4-col: 2 → 4 */
+.g4 { display: grid; gap: 1.25rem; grid-template-columns: 1fr 1fr; }
+@media (min-width: 1024px) { .g4 { grid-template-columns: repeat(4, 1fr); } }
+
+/* 5-col logo grid */
+.g5 { display: grid; gap: 0.75rem; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 480px) { .g5 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 900px) { .g5 { grid-template-columns: repeat(5, 1fr); } }
+
+/* 2-col inline form pairs */
+.gform { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 540px) { .gform { grid-template-columns: 1fr 1fr; } }
+
+/* Stats grid: 2 at sm, 4 at lg — inline borders handled per-item but layout is responsive */
+.g-stats { display: grid; grid-template-columns: 1fr 1fr; }
+@media (min-width: 1024px) { .g-stats { grid-template-columns: repeat(4, 1fr); } }
+
+/* Utility: preserve z-index stacking in sections */
+.rel { position: relative; z-index: 1; }

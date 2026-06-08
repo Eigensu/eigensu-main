@@ -1,209 +1,328 @@
-﻿"use client";
+"use client";
 
-import { useModal, useTheme } from "./components/PageShell";
-import { HeroBadge, ThemeHeroSection } from "./components/ThemeHero";
-import { getThemeTokens } from "./lib/themeTokens";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { useModal } from "./components/PageShell";
+import { ThemeHeroSection } from "./components/ThemeHero";
 
-type Theme = "dark" | "light";
+const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
+const HEAD = "var(--font-head), 'Sora', sans-serif";
+const BODY = "var(--font-body), 'Hanken Grotesk', sans-serif";
 
-function DashboardPreview({ theme }: { theme: Theme }) {
-  const isDark = theme === "dark";
-  const bg = isDark ? "rgba(14,20,28,0.88)" : "rgba(255,252,245,0.94)";
-  const border = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
-  const shadow = isDark
-    ? "0 8px 80px rgba(0,200,180,.10),0 2px 32px rgba(0,0,0,.6)"
-    : "0 8px 80px rgba(251,191,36,.18),0 2px 32px rgba(0,0,0,.10)";
-  const cardBg = isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)";
-  const cardBdr = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)";
-  const rowBg = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
-  const txt = isDark ? "#ffffff" : "#0f172a";
-  const muted = isDark ? "rgba(255,255,255,0.38)" : "rgba(15,23,42,0.45)";
-  const activeRow = isDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.07)";
-  const barFrom = isDark ? "#00c8b4" : "#f59e0b";
-  const barTo = isDark ? "#0099cc" : "#fbbf24";
-  const filterCls = isDark
-    ? { bg: "rgba(0,200,180,0.15)", color: "#2dd4bf", border: "rgba(0,200,180,0.35)" }
-    : { bg: "rgba(251,191,36,0.18)", color: "#b45309", border: "rgba(251,191,36,0.45)" };
-  const avatarGrad = isDark
-    ? "linear-gradient(135deg,#00c8b4,#0099cc)"
-    : "linear-gradient(135deg,#fbbf24,#f59e0b)";
+/* ── Eyebrow ─────────────────────────────────────────────────────────────── */
 
+function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="relative mx-auto mt-16 w-full max-w-4xl overflow-hidden rounded-2xl"
-      style={{
-        background: bg,
-        border: `1px solid ${border}`,
-        boxShadow: shadow,
-        backdropFilter: "blur(16px)",
-        zIndex: 10,
-        transform: "perspective(900px) rotateX(4deg)",
-        transition: "background 0.5s,box-shadow 0.5s",
-      }}
-    >
-      <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: `1px solid ${cardBdr}` }}>
-        <div className="flex gap-2">
-          <span className="h-3 w-3 rounded-full bg-red-400/70" />
-          <span className="h-3 w-3 rounded-full bg-yellow-400/70" />
-          <span className="h-3 w-3 rounded-full bg-green-400/70" />
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color: "#3b82f6", marginBottom: 18 }}>
+      <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#3b82f6", boxShadow: "0 0 10px #3b82f6", flexShrink: 0 }} />
+      {children}
+    </div>
+  );
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+function BtnPrimary({ href, onClick, children }: { href?: string; onClick?: () => void; children: React.ReactNode }) {
+  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "#3b82f6", color: "#00112e", boxShadow: "0 0 0 1px rgba(59,130,246,0.35), 0 8px 28px -8px #3b82f6", textDecoration: "none", whiteSpace: "nowrap" as const };
+  if (href) return <Link href={href} style={s}>{children}</Link>;
+  return <button type="button" onClick={onClick} style={s}>{children}</button>;
+}
+
+function BtnGhost({ href, onClick, children }: { href?: string; onClick?: () => void; children: React.ReactNode }) {
+  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "#f3f4f6", border: "1px solid rgba(255,255,255,0.16)", textDecoration: "none", whiteSpace: "nowrap" as const };
+  if (href) return <Link href={href} style={s}>{children}</Link>;
+  return <button type="button" onClick={onClick} style={s}>{children}</button>;
+}
+
+/* ── useReveal ───────────────────────────────────────────────────────────── */
+
+function useReveal(threshold = 0.1) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setOn(true); obs.disconnect(); } }, { threshold });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return { ref, on };
+}
+
+/* ── Ops Console ─────────────────────────────────────────────────────────── */
+
+function OpsConsole() {
+  const [tick, setTick] = useState(true);
+  useEffect(() => { const id = setInterval(() => setTick(t => !t), 850); return () => clearInterval(id); }, []);
+  const BARS = [42, 61, 38, 78, 55, 90, 47, 68, 83, 59, 72, 95];
+  return (
+    <div style={{ background: "linear-gradient(180deg,#0e1014,#08090b)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 14, overflow: "hidden", boxShadow: "0 32px 64px -24px rgba(0,0,0,0.8)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "13px 16px", borderBottom: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.015)" }}>
+        <div style={{ display: "flex", gap: 7 }}>
+          {["#ff6b6b","#ffb224","#38e8b0"].map(c => <i key={c} style={{ width: 11, height: 11, borderRadius: "50%", display: "block", background: c }} />)}
         </div>
-        <div className="flex items-center gap-2 rounded-lg px-3 py-1.5" style={{ background: rowBg }}>
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" style={{ color: muted }}>
-            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-            <path d="M20 20l-3-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-          <span className="font-mono text-xs" style={{ color: muted }}>
-            Search anything...
-          </span>
-          <span className="ml-6 font-mono text-xs" style={{ color: muted, opacity: 0.5 }}>
-            ⌘K
-          </span>
-        </div>
-        <div
-          className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold text-white"
-          style={{ background: avatarGrad }}
-        >
-          E
-        </div>
+        <span style={{ fontFamily: MONO, fontSize: "0.72rem", color: "#8b919c" }}>ops_console — live</span>
       </div>
-      <div className="flex">
-        <div className="hidden w-44 shrink-0 px-3 py-4 md:block" style={{ borderRight: `1px solid ${cardBdr}` }}>
-          {["Insights", "Company", "Transactions", "Cards", "Accounting"].map((label, i) => (
-            <div
-              key={label}
-              className="mb-1 rounded-lg px-3 py-2 text-sm"
-              style={{
-                background: i === 0 ? activeRow : "transparent",
-                color: i === 0 ? txt : muted,
-                fontWeight: i === 0 ? 500 : 400,
-              }}
-            >
-              {label}
-            </div>
-          ))}
+      <div style={{ padding: 18 }}>
+        {[
+          { label: "invoice_sync",     tag: "active",  tc: "#38e8b0", tb: "rgba(56,232,176,0.1)",  tbd: "rgba(56,232,176,0.25)" },
+          { label: "inventory_recon",  tag: "running", tc: "#3b82f6", tb: "rgba(59,130,246,0.12)", tbd: "rgba(59,130,246,0.35)" },
+          { label: "approval_routing", tag: "queued",  tc: "#ffb224", tb: "rgba(255,178,36,0.1)",  tbd: "rgba(255,178,36,0.25)" },
+        ].map(row => (
+          <div key={row.label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, marginBottom: 8, background: "rgba(255,255,255,0.012)" }}>
+            <span style={{ fontFamily: MONO, fontSize: "0.76rem", color: "#8b919c" }}>{row.label}</span>
+            <span style={{ fontFamily: MONO, fontSize: "0.64rem", letterSpacing: "0.5px", padding: "3px 8px", borderRadius: 100, textTransform: "uppercase", color: row.tc, background: row.tb, border: `1px solid ${row.tbd}` }}>{row.tag}</span>
+          </div>
+        ))}
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 72, padding: "12px 12px 6px", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, marginTop: 4 }}>
+          {BARS.map((h, i) => <div key={i} style={{ flex: 1, background: "linear-gradient(180deg,#3b82f6,rgba(59,130,246,0.2))", borderRadius: "3px 3px 0 0", height: `${h}%` }} />)}
         </div>
-        <div className="flex-1 p-4">
-          <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-            {[
-              { label: "Inference calls today", value: "₹1,036", cents: ".62", badge: "+21%", bc: "text-green-500 bg-green-500/15" },
-              { label: "Avg latency (ms)", value: "244", cents: ".8", badge: "-0.7%", bc: "text-red-500 bg-red-500/15" },
-              { label: "Potential savings", value: "₹1,870", cents: ".00", badge: null, bc: "" },
-              { label: "Monthly spend", value: "72%", cents: "", badge: "↑", bc: "text-orange-500 bg-orange-500/15" },
-            ].map((c, i) => {
-              const progressWidths = ["55.4%", "47.2%", "70.1%", "49.0%"];
-              return (
-                <div key={c.label} className="rounded-xl p-3" style={{ background: cardBg, border: `1px solid ${cardBdr}` }}>
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs" style={{ color: muted }}>
-                      {c.label}
-                    </span>
-                    {c.badge && <span className={`rounded-md px-1.5 py-0.5 text-xs font-medium ${c.bc}`}>{c.badge}</span>}
-                  </div>
-                  <div className="flex items-baseline gap-0.5">
-                    <span className="text-lg font-semibold" style={{ color: txt }}>
-                      {c.value}
-                    </span>
-                    <span className="text-xs" style={{ color: muted }}>
-                      {c.cents}
-                    </span>
-                  </div>
-                  <div
-                    className="mt-2 h-1 overflow-hidden rounded-full"
-                    style={{ background: isDark ? "rgba(255,255,255,.05)" : "rgba(0,0,0,.06)" }}
-                  >
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: progressWidths[i],
-                        backgroundImage: `linear-gradient(to right,${barFrom},${barTo})`,
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="mt-2 flex items-center gap-3">
-            {["Last 4 weeks", "Jun 8 – Jul 5"].map((t) => (
-              <div key={t} className="rounded-lg px-3 py-1.5 text-xs" style={{ background: cardBg, color: muted }}>
-                {t}
-              </div>
-            ))}
-            <div className="ml-auto flex items-center gap-2">
-              {["Daily", "Weekly"].map((t) => (
-                <span key={t} className="cursor-pointer rounded-md px-2 py-1 text-xs" style={{ color: muted }}>
-                  {t}
-                </span>
-              ))}
-              <span
-                className="cursor-pointer rounded-md border px-2 py-1 text-xs font-medium"
-                style={{
-                  background: filterCls.bg,
-                  color: filterCls.color,
-                  borderColor: filterCls.border,
-                }}
-              >
-                Filter
-              </span>
-            </div>
-          </div>
+        <div style={{ fontFamily: MONO, fontSize: "0.74rem", color: "#8b919c", marginTop: 10, padding: "9px 12px", borderRadius: 8, background: "#000", border: "1px solid rgba(255,255,255,0.07)" }}>
+          <span style={{ color: "#38e8b0" }}>eigensu ▸</span>
+          {" deploy --pipeline ops.core"}
+          <span style={{ display: "inline-block", width: 7, height: 13, background: "#3b82f6", marginLeft: 2, verticalAlign: "middle", opacity: tick ? 0.9 : 0, transition: "opacity .1s" }} />
         </div>
       </div>
     </div>
   );
 }
 
-export default function HeroSection() {
-  const { theme } = useTheme();
-  const { openModal } = useModal();
-  const tokens = getThemeTokens(theme);
-  const isDark = tokens.isDark;
+/* ── Ticker ──────────────────────────────────────────────────────────────── */
 
-  const secBg = isDark ? "rgba(255,255,255,.06)" : "rgba(0,0,0,.05)";
-  const secBdr = isDark ? "rgba(255,255,255,.15)" : "rgba(0,0,0,.12)";
-  const secTxt = isDark ? "rgba(255,255,255,.80)" : "rgba(15,23,42,.70)";
+const TICKER_ITEMS = ["NORTHWIND LOGISTICS","VERTEX MANUFACTURING","HELIOS RETAIL","ATLAS FINANCE","MERIDIAN HEALTH","QUANTA LABS"];
+
+function Ticker() {
+  const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  return (
+    <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", borderBottom: "1px solid rgba(255,255,255,0.08)", overflow: "hidden", padding: "20px 0", background: "rgba(0,0,0,0.4)", position: "relative", zIndex: 1 }}>
+      <div style={{ display: "flex", gap: 56, width: "max-content", animation: "tickerScroll 28s linear infinite" }}>
+        {items.map((item, i) => (
+          <span key={i} style={{ fontFamily: MONO, fontSize: "0.82rem", color: "#8b919c", letterSpacing: "1px", whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: 10 }}>
+            <span style={{ color: "#3b82f6", fontSize: "0.6rem" }}>◆</span>
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Services Teaser ─────────────────────────────────────────────────────── */
+
+const SERVICES = [
+  { idx: "01", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "#3b82f6" }}><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>, title: "Operations Automation", body: "Replace spreadsheets and manual workflows with pipelines that trigger, route and reconcile on their own." },
+  { idx: "02", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "#3b82f6" }}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>, title: "Internal Tooling", body: "Custom dashboards, admin panels and internal apps that fit your process instead of forcing you into a template." },
+  { idx: "03", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "#3b82f6" }}><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6"/></svg>, title: "Systems Integration", body: "Connect the tools you already pay for so data flows once, cleanly, without a human in the middle." },
+];
+
+function ServiceCard({ s }: { s: typeof SERVICES[0] }) {
+  const { ref, on } = useReveal();
+  return (
+    <article ref={ref} style={{ background: "#08090b", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "26px 24px", position: "relative", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .6s, transform .6s" }}>
+      <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: "#565c66" }}>{s.idx}</span>
+      <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.02)", marginBottom: 18 }}>
+        {s.icon}
+      </div>
+      <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginBottom: 10, color: "#f3f4f6" }}>{s.title}</h3>
+      <p style={{ color: "#8b919c", fontSize: "0.9rem", lineHeight: 1.65 }}>{s.body}</p>
+      <Link href="/services" style={{ fontFamily: MONO, fontSize: "0.74rem", letterSpacing: "0.5px", color: "#3b82f6", marginTop: 16, display: "inline-flex", gap: 6, alignItems: "center" }}>Explore →</Link>
+    </article>
+  );
+}
+
+/* ── Stats strip ─────────────────────────────────────────────────────────── */
+
+const STATS = [
+  { num: "12", unit: "+",  lbl: "Projects delivered" },
+  { num: "100", unit: "%", lbl: "Client retention" },
+  { num: "3",   unit: "×", lbl: "Avg. process speed-up" },
+  { num: "04",  unit: "yr",lbl: "Track record" },
+];
+
+function StatsStrip() {
+  const { ref, on } = useReveal();
+  return (
+    <div ref={ref} style={{ border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, background: "linear-gradient(180deg,#0e1014,#08090b)", overflow: "hidden", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+      <div className="g-stats">
+        {STATS.map((s, i) => (
+          <div key={s.lbl} style={{ padding: "clamp(24px,4vw,40px) clamp(18px,3vw,28px)", borderRight: i % 2 === 0 ? "1px solid rgba(255,255,255,0.08)" : "none", borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
+            <div style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.8rem,3.5vw,2.8rem)", letterSpacing: "-0.03em", color: "#f3f4f6" }}>
+              {s.num}<span style={{ color: "#3b82f6" }}>{s.unit}</span>
+            </div>
+            <div style={{ fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "1px", textTransform: "uppercase", color: "#8b919c", marginTop: 6 }}>{s.lbl}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Carousel ────────────────────────────────────────────────────────────── */
+
+const SLIDES = [
+  { tag: "Logistics",    title: "Dispatch automation",      body: "Replaced a 6-person routing desk with a self-balancing engine handling 2,000+ orders/day.", client: "NORTHWIND", outcome: "−71% manual hrs" },
+  { tag: "Manufacturing",title: "Inventory reconciliation", body: "Real-time stock sync across 4 plants and 3 ERPs, killing the monthly variance scramble.", client: "VERTEX",    outcome: "99.4% accuracy" },
+  { tag: "Finance",      title: "Approval routing",         body: "Policy-aware flows that route, escalate and audit themselves — cycle cut from days to 40min.", client: "ATLAS",     outcome: "8h → 40m" },
+  { tag: "Retail",       title: "Ops command centre",       body: "One console unifying 9 in-store systems into a single live operational view.", client: "HELIOS",    outcome: "9 tools → 1" },
+  { tag: "Healthcare",   title: "Intake digitisation",      body: "Paper intake replaced with a validated workflow feeding straight into the records system.", client: "MERIDIAN",  outcome: "−92% errors" },
+];
+
+function Carousel() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const { ref, on } = useReveal(0.08);
+
+  const slideWidth = () => (trackRef.current?.children[0] as HTMLElement)?.offsetWidth + 20 || 360;
+  const goTo = (i: number) => trackRef.current?.scrollTo({ left: i * slideWidth(), behavior: "smooth" });
+  const onScroll = () => setActiveIdx(Math.round((trackRef.current?.scrollLeft || 0) / slideWidth()));
 
   return (
-    <ThemeHeroSection fullScreen align="center" contentClassName="pb-0 mt-14">
-      <HeroBadge className="mb-8">Building the future of enterprise IT</HeroBadge>
-
-      <h1
-        className="hero-anim-3 mb-6 text-4xl leading-tight tracking-tight md:text-6xl lg:text-7xl"
-        style={{ letterSpacing: "0.02em", color: tokens.heading }}
-      >
-        <span>Enterprise-grade IT,</span>
-        <br />
-        <span>delivered without friction.</span>
-      </h1>
-
-      <p className="hero-anim-4 mb-10 max-w-xl text-base leading-relaxed md:text-lg" style={{ color: tokens.body }}>
-        From cloud and security to managed services—Eigensu keeps your stack fast, safe, and scalable.
-      </p>
-
-      <div className="hero-anim-4 mb-4 flex flex-col items-center gap-3 sm:flex-row">
-        <button
-          className="btn-pri rounded-lg px-8 py-3.5 text-base font-semibold text-white transition-all duration-200"
-          style={{ background: tokens.priGrad, boxShadow: tokens.priShadow }}
-        >
-          Get started
-        </button>
-        <button
-          className="btn-sec rounded-lg px-8 py-3.5 text-base font-medium transition-all duration-200"
-          style={{ background: secBg, border: `1px solid ${secBdr}`, color: secTxt }}
-          onClick={openModal}
-        >
-          Book a demo
-        </button>
+    <div ref={ref} style={{ opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+      <div ref={trackRef} onScroll={onScroll} style={{ display: "flex", gap: 16, overflowX: "auto", scrollSnapType: "x mandatory", padding: "4px 2px 16px", scrollbarWidth: "none" }}>
+        {SLIDES.map(slide => (
+          <article key={slide.client} style={{ scrollSnapAlign: "start", flex: "0 0 clamp(280px, 30%, 360px)", background: "#08090b", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "24px 22px" }}>
+            <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1px", textTransform: "uppercase", color: "#a78bfa", padding: "3px 9px", border: "1px solid rgba(167,139,250,0.3)", borderRadius: 100, display: "inline-block" }}>{slide.tag}</span>
+            <h4 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", margin: "16px 0 10px", color: "#f3f4f6" }}>{slide.title}</h4>
+            <p style={{ color: "#8b919c", fontSize: "0.88rem", lineHeight: 1.65 }}>{slide.body}</p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 20, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.07)", fontFamily: MONO, fontSize: "0.72rem" }}>
+              <span style={{ color: "#565c66" }}>{slide.client}</span>
+              <span style={{ color: "#38e8b0" }}>{slide.outcome}</span>
+            </div>
+          </article>
+        ))}
       </div>
-
-      <div className="hero-anim-5 w-full max-w-5xl px-4">
-        <DashboardPreview theme={theme} />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
+        <div style={{ display: "flex", gap: 7 }}>
+          {SLIDES.map((_, i) => <button key={i} onClick={() => goTo(i)} style={{ width: i === activeIdx ? 22 : 7, height: 7, borderRadius: 4, background: i === activeIdx ? "#3b82f6" : "rgba(255,255,255,0.14)", border: "none", cursor: "pointer", transition: "all .25s", padding: 0 }} />)}
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          {[{ l: "←", d: -1 }, { l: "→", d: 1 }].map(({ l, d }) => (
+            <button key={l} onClick={() => goTo(activeIdx + d)} style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.14)", display: "grid", placeItems: "center", background: "none", color: "#f3f4f6", cursor: "pointer" }}>{l}</button>
+          ))}
+        </div>
       </div>
+    </div>
+  );
+}
+
+/* ── CTA block ───────────────────────────────────────────────────────────── */
+
+function CtaBlock({ heading, sub, primary, primaryHref, ghost, ghostFn }: { heading: string; sub: string; primary: string; primaryHref: string; ghost: string; ghostFn?: () => void }) {
+  const { ref, on } = useReveal();
+  return (
+    <div ref={ref} style={{ position: "relative", textAlign: "center", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "#08090b", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+      <div style={{ position: "absolute", width: 400, height: 280, background: "#3b82f6", filter: "blur(100px)", opacity: 0.18, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <Eyebrow>Get started</Eyebrow>
+        <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "#f3f4f6", maxWidth: "22ch", margin: "0 auto 16px" }}>{heading}</h2>
+        <p style={{ color: "#8b919c", fontSize: "clamp(0.9rem,1.3vw,1rem)", maxWidth: "50ch", margin: "0 auto 28px", lineHeight: 1.7 }}>{sub}</p>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <BtnPrimary href={primaryHref}>{primary}</BtnPrimary>
+          <BtnGhost onClick={ghostFn} href={ghostFn ? undefined : "/contact"}>{ghost}</BtnGhost>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Page ────────────────────────────────────────────────────────────────── */
+
+export default function HomePage() {
+  const { openModal } = useModal();
+
+  return (
+    <div>
+      {/* ── Hero ── */}
+      <ThemeHeroSection fullScreen contentClassName="pb-8">
+        <div className="grid w-full gap-8 min-[900px]:grid-cols-[1.05fr_0.95fr] min-[900px]:items-center">
+          {/* Left */}
+          <div>
+            <div className="hero-anim-2" style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase", color: "#3b82f6", marginBottom: 20 }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#3b82f6", boxShadow: "0 0 10px #3b82f6" }} />
+              Internal systems
+            </div>
+            <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "#f3f4f6", margin: "0 0 20px" }}>
+              Internal systems that{" "}
+              <span style={{ color: "#3b82f6" }}>run themselves</span>.
+            </h1>
+            <p className="hero-anim-4" style={{ color: "#8b919c", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", marginBottom: 32, lineHeight: 1.7 }}>
+              Eigensu builds tailored software that streamlines internal management and optimises operations — so your teams stop fighting tools and start compounding output.
+            </p>
+            <div className="hero-anim-4 flex flex-wrap gap-3">
+              <BtnPrimary href="/onboard">
+                Start a Project
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{ width: 15, height: 15 }}><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </BtnPrimary>
+              <BtnGhost href="/projects">See our work</BtnGhost>
+              <BtnGhost onClick={openModal}>Book a call</BtnGhost>
+            </div>
+          </div>
+          {/* Right */}
+          <div className="hero-anim-5">
+            <OpsConsole />
+          </div>
+        </div>
+      </ThemeHeroSection>
+
+      {/* ── Ticker ── */}
+      <Ticker />
+
+      {/* ── Services teaser ── */}
+      <section className="relative z-10 py-14 md:py-20 lg:py-24">
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div style={{ maxWidth: 580, marginBottom: 48 }}>
+            <Eyebrow>What we do</Eyebrow>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "#f3f4f6" }}>
+              Built for the unglamorous parts{" "}
+              <span style={{ background: "linear-gradient(120deg,#fff 30%,#3b82f6 130%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>that run the company.</span>
+            </h2>
+            <p style={{ color: "#8b919c", fontSize: "clamp(0.9rem,1.3vw,1rem)", marginTop: 16, lineHeight: 1.7 }}>Three disciplines, one outcome: less manual work, fewer errors, faster decisions.</p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {SERVICES.map(s => <ServiceCard key={s.idx} s={s} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Stats ── */}
+      <section className="relative z-10 py-10 md:py-14">
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <StatsStrip />
+        </div>
+      </section>
+
+      {/* ── Carousel ── */}
+      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div style={{ maxWidth: 560, marginBottom: 48 }}>
+            <Eyebrow>Proof</Eyebrow>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "#f3f4f6" }}>Selected outcomes.</h2>
+          </div>
+          <Carousel />
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="relative z-10 py-10 md:py-14">
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <CtaBlock
+            heading="Tell us what's slowing your operation down."
+            sub="We'll map it, scope it, and show you what automating it looks like — usually within a week."
+            primary="Onboard a project"
+            primaryHref="/onboard"
+            ghost="Book a call"
+            ghostFn={openModal}
+          />
+        </div>
+      </section>
 
       <style>{`
-        .btn-pri:hover{transform:scale(1.04)!important}
-        .btn-sec:hover{transform:scale(1.04)!important;background:rgba(255,255,255,.10)!important}
+        @keyframes tickerScroll { to { transform: translateX(-50%); } }
+        @media (min-width: 1024px) {
+          .g-stats > div:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08) !important; }
+          .g-stats > div:nth-child(-n+2) { border-bottom: none !important; }
+        }
       `}</style>
-    </ThemeHeroSection>
+    </div>
   );
 }

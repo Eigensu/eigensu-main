@@ -1,27 +1,29 @@
 export type Theme = "dark" | "light";
 
-export function getThemeTokens(theme: Theme) {
-  const isDark = theme === "dark";
-
+export function getThemeTokens(_theme?: Theme) {
   return {
-    isDark,
-    sectionBg: isDark
-      ? "radial-gradient(ellipse at 50% 0%,#0a1a20 0%,#060d12 50%,#020608 100%)"
-      : "radial-gradient(ellipse at 50% 0%,#fffbeb 0%,#fef9ee 45%,#fff8e1 100%)",
-    pageBg: isDark ? "#020608" : "#fffaf0",
-    contentBg: isDark ? "#050b10" : "#fff7e8",
-    heading: isDark ? "#ffffff" : "#0f172a",
-    body: isDark ? "rgba(255,255,255,0.72)" : "rgba(15,23,42,0.72)",
-    muted: isDark ? "rgba(255,255,255,0.46)" : "rgba(15,23,42,0.52)",
-    border: isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)",
-    accent: isDark ? "#00c8b4" : "#f59e0b",
-    accentSoft: isDark ? "rgba(0,200,180,0.12)" : "rgba(245,158,11,0.12)",
-    badgeBg: isDark ? "rgba(0,200,180,0.12)" : "rgba(251,191,36,0.18)",
-    badgeBorder: isDark ? "rgba(0,200,180,0.30)" : "rgba(251,191,36,0.5)",
-    badgeText: isDark ? "rgba(255,255,255,0.9)" : "rgba(15,23,42,0.8)",
-    badgeIcon: isDark ? "#00c8b4" : "#f59e0b",
-    priGrad: isDark ? "linear-gradient(135deg,#00c8b4,#0099cc)" : "linear-gradient(135deg,#fbbf24,#f59e0b)",
-    priShadow: isDark ? "0 0 28px rgba(0,200,180,0.45)" : "0 0 28px rgba(251,191,36,0.55)",
-    panel: isDark ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.82)",
+    isDark: true,
+    pageBg:     "#000000",
+    contentBg:  "#08090b",
+    sectionBg:  "radial-gradient(ellipse at 50% 0%, #08090b 0%, #000000 60%)",
+    heading:    "#f3f4f6",
+    body:       "#8b919c",
+    muted:      "#565c66",
+    border:       "rgba(255,255,255,0.08)",
+    borderStrong: "rgba(255,255,255,0.16)",
+    accent:     "#3b82f6",
+    accent2:    "#38e8b0",
+    accent3:    "#ffb224",
+    accent4:    "#a78bfa",
+    accent5:    "#ff6b6b",
+    accentSoft: "rgba(59,130,246,0.12)",
+    accentLine: "rgba(59,130,246,0.35)",
+    panel:      "rgba(255,255,255,0.04)",
+    priGrad:    "linear-gradient(135deg,#3b82f6,#6366f1)",
+    priShadow:  "0 0 28px rgba(59,130,246,0.45)",
+    badgeBg:    "rgba(59,130,246,0.12)",
+    badgeBorder:"rgba(59,130,246,0.35)",
+    badgeText:  "rgba(255,255,255,0.9)",
+    badgeIcon:  "#3b82f6",
   };
 }
