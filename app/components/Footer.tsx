@@ -36,7 +36,7 @@ function FooterBreaker() {
       aria-hidden="true"
       className="relative w-full overflow-hidden select-none"
       style={{
-        background: "#000000",
+        background: "var(--bg)",
         height: "clamp(110px, 16vw, 200px)",
       }}
     >
@@ -49,8 +49,8 @@ function FooterBreaker() {
               fontFamily: "var(--font-logo), 'Montserrat', sans-serif",
               fontSize: "clamp(14rem, 30vw, 30rem)",
               lineHeight: 1,
-              color: filled ? "#3b82f6" : "transparent",
-              WebkitTextStroke: filled ? "0" : "2px #3b82f6",
+              color: filled ? "var(--accent)" : "transparent",
+              WebkitTextStroke: filled ? "0" : "2px var(--accent)",
               paintOrder: "stroke fill",
               marginLeft: index === 0 ? 0 : "-0.04em",
               zIndex: filled ? 2 : 1,
@@ -85,7 +85,7 @@ export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
       {/* CTA section */}
       <section
         className="relative w-full overflow-hidden"
-        style={{ background: "#08090b", borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}` }}
+        style={{ background: "var(--bg-elev-2)", borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}` }}
       >
         <div
           aria-hidden="true"
@@ -124,10 +124,10 @@ export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
                   href="/onboard"
                   className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:opacity-90"
                   style={{
-                    background: "#3b82f6",
-                    color: "#00112e",
+                    background: "var(--accent)",
+                    color: "var(--on-accent)",
                     fontFamily: "var(--font-body), 'Hanken Grotesk', sans-serif",
-                    boxShadow: "0 0 0 1px rgba(59,130,246,0.35), 0 8px 30px -8px #3b82f6",
+                    boxShadow: "0 0 0 1px var(--accent-line), 0 8px 30px -8px var(--accent)",
                   }}
                 >
                   Onboard a project
@@ -155,7 +155,7 @@ export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
       <FooterBreaker />
 
       {/* Footer bottom */}
-      <footer style={{ background: "#000000", borderTop: `1px solid ${border}` }}>
+      <footer style={{ background: "var(--bg)", borderTop: `1px solid ${border}` }}>
         <div className="mx-auto max-w-[1200px] px-6 py-14 md:py-16">
           <div className="mb-12 grid grid-cols-2 gap-10 md:grid-cols-4 md:gap-8">
 
@@ -172,7 +172,7 @@ export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
                   color: textPri,
                 }}
               >
-                <span style={{ width: 8, height: 8, borderRadius: 2, background: "#3b82f6", boxShadow: "0 0 10px #3b82f6" }} />
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--accent)", boxShadow: "0 0 10px var(--accent)" }} />
                 EIGENSU
               </div>
               <p className="mb-4 text-sm leading-6" style={{ color: textMuted }}>
@@ -265,8 +265,8 @@ export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
                   width: 8,
                   height: 8,
                   borderRadius: "50%",
-                  background: "#38e8b0",
-                  boxShadow: "0 0 10px #38e8b0",
+                  background: "var(--ok)",
+                  boxShadow: "0 0 10px var(--ok)",
                   animation: "footerPulse 2s infinite",
                 }}
               />
