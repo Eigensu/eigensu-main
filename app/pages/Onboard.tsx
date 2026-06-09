@@ -17,19 +17,19 @@ const PROJECT_TYPES = [
 
 const inputStyle: React.CSSProperties = {
   width: "100%", fontFamily: BODY, fontSize: "0.92rem",
-  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-  borderRadius: 9, padding: "11px 13px", color: "#f3f4f6", outline: "none",
+  background: "var(--panel)", border: "1px solid var(--border)",
+  borderRadius: 9, padding: "11px 13px", color: "var(--text)", outline: "none",
   boxSizing: "border-box",
 };
 
 const labelStyle: React.CSSProperties = {
   fontFamily: MONO, fontSize: "0.7rem", letterSpacing: "1.5px",
-  textTransform: "uppercase", color: "#565c66", marginBottom: 8, display: "block",
+  textTransform: "uppercase", color: "var(--text-dim)", marginBottom: 8, display: "block",
 };
 
 function BtnPrimary({ children, onClick, type = "button" }: { children: React.ReactNode; onClick?: () => void; type?: "button" | "submit" }) {
   return (
-    <button type={type} onClick={onClick} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, background: "#3b82f6", color: "#00112e", border: "none", cursor: "pointer", boxShadow: "0 0 0 1px rgba(59,130,246,0.35), 0 8px 28px -8px #3b82f6" }}>
+    <button type={type} onClick={onClick} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", border: "none", cursor: "pointer", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)" }}>
       {children}
     </button>
   );
@@ -37,7 +37,7 @@ function BtnPrimary({ children, onClick, type = "button" }: { children: React.Re
 
 function BtnGhost({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   return (
-    <button type="button" onClick={onClick} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, color: "#f3f4f6", border: "1px solid rgba(255,255,255,0.16)", background: "none", cursor: "pointer" }}>
+    <button type="button" onClick={onClick} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", background: "none", cursor: "pointer" }}>
       {children}
     </button>
   );
@@ -61,13 +61,13 @@ export default function OnboardPage() {
         <ThemeHeroSection>
           <div style={{ textAlign: "center" }}>
             <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(56,232,176,0.1)", border: "1px solid rgba(56,232,176,0.25)", display: "grid", placeItems: "center", margin: "0 auto 24px" }}>
-              <svg viewBox="0 0 24 24" fill="none" width={28} height={28}><path d="M5 13l4 4L19 7" stroke="#38e8b0" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" width={28} height={28}><path d="M5 13l4 4L19 7" stroke="var(--ok)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
-            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,4vw,2.8rem)", letterSpacing: "-0.02em", color: "#f3f4f6", marginBottom: 14 }}>Project received.</h2>
-            <p style={{ fontFamily: BODY, color: "#8b919c", fontSize: "1rem", lineHeight: 1.7, maxWidth: "42ch", margin: "0 auto 28px" }}>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,4vw,2.8rem)", letterSpacing: "-0.02em", color: "var(--text)", marginBottom: 14 }}>Project received.</h2>
+            <p style={{ fontFamily: BODY, color: "var(--text-muted)", fontSize: "1rem", lineHeight: 1.7, maxWidth: "42ch", margin: "0 auto 28px" }}>
               Thanks — we&apos;ve got your details. Someone from the team will be in touch within 24 hours to map out next steps.
             </p>
-            <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, color: "#f3f4f6", border: "1px solid rgba(255,255,255,0.16)", textDecoration: "none" }}>Back to home</Link>
+            <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>Back to home</Link>
           </div>
         </ThemeHeroSection>
       </div>
@@ -78,14 +78,14 @@ export default function OnboardPage() {
     <div>
       {/* ── Hero ── */}
       <ThemeHeroSection>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase", color: "#565c66", marginBottom: 16 }}>
-          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#565c66", flexShrink: 0 }} />
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase", color: "var(--text-dim)", marginBottom: 16 }}>
+          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--text-dim)", flexShrink: 0 }} />
           Onboard // new project
         </div>
-        <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "#f3f4f6", maxWidth: "16ch", margin: "0 0 20px" }}>
-          Let&apos;s scope <span style={{ color: "#3b82f6" }}>your project</span>.
+        <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", maxWidth: "16ch", margin: "0 0 20px" }}>
+          Let&apos;s scope <span style={{ color: "var(--accent)" }}>your project</span>.
         </h1>
-        <p className="hero-anim-4" style={{ color: "#8b919c", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "46ch", lineHeight: 1.7 }}>
+        <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "46ch", lineHeight: 1.7 }}>
           Three quick steps. Takes about two minutes — we&apos;ll follow up within 24 hours.
         </p>
       </ThemeHeroSection>
@@ -97,8 +97,8 @@ export default function OnboardPage() {
           <div className="grid grid-cols-3 gap-3 mb-9">
             {STEPS.map((label, i) => (
               <div key={label}>
-                <div style={{ height: 3, borderRadius: 2, background: i <= step ? "#3b82f6" : "rgba(255,255,255,0.1)", marginBottom: 8, transition: "background .3s" }} />
-                <div style={{ fontFamily: MONO, fontSize: "0.7rem", letterSpacing: "1.5px", textTransform: "uppercase", color: i === step ? "#f3f4f6" : "#565c66" }}>
+                <div style={{ height: 3, borderRadius: 2, background: i <= step ? "var(--accent)" : "var(--border)", marginBottom: 8, transition: "background .3s" }} />
+                <div style={{ fontFamily: MONO, fontSize: "0.7rem", letterSpacing: "1.5px", textTransform: "uppercase", color: i === step ? "var(--text)" : "var(--text-dim)" }}>
                   {String(i + 1).padStart(2, "0")} — {label}
                 </div>
               </div>
@@ -106,13 +106,13 @@ export default function OnboardPage() {
           </div>
 
           {/* Card */}
-          <div style={{ background: "#08090b", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "clamp(22px,4vw,34px)" }}>
+          <div style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "clamp(22px,4vw,34px)" }}>
 
             {/* Step 1 */}
             {step === 0 && (
               <div>
-                <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.4rem", color: "#f3f4f6", marginBottom: 8 }}>About you</h3>
-                <p style={{ fontFamily: BODY, color: "#8b919c", marginBottom: 26, fontSize: "0.9rem" }}>So we know who we&apos;re talking to.</p>
+                <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.4rem", color: "var(--text)", marginBottom: 8 }}>About you</h3>
+                <p style={{ fontFamily: BODY, color: "var(--text-muted)", marginBottom: 26, fontSize: "0.9rem" }}>So we know who we&apos;re talking to.</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div><label style={labelStyle}>Full name</label><input value={s1.name} onChange={e => setS1(s => ({ ...s, name: e.target.value }))} placeholder="Jane Doe" style={inputStyle} /></div>
@@ -132,16 +132,16 @@ export default function OnboardPage() {
             {/* Step 2 */}
             {step === 1 && (
               <div>
-                <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.4rem", color: "#f3f4f6", marginBottom: 8 }}>The project</h3>
-                <p style={{ fontFamily: BODY, color: "#8b919c", marginBottom: 26, fontSize: "0.9rem" }}>What are we building, and roughly how big is it?</p>
+                <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.4rem", color: "var(--text)", marginBottom: 8 }}>The project</h3>
+                <p style={{ fontFamily: BODY, color: "var(--text-muted)", marginBottom: 26, fontSize: "0.9rem" }}>What are we building, and roughly how big is it?</p>
 
                 <div style={{ marginBottom: 22 }}>
                   <label style={labelStyle}>Type of work</label>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {PROJECT_TYPES.map((pt, i) => (
-                      <button key={i} type="button" onClick={() => setS2(s => ({ ...s, projectType: i }))} style={{ padding: "14px 16px", borderRadius: 9, textAlign: "left", border: s2.projectType === i ? "1px solid #3b82f6" : "1px solid rgba(255,255,255,0.08)", background: s2.projectType === i ? "rgba(59,130,246,0.08)" : "rgba(255,255,255,0.02)", cursor: "pointer" }}>
-                        <div style={{ fontFamily: BODY, fontWeight: 600, fontSize: "0.88rem", color: s2.projectType === i ? "#f3f4f6" : "#8b919c", marginBottom: 4 }}>{pt.title}</div>
-                        <div style={{ fontFamily: MONO, fontSize: "0.68rem", color: "#565c66", letterSpacing: "0.5px" }}>{pt.desc}</div>
+                      <button key={i} type="button" onClick={() => setS2(s => ({ ...s, projectType: i }))} style={{ padding: "14px 16px", borderRadius: 9, textAlign: "left", border: s2.projectType === i ? "1px solid var(--accent)" : "1px solid var(--border)", background: s2.projectType === i ? "var(--accent-soft)" : "var(--panel)", cursor: "pointer" }}>
+                        <div style={{ fontFamily: BODY, fontWeight: 600, fontSize: "0.88rem", color: s2.projectType === i ? "var(--text)" : "var(--text-muted)", marginBottom: 4 }}>{pt.title}</div>
+                        <div style={{ fontFamily: MONO, fontSize: "0.68rem", color: "var(--text-dim)", letterSpacing: "0.5px" }}>{pt.desc}</div>
                       </button>
                     ))}
                   </div>
@@ -183,8 +183,8 @@ export default function OnboardPage() {
             {/* Step 3 */}
             {step === 2 && (
               <form onSubmit={e => { e.preventDefault(); setSubmitted(true); }}>
-                <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.4rem", color: "#f3f4f6", marginBottom: 8 }}>Confirm &amp; submit</h3>
-                <p style={{ fontFamily: BODY, color: "#8b919c", marginBottom: 26, fontSize: "0.9rem" }}>Anything else we should know before we reach out?</p>
+                <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.4rem", color: "var(--text)", marginBottom: 8 }}>Confirm &amp; submit</h3>
+                <p style={{ fontFamily: BODY, color: "var(--text-muted)", marginBottom: 26, fontSize: "0.9rem" }}>Anything else we should know before we reach out?</p>
 
                 <div style={{ marginBottom: 20 }}>
                   <label style={labelStyle}>Additional notes (optional)</label>

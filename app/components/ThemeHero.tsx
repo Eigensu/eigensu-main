@@ -99,19 +99,19 @@ function MoonRay({ visible, fixed = false }: { visible: boolean; fixed?: boolean
         <defs>
           <linearGradient id="moonRayFade" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.22" />
-            <stop offset="60%" stopColor="#3b82f6" stopOpacity="0.07" />
-            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+            <stop offset="60%" stopColor="var(--accent)" stopOpacity="0.07" />
+            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
           </linearGradient>
           <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
             <stop offset="0%"   stopColor="#dbeafe" stopOpacity="1" />
             <stop offset="35%"  stopColor="#93c5fd" stopOpacity="0.9" />
-            <stop offset="70%"  stopColor="#3b82f6" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+            <stop offset="70%"  stopColor="var(--accent)" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="moonHalo" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#3b82f6" stopOpacity="0.18" />
-            <stop offset="60%"  stopColor="#6366f1" stopOpacity="0.07" />
-            <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+            <stop offset="0%"   stopColor="var(--accent)" stopOpacity="0.18" />
+            <stop offset="60%"  stopColor="var(--accent)" stopOpacity="0.07" />
+            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
           </radialGradient>
           <filter id="moonRayBlur"><feGaussianBlur stdDeviation="7" /></filter>
           <filter id="moonDiscBlur"><feGaussianBlur stdDeviation="2.5" /></filter>
@@ -146,9 +146,9 @@ function MoonRay({ visible, fixed = false }: { visible: boolean; fixed?: boolean
 }
 
 function GlowArcs({ theme: _theme }: { theme: Theme }) {
-  const bottomGlow = "radial-gradient(ellipse at center,rgba(59,130,246,.13) 0%,rgba(59,130,246,.07) 40%,transparent 70%)";
-  const sideGlow   = "radial-gradient(ellipse at center,rgba(99,102,241,.12) 0%,transparent 70%)";
-  const arcColor   = "#3b82f6";
+  const bottomGlow = "radial-gradient(ellipse at center, var(--glow) 0%, transparent 70%)";
+  const sideGlow   = "radial-gradient(ellipse at center, var(--glow) 0%, transparent 70%)";
+  const arcColor   = "var(--accent)";
 
   return (
     <div className="pointer-events-none absolute inset-0 flex items-end justify-center overflow-hidden" style={{ zIndex: 1 }}>
@@ -179,7 +179,7 @@ function GlowArcs({ theme: _theme }: { theme: Theme }) {
 const HERO_ANIM_STYLES = `
   @keyframes fadeInUp   { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
   @keyframes fadeInDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes heroPulse  { 0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.25)} 50%{box-shadow:0 0 0 8px rgba(59,130,246,0)} }
+  @keyframes heroPulse  { 0%,100%{box-shadow:0 0 0 0 var(--accent-line)} 50%{box-shadow:0 0 0 8px transparent} }
   .hero-anim-1{animation:fadeInDown .7s ease both;animation-delay:.1s}
   .hero-anim-2{animation:fadeInUp   .8s ease both;animation-delay:.25s}
   .hero-anim-3{animation:fadeInUp   .8s ease both;animation-delay:.45s}
@@ -216,7 +216,7 @@ export function ThemeHeroSection({
       style={{ background: sectionBg }}
     >
       <style>{HERO_ANIM_STYLES}</style>
-      <Starfield visible />
+      <Starfield visible={theme !== "light"} />
       <GlowArcs theme={theme} />
       <div
         className={`relative z-10 flex flex-1 flex-col pb-16 pt-[var(--hero-content-top)] md:pb-20 w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10 ${
