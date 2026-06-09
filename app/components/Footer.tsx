@@ -74,11 +74,11 @@ function IconArrow() {
 }
 
 export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
-  const border    = "rgba(255,255,255,0.08)";
-  const textMuted = "#8b919c";
-  const textDim   = "#565c66";
-  const textPri   = "#f3f4f6";
-  const dotGrid   = "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)";
+  const border    = "var(--border)";
+  const textMuted = "var(--text-muted)";
+  const textDim   = "var(--text-dim)";
+  const textPri   = "var(--text)";
+  const dotGrid   = "radial-gradient(circle, var(--border) 1px, transparent 1px)";
 
   return (
     <>

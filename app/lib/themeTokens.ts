@@ -1,29 +1,50 @@
 export type Theme = "dark" | "light";
 
-export function getThemeTokens(_theme?: Theme) {
+/**
+ * Theme tokens as CSS custom-property references.
+ *
+ * Colours are driven by `html[data-theme]` (see globals.css), so returning
+ * `var(--…)` here means inline styles re-resolve automatically when the theme
+ * toggles — no recolouring logic per component. `isDark` is still derived from
+ * the active theme for the few places that branch on it.
+ */
+export function getThemeTokens(theme?: Theme) {
   return {
-    isDark: true,
-    pageBg:     "#000000",
-    contentBg:  "#08090b",
-    sectionBg:  "radial-gradient(ellipse at 50% 0%, #08090b 0%, #000000 60%)",
-    heading:    "#f3f4f6",
-    body:       "#8b919c",
-    muted:      "#565c66",
-    border:       "rgba(255,255,255,0.08)",
-    borderStrong: "rgba(255,255,255,0.16)",
-    accent:     "#3b82f6",
-    accent2:    "#38e8b0",
-    accent3:    "#ffb224",
-    accent4:    "#a78bfa",
-    accent5:    "#ff6b6b",
-    accentSoft: "rgba(59,130,246,0.12)",
-    accentLine: "rgba(59,130,246,0.35)",
-    panel:      "rgba(255,255,255,0.04)",
-    priGrad:    "linear-gradient(135deg,#3b82f6,#6366f1)",
-    priShadow:  "0 0 28px rgba(59,130,246,0.45)",
-    badgeBg:    "rgba(59,130,246,0.12)",
-    badgeBorder:"rgba(59,130,246,0.35)",
-    badgeText:  "rgba(255,255,255,0.9)",
-    badgeIcon:  "#3b82f6",
+    isDark: theme !== "light",
+
+    pageBg:     "var(--bg)",
+    contentBg:  "var(--bg-elev)",
+    contentBg2: "var(--bg-elev-2)",
+    sectionBg:  "var(--section-bg)",
+
+    heading:    "var(--text)",
+    body:       "var(--text-muted)",
+    muted:      "var(--text-dim)",
+
+    border:       "var(--border)",
+    borderStrong: "var(--border-strong)",
+    panel:        "var(--panel)",
+
+    accent:     "var(--accent)",
+    accent2:    "var(--accent-2)",
+    accent3:    "var(--accent-3)",
+    accent4:    "var(--accent-4)",
+    accent5:    "var(--accent-5)",
+    accentSoft: "var(--accent-soft)",
+    accentLine: "var(--accent-line)",
+    onAccent:   "var(--on-accent)",
+
+    ok:         "var(--ok)",
+    warn:       "var(--warn)",
+    err:        "var(--err)",
+
+    priGrad:    "linear-gradient(135deg, var(--accent), var(--accent-3))",
+    priShadow:  "0 0 28px var(--accent-line)",
+    glow:       "var(--glow)",
+
+    badgeBg:    "var(--accent-soft)",
+    badgeBorder:"var(--accent-line)",
+    badgeText:  "var(--text)",
+    badgeIcon:  "var(--accent)",
   };
 }

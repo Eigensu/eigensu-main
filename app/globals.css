@@ -1,29 +1,55 @@
 @import "tailwindcss";
 
+/* ──────────────────────────────────────────────────────────────────────────
+   COLOUR SYSTEM — main's palette (teal / amber / blue), themeable.
+   DARK is the default (:root). LIGHT overrides under html[data-theme="light"].
+   Component code references these vars so a theme toggle flips everything.
+   Functional status colours (ok / warn / err) keep their meaning per theme.
+   ────────────────────────────────────────────────────────────────────────── */
 :root {
+  color-scheme: dark;
+
   /* Surfaces */
-  --bg:            #000000;
-  --bg-elev:       #08090b;
-  --bg-elev-2:     #0e1014;
-  --bg-elev-3:     #14171c;
+  --bg:            #04070a;
+  --bg-elev:       #0a0f14;
+  --bg-elev-2:     #0f1620;
+  --bg-elev-3:     #141d2a;
+  --panel:         rgba(255, 255, 255, 0.04);
+  --section-bg:    radial-gradient(ellipse at 50% 0%, #0a0f14 0%, #04070a 60%);
 
   /* Lines */
-  --border:        rgba(255, 255, 255, 0.08);
+  --border:        rgba(255, 255, 255, 0.09);
   --border-strong: rgba(255, 255, 255, 0.16);
 
   /* Text */
-  --text:          #f3f4f6;
-  --text-muted:    #8b919c;
-  --text-dim:      #565c66;
+  --text:          #f1f5f9;
+  --text-muted:    #94a3b8;
+  --text-dim:      #5b6b7d;
 
-  /* Accent palette — electric blue primary + 4 functional accents */
-  --accent:        #3b82f6;
-  --accent-2:      #38e8b0;
-  --accent-3:      #ffb224;
-  --accent-4:      #a78bfa;
-  --accent-5:      #ff6b6b;
-  --accent-soft:   rgba(59, 130, 246, 0.12);
-  --accent-line:   rgba(59, 130, 246, 0.35);
+  /* Accent palette — DARK uses main's teal primary (matches existing
+     theme-aware components which use rgba(0,200,180,…) in dark mode). */
+  --accent:        #00c8b4;   /* teal */
+  --accent-2:      #f59e0b;   /* amber */
+  --accent-3:      #0099cc;   /* blue */
+  --accent-4:      #a0e8b0;   /* green */
+  --accent-5:      #ff5757;   /* red */
+  --accent-soft:   rgba(0, 200, 180, 0.12);
+  --accent-line:   rgba(0, 200, 180, 0.35);
+  --on-accent:     #00211d;   /* dark text on a filled accent button */
+
+  /* Functional status (semantic, theme-aware) */
+  --ok:            #38e8b0;
+  --warn:          #ffb224;
+  --err:           #ff6b6b;
+
+  /* Decorative */
+  --grid-line:     rgba(255, 255, 255, 0.022);
+  --vignette:      rgba(0, 0, 0, 0.6);
+  --glow:          rgba(0, 200, 180, 0.18);
+
+  /* Nav surfaces */
+  --nav-bg:        rgba(10, 15, 20, 0.9);
+  --nav-card:      rgba(255, 255, 255, 0.05);
 
   /* Nav layout */
   --nav-top:            1.5rem;
@@ -38,6 +64,52 @@
   --radius-sm: 9px;
 
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces — warm cream / white (main's light look) */
+  --bg:            #fbfaf7;
+  --bg-elev:       #ffffff;
+  --bg-elev-2:     #f5f3ee;
+  --bg-elev-3:     #efece4;
+  --panel:         rgba(15, 23, 42, 0.035);
+  --section-bg:    radial-gradient(ellipse at 50% 0%, #ffffff 0%, #fbfaf7 55%, #f5f3ee 100%);
+
+  /* Lines */
+  --border:        rgba(15, 23, 42, 0.10);
+  --border-strong: rgba(15, 23, 42, 0.18);
+
+  /* Text */
+  --text:          #0f172a;
+  --text-muted:    #475569;
+  --text-dim:      #94a3b8;
+
+  /* Accent — LIGHT uses main's amber primary (matches existing theme-aware
+     components which use rgba(245,158,11,…) in light mode). */
+  --accent:        #d97706;   /* amber (deep enough for cream) */
+  --accent-2:      #0a9985;   /* teal */
+  --accent-3:      #0284c7;   /* blue */
+  --accent-4:      #15803d;   /* green */
+  --accent-5:      #e11d48;   /* red */
+  --accent-soft:   rgba(245, 158, 11, 0.12);
+  --accent-line:   rgba(217, 119, 6, 0.32);
+  --on-accent:     #2a1800;   /* dark text on a filled amber button */
+
+  /* Functional status */
+  --ok:            #0a9985;
+  --warn:          #b45309;
+  --err:           #dc2626;
+
+  /* Decorative */
+  --grid-line:     rgba(15, 23, 42, 0.04);
+  --vignette:      rgba(15, 23, 42, 0.05);
+  --glow:          rgba(245, 158, 11, 0.16);
+
+  /* Nav surfaces */
+  --nav-bg:        rgba(255, 255, 255, 0.9);
+  --nav-card:      rgba(15, 23, 42, 0.04);
 }
 
 @media (min-width: 768px) {
@@ -57,7 +129,11 @@
   --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
 }
 
-/* ── Reset ── */
+/* ── Base layer ──
+   Wrapped in @layer base so Tailwind's utilities (py-*, pt-*, mx-auto, …)
+   can override these. An UNLAYERED `* { margin:0; padding:0 }` reset beats
+   every layered Tailwind utility and collapses all spacing. */
+@layer base {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -80,8 +156,8 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 64px 64px;
   pointer-events: none;
   z-index: 0;
@@ -93,7 +169,7 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse 120% 80% at 50% -10%, transparent 55%, rgba(0,0,0,0.6) 100%);
+  background: radial-gradient(ellipse 120% 80% at 50% -10%, transparent 55%, var(--vignette) 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -139,6 +215,7 @@ input:focus, textarea:focus, select:focus, button:focus {
   outline: none;
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
+} /* end @layer base */
 
 /* ── Responsive Layout Utilities ──────────────────────────────────────────── */
 

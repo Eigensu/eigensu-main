@@ -32,6 +32,8 @@ interface CardNavProps {
   onCtaClick?: () => void;
   onLinkClick?: (link: CardNavLink, event: React.MouseEvent<HTMLAnchorElement>) => void;
   ease?: string;
+  theme?: Theme;
+  onToggleTheme?: () => void;
 }
 
 function CardNav({
@@ -46,6 +48,8 @@ function CardNav({
   onCtaClick,
   onLinkClick,
   ease = "power3.out",
+  theme = "dark",
+  onToggleTheme,
 }: CardNavProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
@@ -281,6 +285,29 @@ function CardNav({
           </div>
 
           <div className="flex h-full items-center gap-2 md:gap-3">
+            {onToggleTheme && (
+              <button
+                type="button"
+                onClick={onToggleTheme}
+                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                className="flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-300 hover:opacity-80"
+                style={{ color: menuColor, border: "1px solid var(--border)" }}
+              >
+                {theme === "dark" ? (
+                  /* sun */
+                  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4" />
+                    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+                  </svg>
+                ) : (
+                  /* moon */
+                  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z" />
+                  </svg>
+                )}
+              </button>
+            )}
             {onCtaClick ? (
               <button
                 type="button"
@@ -361,7 +388,7 @@ function EigensuLogo() {
       href="/"
       className="flex items-center gap-2 no-underline"
       style={{
-        color: "#f3f4f6",
+        color: "var(--text)",
         fontFamily: "var(--font-logo), 'Montserrat', sans-serif",
         fontWeight: 800,
         fontSize: "1.1rem",
@@ -374,8 +401,8 @@ function EigensuLogo() {
           width: 8,
           height: 8,
           borderRadius: 2,
-          background: "#3b82f6",
-          boxShadow: "0 0 12px #3b82f6",
+          background: "var(--accent)",
+          boxShadow: "0 0 12px var(--accent)",
           flexShrink: 0,
         }}
       />
@@ -385,10 +412,10 @@ function EigensuLogo() {
 }
 
 function buildNavItems(): CardNavItem[] {
-  const cardA = "#0f1a2e";
-  const cardB = "#0d1828";
-  const cardC = "#101420";
-  const text  = "#f3f4f6";
+  const cardA = "var(--nav-card)";
+  const cardB = "var(--nav-card)";
+  const cardC = "var(--nav-card)";
+  const text  = "var(--text)";
 
   return [
     {
@@ -423,18 +450,18 @@ function buildNavItems(): CardNavItem[] {
 }
 
 export default function Navigation({
-  theme: _theme,
+  theme = "dark",
   onContact: _onContact,
-  setTheme: _setTheme,
+  setTheme,
 }: {
   theme?: Theme;
   onContact?: () => void;
   setTheme?: (t: Theme) => void;
 }) {
-  const baseColor      = "rgba(8,9,11,0.92)";
-  const menuColor      = "#f3f4f6";
-  const buttonBgColor  = "#3b82f6";
-  const buttonTextColor = "#00112e";
+  const baseColor       = "var(--nav-bg)";
+  const menuColor       = "var(--text)";
+  const buttonBgColor   = "var(--accent)";
+  const buttonTextColor = "var(--on-accent)";
 
   const items = buildNavItems();
 
@@ -448,6 +475,8 @@ export default function Navigation({
       buttonTextColor={buttonTextColor}
       ctaLabel="Start a Project"
       ctaHref="/onboard"
+      theme={theme}
+      onToggleTheme={setTheme ? () => setTheme(theme === "dark" ? "light" : "dark") : undefined}
     />
   );
 }
