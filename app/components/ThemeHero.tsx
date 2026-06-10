@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { useTheme } from "./PageShell";
 import { getThemeTokens, type Theme } from "../lib/themeTokens";
 
@@ -56,18 +56,7 @@ function Starfield({ visible }: { visible: boolean }) {
   );
 }
 
-const CELESTIAL_STYLE: CSSProperties = {
-  position: "fixed",
-  top: 0,
-  left: "50%",
-  transform: "translateX(-50%) scale(0.44)",
-  transformOrigin: "top center",
-  width: "min(900px, 100vw)",
-  zIndex: 85,
-  pointerEvents: "none",
-};
-
-function MoonRay({ visible, fixed = false }: { visible: boolean; fixed?: boolean }) {
+function MoonRay({ visible }: { visible: boolean }) {
   const RAYS = [
     { angle: -62, w: 9 }, { angle: -48, w: 14 }, { angle: -36, w: 10 },
     { angle: -24, w: 18 }, { angle: -14, w: 12 }, { angle: -5, w: 20 },
@@ -81,21 +70,20 @@ function MoonRay({ visible, fixed = false }: { visible: boolean; fixed?: boolean
     <div
       className="flex justify-center"
       style={{
-        ...(fixed ? CELESTIAL_STYLE : {
-          position: "absolute",
-          top: "-6%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "100%",
-          zIndex: 2,
-          pointerEvents: "none",
-        }),
+        position: "absolute",
+        top: "-6%",
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "100%",
+        zIndex: 2,
+        pointerEvents: "none",
+        overflow: "hidden",
         opacity: visible ? 1 : 0,
         visibility: visible ? "visible" : "hidden",
         transition: "opacity 0.8s ease, visibility 0.8s ease",
       }}
     >
-      <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 900, overflow: "visible" }}>
+      <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 900, overflow: "hidden" }}>
         <defs>
           <linearGradient id="moonRayFade" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.22" />
@@ -187,11 +175,6 @@ const HERO_ANIM_STYLES = `
   .hero-anim-5{animation:fadeInUp   1s  ease both;animation-delay:.75s}
 `;
 
-/** Fixed moon above the nav bar — rendered from PageShell. */
-export function CelestialLayer({ theme: _theme }: { theme: Theme }) {
-  return <MoonRay visible fixed />;
-}
-
 type ThemeHeroSectionProps = {
   children: ReactNode;
   className?: string;
@@ -217,6 +200,7 @@ export function ThemeHeroSection({
     >
       <style>{HERO_ANIM_STYLES}</style>
       <Starfield visible={theme !== "light"} />
+      <MoonRay visible />
       <GlowArcs theme={theme} />
       <div
         className={`relative z-10 flex flex-1 flex-col pb-16 pt-[var(--hero-content-top)] md:pb-20 w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10 ${

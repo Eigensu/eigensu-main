@@ -150,29 +150,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Faint graph-paper grid behind everything */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 64px 64px;
-  pointer-events: none;
-  z-index: 0;
-  mask-image: radial-gradient(ellipse 100% 70% at 50% 0%, #000 30%, transparent 80%);
-}
-
-/* Subtle vignette */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(ellipse 120% 80% at 50% -10%, transparent 55%, var(--vignette) 100%);
-  pointer-events: none;
-  z-index: 0;
-}
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-head), "Sora", sans-serif;
