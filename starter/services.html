@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eigensu — Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="logo"><span class="dot"></span>EIGENSU</a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html" class="active">Services</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="onboard.html" class="btn btn--primary btn--sm">Start a Project</a>
+      <button class="nav__burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a><a href="services.html">Services</a><a href="projects.html">Projects</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  <a href="onboard.html" class="btn btn--primary">Start a Project</a>
+</div>
+
+<!-- PAGE HEAD -->
+<section class="page-head">
+  <div class="glow"></div>
+  <div class="wrap">
+    <span class="eyebrow">Services // capabilities</span>
+    <h1 class="h-xl" style="max-width:16ch;">Everything between <span class="accent-word">a problem</span> and a system that solves it.</h1>
+    <p class="lead">We don't sell seats or licences. We build the specific machinery your operation needs and hand it over running.</p>
+  </div>
+</section>
+
+<!-- SERVICE CARDS -->
+<section class="section--tight">
+  <div class="wrap">
+    <div class="grid-3">
+      <article class="card reveal">
+        <span class="card__idx">01</span>
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></div>
+        <h3>Operations Automation</h3>
+        <p>Event-driven pipelines that handle the repetitive, rules-based work humans shouldn't be touching — sync, route, reconcile, notify.</p>
+        <a href="onboard.html" class="card__link">Scope this →</a>
+      </article>
+      <article class="card reveal">
+        <span class="card__idx">02</span>
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <h3>Internal Tooling</h3>
+        <p>Dashboards, admin consoles and internal products designed around your actual workflow — not a generic SaaS template.</p>
+        <a href="onboard.html" class="card__link">Scope this →</a>
+      </article>
+      <article class="card reveal">
+        <span class="card__idx">03</span>
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6"/></svg></div>
+        <h3>Systems Integration</h3>
+        <p>Make your existing stack behave like one system — clean data contracts between ERPs, CRMs, finance and ops tools.</p>
+        <a href="onboard.html" class="card__link">Scope this →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- DEEP DIVE 1 — code window right -->
+<section class="section">
+  <div class="wrap">
+    <div class="feature reveal">
+      <div class="feature__copy">
+        <span class="eyebrow">Deep dive // 01</span>
+        <h3>Workflows you can read like a sentence.</h3>
+        <p class="lead">Every automation we ship is declarative and versioned. No black-box drag-and-drop — your team can see exactly what triggers, what runs, and what happens on failure.</p>
+        <ul class="checks">
+          <li>Trigger on schedule, webhook or queue event</li>
+          <li>Built-in retries, alerting and audit trail</li>
+          <li>Deploys through CI — fully reproducible</li>
+        </ul>
+      </div>
+      <div class="feature__media">
+        <div class="window">
+          <div class="window__bar"><div class="window__dots"><i></i><i></i><i></i></div><span class="window__tab">invoice_sync.ops.ts</span></div>
+          <pre class="code"><code><span class="ln">1</span><span class="cm">// reconcile vendor invoices nightly</span>
+<span class="ln">2</span><span class="kw">export const</span> <span class="fn">invoiceSync</span> <span class="pun">=</span> <span class="fn">workflow</span><span class="pun">({</span>
+<span class="ln">3</span>  trigger<span class="pun">:</span> <span class="fn">schedule</span><span class="pun">(</span><span class="str">"0 2 * * *"</span><span class="pun">),</span>
+<span class="ln">4</span>  retries<span class="pun">:</span> <span class="num">3</span><span class="pun">,</span>
+<span class="ln">5</span>  <span class="fn">run</span><span class="pun">:</span> <span class="kw">async</span> <span class="pun">({</span> step <span class="pun">}) =&gt; {</span>
+<span class="ln">6</span>    <span class="kw">const</span> rows <span class="pun">=</span> <span class="kw">await</span> step<span class="pun">.</span><span class="fn">fetch</span><span class="pun">(</span><span class="str">"erp.invoices"</span><span class="pun">);</span>
+<span class="ln">7</span>    <span class="kw">const</span> matched <span class="pun">=</span> <span class="fn">reconcile</span><span class="pun">(</span>rows<span class="pun">,</span> ledger<span class="pun">);</span>
+<span class="ln">8</span>    <span class="kw">await</span> step<span class="pun">.</span><span class="fn">commit</span><span class="pun">(</span>matched<span class="pun">);</span>
+<span class="ln">9</span>    <span class="kw">return</span> <span class="pun">{</span> synced<span class="pun">:</span> matched<span class="pun">.</span>length <span class="pun">};</span>
+<span class="ln">10</span>  <span class="pun">},</span>
+<span class="ln">11</span><span class="pun">});</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEEP DIVE 2 — code window left (flipped) -->
+    <div class="feature feature--flip reveal">
+      <div class="feature__copy">
+        <span class="eyebrow">Deep dive // 02</span>
+        <h3>Integrations that don't break at 2am.</h3>
+        <p class="lead">We define explicit contracts between your systems, so a field rename in one tool never silently corrupts another. Typed, validated, observable.</p>
+        <ul class="checks">
+          <li>Schema-validated payloads on every hop</li>
+          <li>Dead-letter handling for bad records</li>
+          <li>Live health metrics per connection</li>
+        </ul>
+      </div>
+      <div class="feature__media">
+        <div class="window">
+          <div class="window__bar"><div class="window__dots"><i></i><i></i><i></i></div><span class="window__tab">integration.config.yaml</span></div>
+          <pre class="code"><code><span class="ln">1</span><span class="kw">source</span><span class="pun">:</span> <span class="str">crm.deals</span>
+<span class="ln">2</span><span class="kw">target</span><span class="pun">:</span> <span class="str">warehouse.revenue</span>
+<span class="ln">3</span><span class="kw">mode</span><span class="pun">:</span> <span class="str">stream</span>
+<span class="ln">4</span><span class="kw">contract</span><span class="pun">:</span>
+<span class="ln">5</span>  <span class="fn">deal_id</span><span class="pun">:</span> <span class="kw">string</span> <span class="pun">!</span>
+<span class="ln">6</span>  <span class="fn">amount</span><span class="pun">:</span> <span class="kw">number</span> <span class="pun">!</span>
+<span class="ln">7</span>  <span class="fn">closed_at</span><span class="pun">:</span> <span class="kw">timestamp</span>
+<span class="ln">8</span><span class="kw">on_error</span><span class="pun">:</span> <span class="str">dead_letter</span>
+<span class="ln">9</span><span class="kw">alerts</span><span class="pun">:</span>
+<span class="ln">10</span>  <span class="fn">channel</span><span class="pun">:</span> <span class="str">"#ops-alerts"</span>
+<span class="ln">11</span>  <span class="fn">threshold</span><span class="pun">:</span> <span class="num">0.99</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section--tight">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">How we work</span>
+      <h2 class="h-lg">Four steps, no surprises.</h2>
+    </div>
+    <div class="grid-4">
+      <article class="card reveal"><span class="card__idx">01</span><h3>Map</h3><p>We sit with your team and document the workflow as it actually runs today.</p></article>
+      <article class="card reveal"><span class="card__idx">02</span><h3>Scope</h3><p>A fixed proposal: what we'll build, the timeline, and the measurable outcome.</p></article>
+      <article class="card reveal"><span class="card__idx">03</span><h3>Build</h3><p>Weekly working demos. You see progress, not status decks.</p></article>
+      <article class="card reveal"><span class="card__idx">04</span><h3>Handover</h3><p>Documented, monitored and yours — with support if you want it.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section--tight">
+  <div class="wrap">
+    <div class="cta-block reveal">
+      <div class="glow"></div>
+      <h2 class="h-lg" style="max-width:18ch;margin-inline:auto;">Have a process that's begging to be automated?</h2>
+      <div class="btn-group"><a href="onboard.html" class="btn btn--primary">Onboard a project</a><a href="contact.html" class="btn btn--ghost">Talk to us</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand"><a href="index.html" class="logo"><span class="dot"></span>EIGENSU</a><p>Tailored systems and products for internal management and operations optimisation.</p></div>
+      <div class="footer__col"><h5>Solutions</h5><a href="services.html">Operations Automation</a><a href="services.html">Internal Tooling</a><a href="services.html">Systems Integration</a></div>
+      <div class="footer__col"><h5>Company</h5><a href="about.html">About</a><a href="projects.html">Projects</a><a href="contact.html">Contact</a></div>
+      <div class="footer__col"><h5>Connect</h5><a href="#">LinkedIn</a><a href="#">X / Twitter</a><a href="#">GitHub</a></div>
+    </div>
+    <div class="footer__bottom"><p>© 2025 Eigensu. All rights reserved.</p><span class="status"><span class="pulse"></span>All systems operational</span></div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

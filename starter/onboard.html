@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eigensu — Onboard a Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="logo"><span class="dot"></span>EIGENSU</a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="onboard.html" class="btn btn--primary btn--sm active">Start a Project</a>
+      <button class="nav__burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a><a href="services.html">Services</a><a href="projects.html">Projects</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  <a href="onboard.html" class="btn btn--primary">Start a Project</a>
+</div>
+
+<!-- PAGE HEAD -->
+<section class="page-head" style="padding-bottom:0;">
+  <div class="glow"></div>
+  <div class="wrap">
+    <span class="eyebrow">Onboard // new project</span>
+    <h1 class="h-xl" style="max-width:16ch;">Let's scope <span class="accent-word">your project</span>.</h1>
+    <p class="lead">Three quick steps. Takes about two minutes — we'll follow up within 24 hours.</p>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="section--tight">
+  <div class="wrap" style="max-width:760px;">
+
+    <!-- progress -->
+    <div class="steps-bar">
+      <div class="seg active"><div class="track"><i></i></div><div class="cap">01 — About you</div></div>
+      <div class="seg"><div class="track"><i></i></div><div class="cap">02 — The project</div></div>
+      <div class="seg"><div class="track"><i></i></div><div class="cap">03 — Confirm</div></div>
+    </div>
+
+    <div class="card" data-multistep style="padding:34px;">
+      <!-- STEP 1 -->
+      <div class="step active">
+        <h3>About you</h3>
+        <p class="lead">So we know who we're talking to.</p>
+        <div class="field-row">
+          <div class="field"><label>Full name</label><input class="input" type="text" placeholder="Jane Doe"></div>
+          <div class="field"><label>Role</label><input class="input" type="text" placeholder="Head of Operations"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Company</label><input class="input" type="text" placeholder="Acme Inc."></div>
+          <div class="field"><label>Work email</label><input class="input" type="email" placeholder="jane@acme.com"></div>
+        </div>
+        <div class="step-actions" style="justify-content:flex-end;">
+          <button class="btn btn--primary" data-next-step>Continue
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <h3>The project</h3>
+        <p class="lead">What are we building, and roughly how big is it?</p>
+        <div class="field">
+          <label>Type of work</label>
+          <div class="choice-grid">
+            <div class="choice sel"><div class="t">Operations Automation</div><div class="d">Pipelines, workflows, reconciliation</div></div>
+            <div class="choice"><div class="t">Internal Tooling</div><div class="d">Dashboards, admin apps</div></div>
+            <div class="choice"><div class="t">Systems Integration</div><div class="d">Connecting existing tools</div></div>
+            <div class="choice"><div class="t">Not sure yet</div><div class="d">Help me figure it out</div></div>
+          </div>
+        </div>
+        <div class="field"><label>Describe the scope</label><textarea class="textarea" placeholder="What's the process today, and what would 'solved' look like?"></textarea></div>
+        <div class="field-row">
+          <div class="field"><label>Timeline</label>
+            <select class="select"><option>ASAP</option><option>1–3 months</option><option>3–6 months</option><option>Just exploring</option></select>
+          </div>
+          <div class="field"><label>Budget range</label>
+            <select class="select"><option>Under ₹5L</option><option>₹5L – ₹15L</option><option>₹15L – ₹40L</option><option>₹40L+</option></select>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button class="btn btn--ghost" data-prev-step>Back</button>
+          <button class="btn btn--primary" data-next-step>Continue
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <h3>Confirm &amp; submit</h3>
+        <p class="lead">Anything else we should know before we reach out?</p>
+        <div class="field"><label>Additional notes (optional)</label><textarea class="textarea" placeholder="Links, context, constraints, deadlines..."></textarea></div>
+        <div class="field">
+          <label>How did you hear about us?</label>
+          <select class="select"><option>Referral</option><option>Search</option><option>Social</option><option>Other</option></select>
+        </div>
+        <div class="step-actions">
+          <button class="btn btn--ghost" data-prev-step>Back</button>
+          <button class="btn btn--primary" data-submit>Submit project
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success">
+      <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg></div>
+      <h2 class="h-md">Project received.</h2>
+      <p class="lead" style="margin:14px auto 28px;">Thanks — we've got your details. Someone from the team will be in touch within 24 hours to map out next steps.</p>
+      <a href="index.html" class="btn btn--ghost">Back to home</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand"><a href="index.html" class="logo"><span class="dot"></span>EIGENSU</a><p>Tailored systems and products for internal management and operations optimisation.</p></div>
+      <div class="footer__col"><h5>Solutions</h5><a href="services.html">Operations Automation</a><a href="services.html">Internal Tooling</a><a href="services.html">Systems Integration</a></div>
+      <div class="footer__col"><h5>Company</h5><a href="about.html">About</a><a href="projects.html">Projects</a><a href="contact.html">Contact</a></div>
+      <div class="footer__col"><h5>Connect</h5><a href="#">LinkedIn</a><a href="#">X / Twitter</a><a href="#">GitHub</a></div>
+    </div>
+    <div class="footer__bottom"><p>© 2025 Eigensu. All rights reserved.</p><span class="status"><span class="pulse"></span>All systems operational</span></div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

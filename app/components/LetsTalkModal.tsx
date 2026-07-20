@@ -87,14 +87,14 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
   const inputClr   = isDark ? "#ffffff"               : "#0a0a0a";
   const labelClr   = isDark ? "rgba(255,255,255,.38)" : "rgba(0,0,0,.42)";
   const reqClr     = isDark ? "rgba(255,255,255,.28)" : "rgba(0,0,0,.28)";
-  const focusBdr   = isDark ? "#00c8b4"               : "#d4a017";
+  const focusBdr   = "var(--accent)";
   const cardBg     = isDark ? "rgba(255,255,255,.04)" : "rgba(0,0,0,.04)";
   const cardBdr    = isDark ? "rgba(255,255,255,.07)" : "rgba(0,0,0,.07)";
   const errClr     = "#ff5757";
-  const linkAccent = isDark ? "#00c8b4" : "#d4a017";
+  const linkAccent = "var(--accent)";
   const btnBg      = linkAccent;
-  const btnTxt     = isDark ? "#020608" : "#ffffff";
-  const btnHoverShadow = isDark ? "rgba(0,200,180,.38)" : "rgba(212,160,23,.35)";
+  const btnTxt     = "var(--on-accent)";
+  const btnHoverShadow = "var(--accent-line)";
   const btnIconBg  = isDark ? "rgba(2,6,8,0.14)" : "rgba(255,255,255,0.22)";
   const overlayBg  = isDark ? "rgba(0,0,0,.55)"       : "rgba(0,0,0,.35)";
   const closeBg    = isDark ? "rgba(255,255,255,.10)"  : "rgba(0,0,0,.08)";
@@ -124,14 +124,14 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
           z-index: 9999;
           overflow-y: auto; overflow-x: hidden;
           scrollbar-width: none;
-          font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+          font-family: var(--font-body), "Hanken Grotesk", sans-serif;
           animation: ltDrawIn .48s cubic-bezier(.22,1,.36,1) both;
         }
         .lt-drawer.out { animation: ltDrawOut .42s cubic-bezier(.4,0,1,1) both; }
         .lt-drawer::-webkit-scrollbar { display: none; }
 
         .lt-drawer h2 {
-          font-family: var(--font-bebas), "Arial Narrow", sans-serif;
+          font-family: var(--font-head), "Sora", sans-serif;
           font-weight: 400;
           letter-spacing: 0.02em;
         }
@@ -145,7 +145,7 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
         .lt-field-hint,
         .lt-card-eyebrow,
         .lt-card-value {
-          font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+          font-family: var(--font-body), "Hanken Grotesk", sans-serif;
         }
 
         .lt-body {

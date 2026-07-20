@@ -1,134 +1,243 @@
 @import "tailwindcss";
 
+/* ──────────────────────────────────────────────────────────────────────────
+   COLOUR SYSTEM — main's palette (teal / amber / blue), themeable.
+   DARK is the default (:root). LIGHT overrides under html[data-theme="light"].
+   Component code references these vars so a theme toggle flips everything.
+   Functional status colours (ok / warn / err) keep their meaning per theme.
+   ────────────────────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  /* Fixed nav: top-4 + 60px bar + breathing room */
-  --nav-top: 1.5rem;
-  --nav-height: 60px;
-  --nav-gap: 0.75rem;
-  --page-offset-top: calc(var(--nav-top) + var(--nav-height) + var(--nav-gap));
-  /* Center of the gap between viewport top and the nav bar */
-  --celestial-top: calc(var(--nav-top) / 2);
-  /* Space for fixed nav + sun/moon rays before hero copy */
-  --hero-content-top: calc(var(--page-offset-top) + 3.5rem);
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg:            #04070a;
+  --bg-elev:       #0a0f14;
+  --bg-elev-2:     #0f1620;
+  --bg-elev-3:     #141d2a;
+  --panel:         rgba(255, 255, 255, 0.04);
+  --section-bg:    radial-gradient(ellipse at 50% 0%, #0a0f14 0%, #04070a 60%);
+
+  /* Lines */
+  --border:        rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Text */
+  --text:          #f1f5f9;
+  --text-muted:    #94a3b8;
+  --text-dim:      #5b6b7d;
+
+  /* Accent palette — DARK uses main's teal primary (matches existing
+     theme-aware components which use rgba(0,200,180,…) in dark mode). */
+  --accent:        #00c8b4;   /* teal */
+  --accent-2:      #f59e0b;   /* amber */
+  --accent-3:      #0099cc;   /* blue */
+  --accent-4:      #a0e8b0;   /* green */
+  --accent-5:      #ff5757;   /* red */
+  --accent-soft:   rgba(0, 200, 180, 0.12);
+  --accent-line:   rgba(0, 200, 180, 0.35);
+  --on-accent:     #00211d;   /* dark text on a filled accent button */
+
+  /* Functional status (semantic, theme-aware) */
+  --ok:            #38e8b0;
+  --warn:          #ffb224;
+  --err:           #ff6b6b;
+
+  /* Decorative */
+  --grid-line:     rgba(255, 255, 255, 0.022);
+  --vignette:      rgba(0, 0, 0, 0.6);
+  --glow:          rgba(0, 200, 180, 0.18);
+
+  /* Nav surfaces */
+  --nav-bg:        rgba(10, 15, 20, 0.9);
+  --nav-card:      rgba(255, 255, 255, 0.05);
+
+  /* Nav layout */
+  --nav-top:            1.5rem;
+  --nav-height:         60px;
+  --nav-gap:            0.75rem;
+  --page-offset-top:    calc(var(--nav-top) + var(--nav-height) + var(--nav-gap));
+  --celestial-top:      calc(var(--nav-top) / 2);
+  --hero-content-top:   calc(var(--page-offset-top) + 3.5rem);
+
+  /* Radius */
+  --radius:    14px;
+  --radius-sm: 9px;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces — warm cream / white (main's light look) */
+  --bg:            #fbfaf7;
+  --bg-elev:       #ffffff;
+  --bg-elev-2:     #f5f3ee;
+  --bg-elev-3:     #efece4;
+  --panel:         rgba(15, 23, 42, 0.035);
+  --section-bg:    radial-gradient(ellipse at 50% 0%, #ffffff 0%, #fbfaf7 55%, #f5f3ee 100%);
+
+  /* Lines */
+  --border:        rgba(15, 23, 42, 0.10);
+  --border-strong: rgba(15, 23, 42, 0.18);
+
+  /* Text */
+  --text:          #0f172a;
+  --text-muted:    #475569;
+  --text-dim:      #94a3b8;
+
+  /* Accent — LIGHT uses main's amber primary (matches existing theme-aware
+     components which use rgba(245,158,11,…) in light mode). */
+  --accent:        #d97706;   /* amber (deep enough for cream) */
+  --accent-2:      #0a9985;   /* teal */
+  --accent-3:      #0284c7;   /* blue */
+  --accent-4:      #15803d;   /* green */
+  --accent-5:      #e11d48;   /* red */
+  --accent-soft:   rgba(245, 158, 11, 0.12);
+  --accent-line:   rgba(217, 119, 6, 0.32);
+  --on-accent:     #2a1800;   /* dark text on a filled amber button */
+
+  /* Functional status */
+  --ok:            #0a9985;
+  --warn:          #b45309;
+  --err:           #dc2626;
+
+  /* Decorative */
+  --grid-line:     rgba(15, 23, 42, 0.04);
+  --vignette:      rgba(15, 23, 42, 0.05);
+  --glow:          rgba(245, 158, 11, 0.16);
+
+  /* Nav surfaces */
+  --nav-bg:        rgba(255, 255, 255, 0.9);
+  --nav-card:      rgba(15, 23, 42, 0.04);
 }
 
 @media (min-width: 768px) {
   :root {
-    --nav-top: 1.5rem; /* matches md:top-6 */
     --hero-content-top: calc(var(--page-offset-top) + 4rem);
   }
 }
 
-/* Pages / sections without ThemeHero */
 .page-offset-top {
   padding-top: var(--page-offset-top);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-lora), Georgia, "Times New Roman", serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: var(--font-body), "Hanken Grotesk", sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ── Base layer ──
+   Wrapped in @layer base so Tailwind's utilities (py-*, pt-*, mx-auto, …)
+   can override these. An UNLAYERED `* { margin:0; padding:0 }` reset beats
+   every layered Tailwind utility and collapses all spacing. */
+@layer base {
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), "Hanken Grotesk", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.1px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-bebas), "Arial Narrow", sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-}
 
-/* Bebas only has one weight — don't let Tailwind utilities fake bold titles */
-h1.font-semibold,
-h1.font-bold,
-h1.font-medium,
-h2.font-semibold,
-h2.font-bold,
-h2.font-medium,
-h3.font-semibold,
-h3.font-bold,
-h3.font-medium,
-h4.font-semibold,
-h4.font-bold,
-h4.font-medium,
-h5.font-semibold,
-h5.font-bold,
-h5.font-medium,
-h6.font-semibold,
-h6.font-bold,
-h6.font-medium {
-  font-weight: 400;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-head), "Sora", sans-serif;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }
 
 .font-heading {
-  font-family: var(--font-bebas), "Arial Narrow", sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.02em;
+  font-family: var(--font-head), "Sora", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .font-body {
-  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
+  font-family: var(--font-body), "Hanken Grotesk", sans-serif;
 }
 
-/* Form / UI labels that use heading tags but should stay in Lora */
-h3.font-body,
-h4.font-body {
-  font-family: var(--font-lora), Georgia, "Times New Roman", serif;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+.font-mono {
+  font-family: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
 }
 
-button,
-input,
-textarea,
-select {
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+ul { list-style: none; }
+
+input, textarea, select {
   font-family: inherit;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-/* Make input/textarea placeholders visible across themes */
-input::placeholder,
-textarea::placeholder,
-select::placeholder {
-  color: inherit;
-  opacity: 0.6;
-}
-
-/* Improve focus visibility for form controls */
-input:focus,
-textarea:focus,
-select:focus,
-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08);
-}
-
-/* Improve form responsiveness: prevent flex overflow and limit horizontal resizing */
-input,
-textarea,
-select {
   min-width: 0;
   resize: vertical;
 }
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-dim);
+  opacity: 1;
+}
+
+input:focus, textarea:focus, select:focus, button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+} /* end @layer base */
+
+/* ── Responsive Layout Utilities ──────────────────────────────────────────── */
+
+/* Page-width container */
+.pg   { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+.pg-n { width: 100%; max-width:  780px; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+
+/* Section vertical rhythm */
+.sp    { padding-block: clamp(3.5rem, 8vw, 6rem); position: relative; z-index: 1; }
+.sp-sm { padding-block: clamp(2rem, 5vw, 4rem);   position: relative; z-index: 1; }
+
+/* Horizontal rule between sections */
+.sd { border-top: 1px solid rgba(255,255,255,0.06); }
+
+/* Hero 2-col: single column on mobile, 1.05/0.95 split at ≥900px */
+.g2-hero { display: grid; gap: clamp(2rem, 5vw, 3.5rem); grid-template-columns: 1fr; }
+@media (min-width: 900px) { .g2-hero { grid-template-columns: 1.05fr 0.95fr; align-items: center; } }
+
+/* Equal 2-col: stacks below 700px */
+.g2 { display: grid; gap: clamp(1.5rem, 4vw, 3.5rem); grid-template-columns: 1fr; }
+@media (min-width: 700px) { .g2 { grid-template-columns: 1fr 1fr; align-items: start; } }
+.g2-center { display: grid; gap: clamp(1.5rem, 4vw, 3.5rem); grid-template-columns: 1fr; }
+@media (min-width: 700px) { .g2-center { grid-template-columns: 1fr 1fr; align-items: center; } }
+
+/* 3-col: 1 → 2 → 3 */
+.g3 { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 560px) { .g3 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 960px) { .g3 { grid-template-columns: repeat(3, 1fr); } }
+
+/* 4-col: 2 → 4 */
+.g4 { display: grid; gap: 1.25rem; grid-template-columns: 1fr 1fr; }
+@media (min-width: 1024px) { .g4 { grid-template-columns: repeat(4, 1fr); } }
+
+/* 5-col logo grid */
+.g5 { display: grid; gap: 0.75rem; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 480px) { .g5 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 900px) { .g5 { grid-template-columns: repeat(5, 1fr); } }
+
+/* 2-col inline form pairs */
+.gform { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+@media (min-width: 540px) { .gform { grid-template-columns: 1fr 1fr; } }
+
+/* Stats grid: 2 at sm, 4 at lg — inline borders handled per-item but layout is responsive */
+.g-stats { display: grid; grid-template-columns: 1fr 1fr; }
+@media (min-width: 1024px) { .g-stats { grid-template-columns: repeat(4, 1fr); } }
+
+/* Utility: preserve z-index stacking in sections */
+.rel { position: relative; z-index: 1; }

@@ -1,136 +1,155 @@
 "use client";
 
-import { useTheme } from "../components/PageShell";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
-import { getThemeTokens } from "../lib/themeTokens";
 
-const pillars = [
-  {
-    title: "Simple systems",
-    description: "Technology should reduce friction, not add it. We keep architecture clear, reliable, and purpose-built.",
-  },
-  {
-    title: "Long-term partnership",
-    description: "We prioritize honest communication, iterative delivery, and a working relationship that survives beyond launch day.",
-  },
-  {
-    title: "Business-first thinking",
-    description: "Every solution is designed around the actual challenge, the users it serves, and the value it needs to create.",
-  },
+const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
+const HEAD = "var(--font-head), 'Sora', sans-serif";
+const BODY = "var(--font-body), 'Hanken Grotesk', sans-serif";
+
+function Eyebrow({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
+  return (
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color: muted ? "var(--text-dim)" : "var(--accent)", marginBottom: 16 }}>
+      <span style={{ width: 7, height: 7, borderRadius: "50%", background: muted ? "var(--text-dim)" : "var(--accent)", boxShadow: muted ? "none" : "0 0 10px var(--accent)", flexShrink: 0 }} />
+      {children}
+    </div>
+  );
+}
+
+function useReveal(threshold = 0.1) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setOn(true); obs.disconnect(); } }, { threshold });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return { ref, on };
+}
+
+const VALUES = [
+  { idx: "01", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>, title: "Outcomes, not output", body: "We measure success by hours saved and errors removed — not lines shipped or features listed." },
+  { idx: "02", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>, title: "No hand-holding required", body: "What we build runs without us. Documented, monitored, and genuinely yours on handover." },
+  { idx: "03", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><path d="M4 6h16M4 12h16M4 18h10"/></svg>, title: "Boring on purpose", body: "The best operational software is invisible. We optimise for reliability over novelty, every time." },
 ];
 
-const milestones = [
-  { value: "2018", label: "Founded" },
-  { value: "Fortune 500", label: "Trusted by" },
-  { value: "End-to-end", label: "Delivery style" },
+const TIMELINE = [
+  { year: "2021", title: "Founded",       body: "Started in Mumbai with one automation project and one stubborn spreadsheet." },
+  { year: "2022", title: "First product", body: "Shipped our first reusable internal-tooling framework." },
+  { year: "2023", title: "Cross-border",  body: "Expanded to clients across three countries and four industries." },
+  { year: "2024", title: "Scaling",       body: "Now running production systems handling millions of events monthly." },
+];
+
+const STATS = [
+  { num: "12+",   lbl: "Projects delivered" },
+  { num: "100%",  lbl: "Client retention" },
+  { num: "03",    lbl: "Countries served" },
+  { num: "04yr",  lbl: "Track record" },
 ];
 
 export default function AboutPage() {
-  const { theme } = useTheme();
-  const t = getThemeTokens(theme);
+  const statsReveal   = useReveal(0.08);
+  const valuesReveal  = useReveal(0.07);
+  const timelineReveal = useReveal(0.07);
+  const ctaReveal     = useReveal(0.08);
 
   return (
-    <div className="min-h-screen" style={{ transition: "background 0.65s ease" }}>
-      <ThemeHeroSection contentClassName="mx-auto w-full max-w-7xl">
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div>
-            <div
-              className="hero-anim-2 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium uppercase tracking-[0.18em]"
-              style={{ borderColor: t.border, color: t.accent, background: t.accentSoft }}
-            >
-              About eigensu
-            </div>
-            <h1 className="hero-anim-3 mt-6 max-w-3xl text-4xl leading-none tracking-tight md:text-5xl lg:text-6xl xl:text-7xl" style={{ color: t.heading }}>
-              Simple, reliable technology built around your business.
-            </h1>
-            <p className="hero-anim-4 mt-6 max-w-2xl text-base leading-7 md:text-lg" style={{ color: t.body }}>
-              We are a team of engineers, designers, and strategists who believe that technology should be simple, reliable, and purpose-built for the problems it aims to solve.
-            </p>
-          </div>
+    <div>
+      {/* ── Hero ── */}
+      <ThemeHeroSection>
+        <Eyebrow muted>EST. 2021 // MUMBAI, IN</Eyebrow>
+        <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", maxWidth: "16ch", margin: "0 0 20px" }}>
+          We build the systems <span style={{ color: "var(--accent)" }}>companies run on</span> but never show off.
+        </h1>
+        <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", lineHeight: 1.7 }}>
+          Eigensu is a small, deliberate engineering studio. We take the messy internal operations that hold businesses together and turn them into software that holds itself together.
+        </p>
+      </ThemeHeroSection>
 
-          <div
-            className="hero-anim-5 rounded-[32px] border p-6 md:p-8 lg:p-10"
-            style={{
-              background: t.panel,
-              borderColor: t.border,
-              boxShadow: t.isDark ? "0 24px 90px rgba(0,0,0,0.28)" : "0 24px 80px rgba(15,23,42,0.08)",
-              backdropFilter: "blur(18px)",
-            }}
-          >
-            <div className="grid gap-4 sm:grid-cols-3">
-              {milestones.map((item) => (
-                <div
-                  key={item.label}
-                  className="rounded-2xl border p-5"
-                  style={{
-                    background: t.isDark ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.65)",
-                    borderColor: t.border,
-                  }}
-                >
-                  <div className="text-2xl tracking-tight" style={{ color: t.heading }}>
-                    {item.value}
+      {/* ── Stats + "Operators first" ── */}
+      <section className="relative z-10 py-14 md:py-20 lg:py-24">
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div ref={statsReveal.ref} className="grid gap-8 md:gap-12 md:grid-cols-2 md:items-center" style={{ opacity: statsReveal.on ? 1 : 0, transform: statsReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+            {/* Stats grid */}
+            <div style={{ border: "1px solid var(--border)", borderRadius: 14, background: "linear-gradient(180deg,var(--bg-elev-2),var(--bg-elev))", overflow: "hidden" }}>
+              <div className="grid grid-cols-2">
+                {STATS.map((s, i) => (
+                  <div key={s.lbl} style={{ padding: "clamp(22px,4vw,36px) clamp(16px,3vw,28px)", borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none", borderBottom: i < 2 ? "1px solid var(--border)" : "none" }}>
+                    <div style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.03em", color: "var(--text)" }}>
+                      {s.num.replace(/[+%×yr]/g, "")}<span style={{ color: "var(--accent)" }}>{s.num.match(/[+%×yr]+/)?.[0] ?? ""}</span>
+                    </div>
+                    <div style={{ fontFamily: MONO, fontSize: "0.7rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--text-muted)", marginTop: 6 }}>{s.lbl}</div>
                   </div>
-                  <div className="mt-1 text-sm" style={{ color: t.muted }}>
-                    {item.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div
-              className="mt-8 rounded-[28px] border p-5 md:p-6"
-              style={{
-                background: t.isDark
-                  ? "linear-gradient(180deg, rgba(0,200,180,0.08), rgba(255,255,255,0.03))"
-                  : "linear-gradient(180deg, rgba(251,191,36,0.10), rgba(255,255,255,0.72))",
-                borderColor: t.border,
-              }}
-            >
-              <div className="text-xs font-medium uppercase tracking-[0.18em]" style={{ color: t.accent }}>
-                Our perspective
+                ))}
               </div>
-              <p className="mt-3 text-sm leading-7 md:text-base" style={{ color: t.body }}>
-                We don&apos;t just build software—we invest in understanding your business, your challenges, and your vision for the future. That collaboration is what turns good work into lasting value.
+            </div>
+            {/* Text */}
+            <div>
+              <Eyebrow>Who we are</Eyebrow>
+              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.5rem,2.5vw,2rem)", letterSpacing: "-0.02em", color: "var(--text)", marginBottom: 16 }}>Operators first, engineers second.</h2>
+              <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7 }}>
+                Most software fails operations because it&apos;s built by people who&apos;ve never run one. We start from the workflow — the handoffs, the exceptions, the 4pm scramble — and only then write code. The result is systems that fit the way work actually happens, not the way a tool wishes it did.
               </p>
             </div>
           </div>
         </div>
-      </ThemeHeroSection>
+      </section>
 
-      <section
-        className="w-full px-4 pb-16 md:px-6 md:pb-24"
-        style={{ background: t.contentBg, transition: "background 0.65s ease" }}
-      >
-        <div className="grid w-full gap-4 md:grid-cols-3 md:gap-6">
-          {pillars.map((pillar, index) => (
-            <article
-              key={pillar.title}
-              className="rounded-[28px] border p-6 md:p-7"
-              style={{
-                background: t.panel,
-                borderColor: t.border,
-                boxShadow:
-                  index === 1
-                    ? t.isDark
-                      ? "0 20px 60px rgba(0,0,0,0.18)"
-                      : "0 20px 60px rgba(15,23,42,0.05)"
-                    : "none",
-              }}
-            >
-              <div
-                className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl"
-                style={{ background: t.accentSoft, border: `1px solid ${t.border}` }}
-              >
-                <span className="text-sm font-semibold" style={{ color: t.accent }}>{`0${index + 1}`}</span>
+      {/* ── Values / Principles ── */}
+      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div style={{ maxWidth: 560, marginBottom: 48 }}>
+            <Eyebrow>Principles</Eyebrow>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>How we think.</h2>
+          </div>
+          <div ref={valuesReveal.ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {VALUES.map((v, i) => (
+              <article key={v.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "24px 22px", position: "relative", opacity: valuesReveal.on ? 1 : 0, transform: valuesReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
+                <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: "var(--text-dim)" }}>{v.idx}</span>
+                <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid var(--border-strong)", background: "var(--panel)", marginBottom: 18 }}>{v.icon}</div>
+                <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>{v.title}</h3>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.65 }}>{v.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Timeline ── */}
+      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div style={{ maxWidth: 560, marginBottom: 48 }}>
+            <Eyebrow>Trajectory</Eyebrow>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>A short history.</h2>
+          </div>
+          <div ref={timelineReveal.ref} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
+            {TIMELINE.map((t, i) => (
+              <article key={t.year} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "22px 20px", opacity: timelineReveal.on ? 1 : 0, transform: timelineReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
+                <Eyebrow muted>{t.year}</Eyebrow>
+                <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginTop: 12, marginBottom: 10, color: "var(--text)" }}>{t.title}</h3>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.65 }}>{t.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="relative z-10 py-10 md:py-14">
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div ref={ctaReveal.ref} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaReveal.on ? 1 : 0, transform: ctaReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+            <div style={{ position: "absolute", width: 400, height: 280, background: "var(--accent)", filter: "blur(100px)", opacity: 0.18, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "20ch", margin: "0 auto 28px" }}>Want to know if we&apos;re the right fit?</h2>
+              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+                <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none" }}>Book a call</Link>
+                <Link href="/projects" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>See our work</Link>
               </div>
-              <h2 className="text-xl" style={{ color: t.heading }}>
-                {pillar.title}
-              </h2>
-              <p className="mt-3 text-sm leading-7 md:text-[15px]" style={{ color: t.body }}>
-                {pillar.description}
-              </p>
-            </article>
-          ))}
+            </div>
+          </div>
         </div>
       </section>
     </div>

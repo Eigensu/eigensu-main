@@ -1,55 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useTheme } from "./PageShell";
 
-const NAV_COLUMNS = [
-  {
-    heading: "Company",
-    links: [
-      { label: "Home", href: "/" },
-      { label: "About", href: "/about" },
-      { label: "Careers", href: "/careers" },
-    ],
-  },
-  {
-    heading: "Services",
-    links: [
-      { label: "Our process", href: "/process" },
-      { label: "Case studies", href: "/cases" },
-      { label: "Pricing", href: "/pricing" },
-    ],
-  },
-  {
-    heading: "Connect",
-    links: [
-      { label: "LinkedIn", href: "#" },
-      { label: "Twitter / X", href: "#" },
-      { label: "GitHub", href: "#" },
-    ],
-  },
+const SOLUTIONS_LINKS = [
+  { label: "Operations Automation", href: "/services" },
+  { label: "Internal Tooling",      href: "/services" },
+  { label: "Systems Integration",   href: "/services" },
 ];
 
-const LEGAL_LINKS = ["Privacy policy", "Terms of service", "Cookie settings"];
+const COMPANY_LINKS = [
+  { label: "About",    href: "/about" },
+  { label: "Projects", href: "/projects" },
+  { label: "Contact",  href: "/contact" },
+];
 
-function IconMail() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <rect x="1" y="2.5" width="12" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
-      <path d="M1 4l6 4.5L13 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-    </svg>
-  );
-}
+const CONNECT_LINKS = [
+  { label: "LinkedIn",   href: "#" },
+  { label: "X / Twitter", href: "#" },
+  { label: "GitHub",     href: "#" },
+];
 
-function IconArrow() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-// Each letter: filled=solid accent, outline=stroke only (matching the reference image style)
 const BREAKER_LETTERS: { char: string; filled: boolean }[] = [
   { char: "E", filled: false },
   { char: "I", filled: true  },
@@ -60,43 +30,28 @@ const BREAKER_LETTERS: { char: string; filled: boolean }[] = [
   { char: "U", filled: true  },
 ];
 
-function FooterBreaker({ isDark }: { isDark: boolean }) {
-  const bg     = isDark ? "#060d12" : "#f5f0e8";
-  const accent = isDark ? "#00c8b4" : "#f59e0b";
-
+function FooterBreaker() {
   return (
     <div
       aria-hidden="true"
       className="relative w-full overflow-hidden select-none"
       style={{
-        background: bg,
-        // Fixed height so letters bleed top+bottom — framed like the reference
+        background: "var(--bg)",
         height: "clamp(110px, 16vw, 200px)",
-        transition: "background 0.65s ease",
       }}
     >
-      {/*
-        The trick: letters are MUCH taller than the container.
-        We centre them vertically so the top and bottom are clipped,
-        leaving only the middle band visible — exactly like the reference.
-      */}
-      <div
-        className="absolute inset-0 flex items-center justify-between"
-        style={{ padding: "0" }}
-      >
+      <div className="absolute inset-0 flex items-center justify-between">
         {BREAKER_LETTERS.map(({ char, filled }, index) => (
           <span
             key={`${char}-${index}`}
             className="flex-1 text-center leading-none"
             style={{
-              fontFamily: "var(--font-bebas), 'Arial Narrow', Impact, sans-serif",
-              // Much taller than the wrapper — bleeds top & bottom
+              fontFamily: "var(--font-logo), 'Montserrat', sans-serif",
               fontSize: "clamp(14rem, 30vw, 30rem)",
               lineHeight: 1,
-              color: filled ? accent : "transparent",
-              WebkitTextStroke: filled ? "0" : `2px ${accent}`,
+              color: filled ? "var(--accent)" : "transparent",
+              WebkitTextStroke: filled ? "0" : "2px var(--accent)",
               paintOrder: "stroke fill",
-              // Slight negative margin creates letter overlap
               marginLeft: index === 0 ? 0 : "-0.04em",
               zIndex: filled ? 2 : 1,
               position: "relative",
@@ -110,191 +65,223 @@ function FooterBreaker({ isDark }: { isDark: boolean }) {
   );
 }
 
+function IconArrow() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
-  const t = {
-    pageBg:        isDark ? "#020608"                     : "#ffffff",
-    ctaSectionBg:  isDark ? "#0b1520"                     : "#f8fafc",
-    ctaCardBg:     isDark ? "rgba(255,255,255,0.04)"      : "#ffffff",
-    btnBg:         isDark ? "rgba(255,255,255,0.06)"      : "#f8fafc",
-
-    sectionBorder: isDark ? "rgba(255,255,255,0.07)"      : "rgba(15,23,42,0.08)",
-    cardBorder:    isDark ? "rgba(255,255,255,0.08)"      : "rgba(15,23,42,0.08)",
-    btnBorder:     isDark ? "rgba(255,255,255,0.12)"      : "rgba(15,23,42,0.12)",
-    divider:       isDark ? "rgba(255,255,255,0.07)"      : "rgba(15,23,42,0.08)",
-
-    textPrimary:   isDark ? "#f1f5f9"                     : "#0f172a",
-    textMuted:     isDark ? "rgba(241,245,249,0.55)"      : "rgba(15,23,42,0.55)",
-    textFaint:     isDark ? "rgba(241,245,249,0.30)"      : "rgba(15,23,42,0.35)",
-    textDimmer:    isDark ? "rgba(241,245,249,0.28)"      : "rgba(15,23,42,0.35)",
-
-    badgeBorder:   isDark ? "rgba(29,158,117,0.35)"       : "rgba(15,118,110,0.25)",
-    badgeBg:       isDark ? "rgba(29,158,117,0.08)"       : "#f0fdf9",
-    badgeText:     isDark ? "#5DCAA5"                     : "#0F6E56",
-    dotGrid:       isDark
-      ? "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)"
-      : "radial-gradient(circle, rgba(15,23,42,0.06) 1px, transparent 1px)",
-  };
+  const border    = "var(--border)";
+  const textMuted = "var(--text-muted)";
+  const textDim   = "var(--text-dim)";
+  const textPri   = "var(--text)";
+  const dotGrid   = "radial-gradient(circle, var(--border) 1px, transparent 1px)";
 
   return (
     <>
-      {/* spacer bridge */}
-      <div
-        className="px-4 md:px-10 pt-10 pb-0 transition-colors duration-500"
-        style={{ background: t.pageBg }}
-      />
-
-      {/* ══ CTA SECTION ════════════════════════════════════════ */}
+      {/* CTA section */}
       <section
-        aria-label="Call to action"
-        className="relative w-full overflow-hidden transition-colors duration-500"
-        style={{
-          background: t.ctaSectionBg,
-          // Sharp corners — no border-radius
-          border: `0.5px solid ${t.sectionBorder}`,
-          borderRadius: 0,
-        }}
+        className="relative w-full overflow-hidden"
+        style={{ background: "var(--bg-elev-2)", borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}` }}
       >
-        {/* dot-grid texture */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
-          style={{ backgroundImage: t.dotGrid, backgroundSize: "24px 24px" }}
+          style={{ backgroundImage: dotGrid, backgroundSize: "24px 24px" }}
         />
-
-        <div className="relative z-10 mx-auto max-w-6xl px-8 py-16 md:px-14 md:py-20">
+        <div className="relative z-10 mx-auto max-w-[1200px] px-6 py-16 md:py-20">
           <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-
-            {/* left copy */}
             <div>
-              {/* No line break, no curves — plain straight heading */}
               <h2
-                className="text-4xl md:text-5xl"
                 style={{
-                  color: t.textPrimary,
+                  fontFamily: "var(--font-head), 'Sora', sans-serif",
+                  fontWeight: 700,
+                  fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
                   letterSpacing: "-0.025em",
                   lineHeight: 1.18,
+                  color: textPri,
+                  maxWidth: "18ch",
                 }}
               >
-                Ready for a website that actually works?
+                Tell us what&apos;s slowing your operation down.
               </h2>
-
-              <p className="mt-5 max-w-md text-base leading-7" style={{ color: t.textMuted }}>
-                Tell us about your project. We respond quickly, and we&apos;ll tell
-                you straight whether we&apos;re the right fit.
+              <p className="mt-5 max-w-md text-base leading-7" style={{ color: textMuted }}>
+                We&apos;ll map it, scope it, and show you what automating it looks like — usually within a week.
               </p>
             </div>
-
-            {/* right card */}
             <div
               className="rounded-2xl p-7"
-              style={{ background: t.ctaCardBg, border: `0.5px solid ${t.cardBorder}` }}
+              style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${border}` }}
             >
-              <p className="text-sm leading-7" style={{ color: t.textMuted }}>
-                We build systems for teams that want clear communication, fast
-                delivery, and long-term reliability — not just a vendor.
+              <p className="text-sm leading-7" style={{ color: textMuted }}>
+                We build systems for teams that want clear communication, fast delivery, and long-term reliability — not just a vendor.
               </p>
-
-              <button
-                type="button"
-                onClick={onOpenModal}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-medium transition-all duration-150 hover:opacity-80 active:scale-[0.98]"
-                style={{ color: t.textPrimary, background: t.btnBg, borderColor: t.btnBorder }}
-              >
-                <IconArrow />
-                Start a conversation
-              </button>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/onboard"
+                  className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:opacity-90"
+                  style={{
+                    background: "var(--accent)",
+                    color: "var(--on-accent)",
+                    fontFamily: "var(--font-body), 'Hanken Grotesk', sans-serif",
+                    boxShadow: "0 0 0 1px var(--accent-line), 0 8px 30px -8px var(--accent)",
+                  }}
+                >
+                  Onboard a project
+                </Link>
+                <button
+                  type="button"
+                  onClick={onOpenModal}
+                  className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:opacity-80"
+                  style={{
+                    color: textPri,
+                    borderColor: "rgba(255,255,255,0.16)",
+                    fontFamily: "var(--font-body), 'Hanken Grotesk', sans-serif",
+                  }}
+                >
+                  <IconArrow />
+                  Book a call
+                </button>
+              </div>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* ══ BREAKER — framed like reference image ══════════════ */}
-      <FooterBreaker isDark={isDark} />
+      {/* Breaker */}
+      <FooterBreaker />
 
-      {/* ══ FOOTER BOTTOM ══════════════════════════════════════ */}
-      <footer
-        className="transition-colors duration-500"
-        style={{ background: t.pageBg }}
-      >
-        <div className="mx-auto max-w-7xl px-6 md:px-12 py-14 md:py-16">
-
-          {/* 4-column grid */}
+      {/* Footer bottom */}
+      <footer style={{ background: "var(--bg)", borderTop: `1px solid ${border}` }}>
+        <div className="mx-auto max-w-[1200px] px-6 py-14 md:py-16">
           <div className="mb-12 grid grid-cols-2 gap-10 md:grid-cols-4 md:gap-8">
 
-            {/* brand */}
+            {/* Brand */}
             <div className="col-span-2 md:col-span-1">
-              <h3 className="mb-2 text-base" style={{ color: t.textPrimary }}>
-                eigensu<span style={{ color: "#1D9E75" }}>.in</span>
-              </h3>
-              <p className="mb-4 text-sm leading-6" style={{ color: t.textMuted }}>
-                Enterprise-grade IT solutions,
-                <br />
-                built for teams that move fast.
+              <div
+                className="mb-3 inline-flex items-center gap-2"
+                style={{
+                  fontFamily: "var(--font-logo), 'Montserrat', sans-serif",
+                  fontWeight: 800,
+                  fontSize: "1.1rem",
+                  letterSpacing: "1.5px",
+                  textTransform: "uppercase",
+                  color: textPri,
+                }}
+              >
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--accent)", boxShadow: "0 0 10px var(--accent)" }} />
+                EIGENSU
+              </div>
+              <p className="mb-4 text-sm leading-6" style={{ color: textMuted }}>
+                Tailored systems and products for internal management and operations optimisation.
               </p>
               <a
                 href="mailto:hello@eigensu.in"
-                className="inline-flex items-center gap-1.5 text-sm transition-opacity hover:opacity-70"
-                style={{ color: t.textMuted }}
+                className="text-sm transition-opacity hover:opacity-70"
+                style={{ color: textMuted }}
               >
-                <IconMail />
                 hello@eigensu.in
               </a>
             </div>
 
-            {/* nav columns */}
-            {NAV_COLUMNS.map((col) => (
-              <div key={col.heading}>
-                <h4
-                  className="mb-4 text-xs font-medium uppercase tracking-widest"
-                  style={{ color: t.textFaint }}
-                >
-                  {col.heading}
-                </h4>
-                <ul className="flex flex-col gap-2.5">
-                  {col.links.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-sm transition-opacity hover:opacity-70"
-                        style={{ color: t.textMuted }}
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+            {/* Solutions */}
+            <div>
+              <h5
+                className="mb-4 text-xs uppercase tracking-[2px]"
+                style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textDim }}
+              >
+                Solutions
+              </h5>
+              <ul className="flex flex-col gap-2.5">
+                {SOLUTIONS_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <Link href={link.href} className="text-sm transition-opacity hover:opacity-70" style={{ color: textMuted }}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* divider */}
-          <div style={{ height: "0.5px", background: t.divider, marginBottom: "20px" }} />
+            {/* Company */}
+            <div>
+              <h5
+                className="mb-4 text-xs uppercase tracking-[2px]"
+                style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textDim }}
+              >
+                Company
+              </h5>
+              <ul className="flex flex-col gap-2.5">
+                {COMPANY_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <Link href={link.href} className="text-sm transition-opacity hover:opacity-70" style={{ color: textMuted }}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* bottom bar */}
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p className="text-xs" style={{ color: t.textDimmer }}>
-              &copy; {new Date().getFullYear()} eigensu.in. All rights reserved.
-            </p>
-            <div className="flex flex-wrap gap-5">
-              {LEGAL_LINKS.map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="text-xs transition-opacity hover:opacity-70"
-                  style={{ color: t.textDimmer }}
-                >
-                  {item}
-                </a>
-              ))}
+            {/* Connect */}
+            <div>
+              <h5
+                className="mb-4 text-xs uppercase tracking-[2px]"
+                style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textDim }}
+              >
+                Connect
+              </h5>
+              <ul className="flex flex-col gap-2.5">
+                {CONNECT_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="text-sm transition-opacity hover:opacity-70" style={{ color: textMuted }}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
+          {/* Divider */}
+          <div style={{ height: "0.5px", background: border, marginBottom: 20 }} />
+
+          {/* Bottom bar */}
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <p
+              className="text-xs"
+              style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textDim }}
+            >
+              &copy; {new Date().getFullYear()} Eigensu. All rights reserved.
+            </p>
+            <span
+              className="inline-flex items-center gap-2 text-xs"
+              style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textMuted }}
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: "var(--ok)",
+                  boxShadow: "0 0 10px var(--ok)",
+                  animation: "footerPulse 2s infinite",
+                }}
+              />
+              All systems operational
+            </span>
+          </div>
         </div>
       </footer>
+
+      <style>{`
+        @keyframes footerPulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(56,232,176,0.5); }
+          70%       { box-shadow: 0 0 0 8px rgba(56,232,176,0); }
+        }
+      `}</style>
     </>
   );
 }

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eigensu — Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="logo"><span class="dot"></span>EIGENSU</a>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__right">
+      <a href="onboard.html" class="btn btn--primary btn--sm">Start a Project</a>
+      <button class="nav__burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a><a href="services.html">Services</a><a href="projects.html">Projects</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  <a href="onboard.html" class="btn btn--primary">Start a Project</a>
+</div>
+
+<!-- PAGE HEAD -->
+<section class="page-head">
+  <div class="glow"></div>
+  <div class="wrap">
+    <span class="eyebrow">Projects // selected work</span>
+    <h1 class="h-xl" style="max-width:15ch;">Systems quietly <span class="accent-word">doing the work</span> right now.</h1>
+    <p class="lead">A sample of what we've shipped. Names are placeholders — swap in your real case studies later.</p>
+  </div>
+</section>
+
+<!-- CAROUSEL -->
+<section class="section--tight">
+  <div class="wrap">
+    <div class="carousel reveal">
+      <div class="carousel__track">
+        <article class="slide"><span class="slide__tag">Logistics</span><h4>Dispatch automation</h4><p>A self-balancing dispatch engine that replaced a manual routing desk, handling 2,000+ orders daily without intervention.</p><div class="slide__meta"><span>NORTHWIND</span><span class="slide__out">−71% manual hrs</span></div></article>
+        <article class="slide"><span class="slide__tag">Manufacturing</span><h4>Inventory reconciliation</h4><p>Real-time stock synchronisation across four plants and three ERP systems, eliminating the monthly variance scramble.</p><div class="slide__meta"><span>VERTEX</span><span class="slide__out">99.4% accuracy</span></div></article>
+        <article class="slide"><span class="slide__tag">Finance</span><h4>Approval routing</h4><p>Policy-aware approval flows that route, escalate, and audit themselves — cutting the average cycle from days to minutes.</p><div class="slide__meta"><span>ATLAS</span><span class="slide__out">8h → 40m</span></div></article>
+        <article class="slide"><span class="slide__tag">Retail</span><h4>Ops command centre</h4><p>A single console unifying nine in-store systems into one live operational view for regional managers.</p><div class="slide__meta"><span>HELIOS</span><span class="slide__out">9 tools → 1</span></div></article>
+        <article class="slide"><span class="slide__tag">Healthcare</span><h4>Intake digitisation</h4><p>Paper intake replaced with a validated digital workflow feeding straight into the records system.</p><div class="slide__meta"><span>MERIDIAN</span><span class="slide__out">−92% errors</span></div></article>
+        <article class="slide"><span class="slide__tag">R&amp;D</span><h4>Experiment tracker</h4><p>Internal product giving lab teams one place to log, compare, and reproduce experiments across sites.</p><div class="slide__meta"><span>QUANTA</span><span class="slide__out">+40% throughput</span></div></article>
+      </div>
+      <div class="carousel__nav">
+        <div class="carousel__dots"></div>
+        <div class="carousel__btns">
+          <button data-prev aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button data-next aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENT LOGOS -->
+<section class="section--tight">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-bottom:32px;">
+      <span class="eyebrow">Clients</span>
+      <h2 class="h-md">Teams that trust the machinery.</h2>
+    </div>
+    <div class="logos reveal">
+      <div>NORTHWIND</div><div>VERTEX</div><div>HELIOS</div><div>ATLAS</div><div>MERIDIAN</div>
+      <div>QUANTA</div><div>ORBIT</div><div>LUMEN</div><div>NEXUS</div><div>SOLACE</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED CASE -->
+<section class="section">
+  <div class="wrap">
+    <div class="feature reveal">
+      <div class="feature__copy">
+        <span class="eyebrow">Featured // case study</span>
+        <h3>From 6 people routing orders to 0.</h3>
+        <p class="lead">Northwind's dispatch desk was a bottleneck and a single point of failure. We modelled their routing rules, built an engine around them, and put humans back on exceptions only.</p>
+        <ul class="checks">
+          <li>2,000+ orders auto-routed every day</li>
+          <li>Exceptions surfaced in a live queue</li>
+          <li>Full audit trail for every decision</li>
+        </ul>
+        <a href="onboard.html" class="btn btn--ghost" style="margin-top:26px;">Start something like this</a>
+      </div>
+      <div class="feature__media">
+        <div class="window">
+          <div class="window__bar"><div class="window__dots"><i></i><i></i><i></i></div><span class="window__tab">dispatch — live</span></div>
+          <div class="dash">
+            <div class="dash__row"><span class="label">orders_in_queue</span><span class="val" style="color:var(--accent-3)">14</span></div>
+            <div class="dash__row"><span class="label">auto_routed_today</span><span class="val" style="color:var(--accent-2)">1,986</span></div>
+            <div class="dash__row"><span class="label">exceptions</span><span class="tag tag--wait">2 pending</span></div>
+            <div class="dash__bars"><i data-h="55"></i><i data-h="70"></i><i data-h="48"></i><i data-h="88"></i><i data-h="62"></i><i data-h="95"></i><i data-h="71"></i><i data-h="80"></i></div>
+            <div class="dash__cmd"><span class="prompt">engine ▸</span> status: balanced<span class="cursor"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section--tight">
+  <div class="wrap">
+    <div class="cta-block reveal">
+      <div class="glow"></div>
+      <h2 class="h-lg" style="max-width:18ch;margin-inline:auto;">Your project could be the next one on this page.</h2>
+      <div class="btn-group"><a href="onboard.html" class="btn btn--primary">Onboard a project</a><a href="contact.html" class="btn btn--ghost">Book a call</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand"><a href="index.html" class="logo"><span class="dot"></span>EIGENSU</a><p>Tailored systems and products for internal management and operations optimisation.</p></div>
+      <div class="footer__col"><h5>Solutions</h5><a href="services.html">Operations Automation</a><a href="services.html">Internal Tooling</a><a href="services.html">Systems Integration</a></div>
+      <div class="footer__col"><h5>Company</h5><a href="about.html">About</a><a href="projects.html">Projects</a><a href="contact.html">Contact</a></div>
+      <div class="footer__col"><h5>Connect</h5><a href="#">LinkedIn</a><a href="#">X / Twitter</a><a href="#">GitHub</a></div>
+    </div>
+    <div class="footer__bottom"><p>© 2025 Eigensu. All rights reserved.</p><span class="status"><span class="pulse"></span>All systems operational</span></div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

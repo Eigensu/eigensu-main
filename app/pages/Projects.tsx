@@ -1,763 +1,221 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useTheme } from "../components/PageShell";
+import Link from "next/link";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
-import { getThemeTokens } from "../lib/themeTokens";
 
-interface Project {
-  id: number;
-  category: string;
-  name: string;
-  tagline: string;
-  body: string;
-  chips: string[];
-  stat: string;
-  statUnit: string;
-  kpiLabel: string;
-  accent: string;
-  year: string;
-}
+const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
+const HEAD = "var(--font-head), 'Sora', sans-serif";
+const BODY = "var(--font-body), 'Hanken Grotesk', sans-serif";
 
-const PROJECTS: Project[] = [
-  {
-    id: 1,
-    category: "Cloud Infrastructure",
-    name: "CloudForge",
-    tagline: "Enterprise Multi-Cloud Migration",
-    body: "Architected a zero-downtime migration for a 2,400-seat financial institution from on-premise data centres to a hybrid AWS / Azure stack. Infrastructure spend dropped 38% while payment pipelines maintained a 99.99% SLA throughout the transition.",
-    chips: ["AWS", "Azure", "Terraform", "Kubernetes"],
-    stat: "38",
-    statUnit: "%",
-    kpiLabel: "Infrastructure Cost Saved",
-    accent: "hsl(38 72% 47%)",
-    year: "2024",
-  },
-  {
-    id: 2,
-    category: "Cybersecurity",
-    name: "SentinelShield",
-    tagline: "Zero-Trust Security Framework",
-    body: "Deployed a full zero-trust architecture across a healthcare network spanning 14 hospitals. Lateral movement risk was eliminated and ISO 27001 certification was achieved within 90 days of go-live — ahead of any comparable engagement in the sector.",
-    chips: ["Zero Trust", "SIEM", "SOC", "ISO 27001"],
-    stat: "90",
-    statUnit: " days",
-    kpiLabel: "Days to ISO Certified",
-    accent: "hsl(165 58% 45%)",
-    year: "2024",
-  },
-  {
-    id: 3,
-    category: "Software Development",
-    name: "NexusFlow",
-    tagline: "Real-Time Logistics Intelligence",
-    body: "Built a real-time supply-chain intelligence platform for a pan-India operator managing 18,000+ daily shipments. An event-driven Kafka backbone delivers sub-100ms tracking updates across the entire fleet — no polling, no lag.",
-    chips: ["Next.js", "Kafka", "PostgreSQL", "Redis"],
-    stat: "18K",
-    statUnit: "+",
-    kpiLabel: "Shipments Tracked Daily",
-    accent: "hsl(278 54% 55%)",
-    year: "2023",
-  },
-  {
-    id: 4,
-    category: "Managed Services",
-    name: "OpsHorizon",
-    tagline: "24/7 Infrastructure Ownership",
-    body: "Assumed complete managed-services responsibility for a Series-C SaaS company — monitoring, patching, incident response and capacity planning. Mean time to detect sits under four minutes; mean time to resolve under twenty-two, sustained over a three-year engagement.",
-    chips: ["NOC / SOC", "Datadog", "PagerDuty", "SRE"],
-    stat: "<4",
-    statUnit: " min",
-    kpiLabel: "Mean Time to Detect",
-    accent: "hsl(4 62% 52%)",
-    year: "2023",
-  },
-  {
-    id: 5,
-    category: "Digital Transformation",
-    name: "DataPulse",
-    tagline: "Enterprise Analytics & BI Overhaul",
-    body: "Replaced a fragmented legacy BI stack with a modern lakehouse for a retail conglomerate operating 400+ stores. Eleven disparate data sources now flow into a single Snowflake warehouse; analyst turnaround fell from days to minutes via self-serve dashboards.",
-    chips: ["Snowflake", "dbt", "Tableau", "Python"],
-    stat: "400",
-    statUnit: "+",
-    kpiLabel: "Retail Stores Unified",
-    accent: "hsl(96 52% 42%)",
-    year: "2022",
-  },
-];
-
-const TICKER_ITEMS = [
-  "Cloud Infrastructure",
-  "Cybersecurity",
-  "Software Engineering",
-  "Managed Services",
-  "Digital Transformation",
-  "Enterprise IT",
-  "Zero Downtime",
-  "ISO 27001",
-];
-
-// ── SVG Visuals per project ─────────────────────────────────────────────────
-
-function CloudVisual({ accent, on }: { accent: string; on: boolean }) {
+function Eyebrow({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
   return (
-    <svg viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg"
-      style={{ width: "100%", maxWidth: 360, opacity: on ? 1 : 0, transition: "opacity 1s ease 0.4s" }}>
-      {/* Grid */}
-      {[0,1,2,3,4,5].map(i => (
-        <line key={`h${i}`} x1="20" y1={40 + i*36} x2="340" y2={40 + i*36}
-          stroke={accent} strokeWidth="0.4" strokeOpacity="0.15" />
-      ))}
-      {[0,1,2,3,4,5,6,7,8].map(i => (
-        <line key={`v${i}`} x1={20 + i*40} y1="40" x2={20 + i*40} y2="220"
-          stroke={accent} strokeWidth="0.4" strokeOpacity="0.15" />
-      ))}
-      {/* Cloud shape AWS */}
-      <ellipse cx="130" cy="130" rx="56" ry="38" stroke={accent} strokeWidth="1.2" strokeOpacity="0.6" fill={`${accent}10`} />
-      <ellipse cx="160" cy="115" rx="38" ry="28" stroke={accent} strokeWidth="1.2" strokeOpacity="0.6" fill={`${accent}10`} />
-      <ellipse cx="195" cy="122" rx="44" ry="32" stroke={accent} strokeWidth="1.2" strokeOpacity="0.6" fill={`${accent}10`} />
-      {/* Cloud shape Azure */}
-      <ellipse cx="240" cy="160" rx="48" ry="32" stroke={accent} strokeWidth="1.2" strokeOpacity="0.35" fill={`${accent}08`}
-        style={{ transform: "scale(0.85)", transformOrigin: "240px 160px" }} />
-      {/* Connecting lines */}
-      <line x1="180" y1="158" x2="240" y2="160" stroke={accent} strokeWidth="0.8" strokeOpacity="0.5" strokeDasharray="4 3" />
-      <circle cx="180" cy="158" r="3.5" fill={accent} opacity="0.8" />
-      <circle cx="240" cy="160" r="3.5" fill={accent} opacity="0.5" />
-      {/* Nodes */}
-      {[[60,210],[130,210],[200,210],[280,210]].map(([x,y],i) => (
-        <g key={i}>
-          <rect x={x-14} y={y-10} width="28" height="20" rx="4"
-            stroke={accent} strokeWidth="0.8" fill={`${accent}12`} opacity="0.7" />
-          <line x1={x} y1={y-10} x2={x} y2={y-30}
-            stroke={accent} strokeWidth="0.6" strokeOpacity="0.4" strokeDasharray="3 2" />
-        </g>
-      ))}
-      {/* Label */}
-      <text x="180" y="248" textAnchor="middle" fontSize="9" letterSpacing="3"
-        fill={accent} fillOpacity="0.5" fontFamily="monospace">HYBRID CLOUD ARCHITECTURE</text>
-    </svg>
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color: muted ? "var(--text-dim)" : "var(--accent)", marginBottom: 16 }}>
+      <span style={{ width: 7, height: 7, borderRadius: "50%", background: muted ? "var(--text-dim)" : "var(--accent)", boxShadow: muted ? "none" : "0 0 10px var(--accent)", flexShrink: 0 }} />
+      {children}
+    </div>
   );
 }
 
-function SecurityVisual({ accent, on }: { accent: string; on: boolean }) {
-  return (
-    <svg viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg"
-      style={{ width: "100%", maxWidth: 360, opacity: on ? 1 : 0, transition: "opacity 1s ease 0.4s" }}>
-      {/* Concentric rings */}
-      {[90,70,50,30].map((r, i) => (
-        <circle key={i} cx="180" cy="126" r={r}
-          stroke={accent} strokeWidth="0.6" strokeOpacity={0.1 + i * 0.08}
-          fill="none" strokeDasharray={i % 2 === 0 ? "4 3" : "none"} />
-      ))}
-      {/* Shield */}
-      <path d="M180 56 L220 74 L220 118 Q220 148 180 168 Q140 148 140 118 L140 74 Z"
-        stroke={accent} strokeWidth="1.4" fill={`${accent}12`} />
-      {/* Lock icon */}
-      <rect x="168" y="112" width="24" height="18" rx="3"
-        stroke={accent} strokeWidth="1" fill={`${accent}20`} />
-      <path d="M172 112 Q172 103 180 103 Q188 103 188 112"
-        stroke={accent} strokeWidth="1" fill="none" />
-      <circle cx="180" cy="121" r="2.5" fill={accent} opacity="0.8" />
-      {/* Tick marks around ring */}
-      {Array.from({length: 12}).map((_, i) => {
-        const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
-        const x1 = 180 + Math.cos(angle) * 96;
-        const y1 = 126 + Math.sin(angle) * 96;
-        const x2 = 180 + Math.cos(angle) * 103;
-        const y2 = 126 + Math.sin(angle) * 103;
-        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
-          stroke={accent} strokeWidth={i % 3 === 0 ? "1.2" : "0.5"} strokeOpacity="0.5" />;
-      })}
-      {/* Nodes on ring */}
-      {[0, 1, 2, 3].map(i => {
-        const angle = (i / 4) * Math.PI * 2 - Math.PI / 4;
-        const x = 180 + Math.cos(angle) * 90;
-        const y = 126 + Math.sin(angle) * 90;
-        return (
-          <g key={i}>
-            <circle cx={x} cy={y} r="5" stroke={accent} strokeWidth="0.8" fill={`${accent}20`} />
-            <line x1={x} y1={y} x2="180" y2="126"
-              stroke={accent} strokeWidth="0.4" strokeOpacity="0.2" />
-          </g>
-        );
-      })}
-      <text x="180" y="248" textAnchor="middle" fontSize="9" letterSpacing="3"
-        fill={accent} fillOpacity="0.5" fontFamily="monospace">ZERO-TRUST PERIMETER</text>
-    </svg>
-  );
-}
-
-function CodeVisual({ accent, on }: { accent: string; on: boolean }) {
-  const lines = [
-    "import { Kafka } from 'kafkajs'",
-    "const consumer = kafka.consumer()",
-    "await consumer.subscribe({",
-    "  topic: 'shipments',",
-    "  fromBeginning: false",
-    "})",
-    "consumer.run({",
-    "  eachMessage: async ({ msg }) => {",
-    "    await trackShipment(msg)",
-    "  }",
-    "})",
-  ];
-  return (
-    <svg viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg"
-      style={{ width: "100%", maxWidth: 360, opacity: on ? 1 : 0, transition: "opacity 1s ease 0.4s" }}>
-      {/* Terminal window */}
-      <rect x="20" y="20" width="320" height="210" rx="8"
-        stroke={accent} strokeWidth="0.8" fill={`${accent}06`} />
-      <rect x="20" y="20" width="320" height="30" rx="8"
-        stroke="none" fill={`${accent}14`} />
-      <circle cx="42" cy="35" r="4.5" fill={accent} opacity="0.4" />
-      <circle cx="58" cy="35" r="4.5" fill={accent} opacity="0.25" />
-      <circle cx="74" cy="35" r="4.5" fill={accent} opacity="0.15" />
-      {/* Code lines */}
-      {lines.map((line, i) => (
-        <text key={i} x="32" y={70 + i * 16} fontSize="8.5"
-          fill={accent} fillOpacity={i === 0 ? 0.9 : 0.55}
-          fontFamily="monospace" letterSpacing="0.3">
-          {line}
-        </text>
-      ))}
-      {/* Cursor blink */}
-      <rect x="32" y="236" width="6" height="10" fill={accent} opacity="0.7">
-        <animate attributeName="opacity" values="0.7;0;0.7" dur="1.2s" repeatCount="indefinite" />
-      </rect>
-      <text x="180" y="248" textAnchor="middle" fontSize="9" letterSpacing="3"
-        fill={accent} fillOpacity="0.5" fontFamily="monospace">EVENT-DRIVEN PIPELINE</text>
-    </svg>
-  );
-}
-
-function OpsVisual({ accent, on }: { accent: string; on: boolean }) {
-  const bars = [62, 78, 55, 90, 45, 80, 70, 95, 60, 85, 72, 88];
-  return (
-    <svg viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg"
-      style={{ width: "100%", maxWidth: 360, opacity: on ? 1 : 0, transition: "opacity 1s ease 0.4s" }}>
-      {/* Horizontal grid */}
-      {[0,1,2,3,4].map(i => (
-        <line key={i} x1="30" y1={50 + i * 36} x2="340" y2={50 + i * 36}
-          stroke={accent} strokeWidth="0.4" strokeOpacity="0.15" />
-      ))}
-      {/* Bars */}
-      {bars.map((h, i) => (
-        <rect key={i} x={30 + i * 26} y={194 - h} width="18" height={h}
-          fill={`${accent}${i === 8 ? "90" : "28"}`}
-          stroke={accent} strokeWidth="0.5" strokeOpacity="0.4" rx="2" />
-      ))}
-      {/* Alert line */}
-      <line x1="30" y1="100" x2="340" y2="100"
-        stroke={accent} strokeWidth="0.8" strokeDasharray="6 4" strokeOpacity="0.6" />
-      <text x="344" y="103" fontSize="8" fill={accent} fillOpacity="0.6" fontFamily="monospace">SLA</text>
-      {/* Pulse dot */}
-      <circle cx="252" cy="194" r="4" fill={accent} opacity="0.9">
-        <animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.9;0.2;0.9" dur="2s" repeatCount="indefinite" />
-      </circle>
-      <circle cx="252" cy="194" r="4" fill={accent} />
-      <text x="180" y="248" textAnchor="middle" fontSize="9" letterSpacing="3"
-        fill={accent} fillOpacity="0.5" fontFamily="monospace">UPTIME MONITORING</text>
-    </svg>
-  );
-}
-
-function DataVisual({ accent, on }: { accent: string; on: boolean }) {
-  const sources = [
-    [50, 60], [50, 100], [50, 140], [50, 180],
-    [310, 60], [310, 100], [310, 140], [310, 180],
-  ];
-  return (
-    <svg viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg"
-      style={{ width: "100%", maxWidth: 360, opacity: on ? 1 : 0, transition: "opacity 1s ease 0.4s" }}>
-      {/* Center warehouse */}
-      <ellipse cx="180" cy="126" rx="48" ry="30"
-        stroke={accent} strokeWidth="1.2" fill={`${accent}14`} />
-      <text x="180" y="130" textAnchor="middle" fontSize="8.5" letterSpacing="1.5"
-        fill={accent} fillOpacity="0.8" fontFamily="monospace">SNOWFLAKE</text>
-      {/* Source nodes */}
-      {sources.map(([x, y], i) => (
-        <g key={i}>
-          <rect x={x - 18} y={y - 10} width="36" height="20" rx="4"
-            stroke={accent} strokeWidth="0.8" fill={`${accent}10`} strokeOpacity="0.5" />
-          <line x1={x > 180 ? x - 18 : x + 18} y1={y}
-            x2={x > 180 ? 228 : 132} y2={120 + (i % 4) * 4}
-            stroke={accent} strokeWidth="0.5" strokeOpacity="0.3" strokeDasharray="3 2" />
-          <circle cx={x > 180 ? x - 18 : x + 18} cy={y} r="2"
-            fill={accent} opacity="0.6" />
-        </g>
-      ))}
-      {/* Flow arrows toward center */}
-      <circle cx="180" cy="126" r="6" fill={accent} opacity="0.3">
-        <animate attributeName="r" values="6;16;6" dur="3s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite" />
-      </circle>
-      <text x="180" y="248" textAnchor="middle" fontSize="9" letterSpacing="3"
-        fill={accent} fillOpacity="0.5" fontFamily="monospace">UNIFIED DATA LAKEHOUSE</text>
-    </svg>
-  );
-}
-
-const PROJECT_VISUALS = [CloudVisual, SecurityVisual, CodeVisual, OpsVisual, DataVisual];
-
-// ── Hooks ────────────────────────────────────────────────────────────────────
-
-function useParallax(factor = 0.3) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const tick = () => {
-      const rect = el.getBoundingClientRect();
-      const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * factor;
-      el.style.transform = `translateY(${offset}px)`;
-    };
-    window.addEventListener("scroll", tick, { passive: true });
-    tick();
-    return () => window.removeEventListener("scroll", tick);
-  }, [factor]);
-  return ref;
-}
-
-function useReveal(threshold = 0.12) {
+function useReveal(threshold = 0.08) {
   const ref = useRef<HTMLDivElement>(null);
   const [on, setOn] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setOn(true); obs.disconnect(); } },
-      { threshold }
-    );
+    const obs = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setOn(true); obs.disconnect(); } }, { threshold });
     obs.observe(el);
     return () => obs.disconnect();
   }, [threshold]);
   return { ref, on };
 }
 
-function useCountUp(target: string, run: boolean, duration = 1400) {
-  const [display, setDisplay] = useState("0");
+/* ── Carousel ────────────────────────────────────────────────────────────── */
+
+const SLIDES = [
+  { tag: "Logistics",    title: "Dispatch automation",      body: "A self-balancing dispatch engine that replaced a manual routing desk, handling 2,000+ orders daily without intervention.",     client: "NORTHWIND", outcome: "−71% manual hrs" },
+  { tag: "Manufacturing",title: "Inventory reconciliation", body: "Real-time stock synchronisation across four plants and three ERP systems, eliminating the monthly variance scramble.",         client: "VERTEX",    outcome: "99.4% accuracy" },
+  { tag: "Finance",      title: "Approval routing",         body: "Policy-aware approval flows that route, escalate, and audit themselves — cutting the average cycle from days to minutes.",    client: "ATLAS",     outcome: "8h → 40m" },
+  { tag: "Retail",       title: "Ops command centre",       body: "A single console unifying nine in-store systems into one live operational view for regional managers.",                       client: "HELIOS",    outcome: "9 tools → 1" },
+  { tag: "Healthcare",   title: "Intake digitisation",      body: "Paper intake replaced with a validated digital workflow feeding straight into the records system.",                           client: "MERIDIAN",  outcome: "−92% errors" },
+  { tag: "R&D",          title: "Experiment tracker",       body: "Internal product giving lab teams one place to log, compare, and reproduce experiments across sites.",                        client: "QUANTA",    outcome: "+40% throughput" },
+];
+
+function Carousel() {
+  const [active, setActive] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  const go = useCallback((idx: number) => {
+    const clamped = Math.max(0, Math.min(SLIDES.length - 1, idx));
+    setActive(clamped);
+    const el = trackRef.current;
+    if (!el) return;
+    el.scrollTo({ left: el.offsetWidth * clamped, behavior: "smooth" });
+  }, []);
+
   useEffect(() => {
-    if (!run) return;
-    const raw = parseFloat(target.replace(/[^0-9.]/g, ""));
-    if (Number.isNaN(raw)) { setDisplay(target); return; }
-    const start = performance.now();
-    const step = (now: number) => {
-      const progress = Math.min(1, (now - start) / duration);
-      const ease = 1 - Math.pow(1 - progress, 4);
-      setDisplay(target.replace(/[0-9]+/, String(Math.round(raw * ease))));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [run, target, duration]);
-  return display;
-}
-
-// ── Components ───────────────────────────────────────────────────────────────
-
-function Ticker() {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
-  return (
-    <div style={{
-      position: "absolute", bottom: 0, left: 0, right: 0,
-      overflow: "hidden", borderTop: "1px solid var(--border)",
-      padding: "14px 0", background: "var(--ticker-bg)",
-    }}>
-      <div style={{
-        display: "flex", gap: 56, whiteSpace: "nowrap",
-        animation: "ticker 28s linear infinite", willChange: "transform",
-      }}>
-        {items.map((item, i) => (
-          <span key={i} style={{
-            fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase",
-            color: "var(--text-muted)", flexShrink: 0, fontFamily: "monospace",
-          }}>
-            {item}
-            <span style={{ margin: "0 28px", opacity: 0.25 }}>✦</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function StatBlock({ stat, statUnit, kpiLabel, accent, on }: {
-  stat: string; statUnit: string; kpiLabel: string; accent: string; on: boolean;
-}) {
-  const value = useCountUp(stat, on);
-  return (
-    <div style={{
-      opacity: on ? 1 : 0,
-      transform: on ? "translateY(0)" : "translateY(32px)",
-      transition: "opacity 1s ease 0.6s, transform 1s cubic-bezier(0.16,1,0.3,1) 0.6s",
-    }}>
-      <div style={{
-        fontSize: "clamp(3rem,5.5vw,4.5rem)", lineHeight: 1,
-        letterSpacing: "-0.04em", color: accent, fontFamily: "var(--font-bebas, 'Arial Narrow', sans-serif)",
-        fontWeight: 400,
-      }}>
-        {value}
-        <span style={{ fontSize: "0.5em", letterSpacing: 0 }}>{statUnit}</span>
-      </div>
-      <div style={{
-        fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase",
-        color: "var(--text-muted)", marginTop: 8, fontFamily: "monospace",
-      }}>
-        {kpiLabel}
-      </div>
-    </div>
-  );
-}
-
-function ProjectSection({ project, index }: { project: Project; index: number }) {
-  const { ref, on } = useReveal(0.1);
-  const orbRef = useParallax(0.18);
-  const watermarkRef = useParallax(0.08);
-  const isEven = index % 2 === 0;
-  const Visual = PROJECT_VISUALS[index];
-  const d = (s: number) => `${s}s`;
-
-  return (
-    <section
-      ref={ref}
-      style={{
-        position: "relative", minHeight: "88vh",
-        display: "flex", alignItems: "center",
-        overflow: "hidden", background: "var(--section-bg)",
-        borderTop: "1px solid var(--border)",
-      }}
-    >
-      {/* Background orb */}
-      <div ref={orbRef} style={{
-        position: "absolute",
-        width: "min(55vw, 520px)", height: "min(55vw, 520px)",
-        borderRadius: "50%",
-        [isEven ? "right" : "left"]: "-10%", top: "5%",
-        background: `radial-gradient(circle, ${project.accent}1c 0%, transparent 68%)`,
-        pointerEvents: "none", filter: "blur(70px)",
-      }} />
-
-      {/* Year watermark */}
-      <div ref={watermarkRef} style={{
-        position: "absolute",
-        [isEven ? "right" : "left"]: "2vw", top: "50%",
-        transform: "translateY(-50%) rotate(90deg)",
-        fontSize: "clamp(6rem,14vw,11rem)",
-        color: project.accent,
-        opacity: on ? 0.05 : 0,
-        transition: "opacity 1.2s ease 0.8s",
-        userSelect: "none", whiteSpace: "nowrap",
-        letterSpacing: "0.06em", pointerEvents: "none",
-        fontFamily: "var(--font-bebas, 'Arial Narrow', sans-serif)",
-        fontWeight: 400,
-      }}>
-        {project.year}
-      </div>
-
-      {/* Main grid */}
-      <div style={{
-        position: "relative", zIndex: 2, width: "100%",
-        maxWidth: 1240, margin: "0 auto",
-        padding: "100px clamp(24px, 6vw, 80px)",
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: "clamp(48px, 8vw, 100px)",
-        alignItems: "center",
-        direction: isEven ? "ltr" : "rtl",
-      }}>
-
-        {/* ── Left: Text ── */}
-        <div style={{ direction: "ltr" }}>
-          {/* Category */}
-          <div style={{
-            display: "flex", alignItems: "center", gap: 14,
-            marginBottom: 28, overflow: "hidden",
-          }}>
-            <span style={{
-              fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
-              color: project.accent, fontFamily: "monospace",
-              opacity: on ? 1 : 0,
-              transform: on ? "translateX(0)" : "translateX(-16px)",
-              transition: `opacity 0.6s ease ${d(0.1)}, transform 0.6s ease ${d(0.1)}`,
-              whiteSpace: "nowrap",
-            }}>
-              {project.category}
-            </span>
-            <div style={{
-              flex: 1, height: "0.5px",
-              background: `linear-gradient(to right, ${project.accent}80, transparent)`,
-              transformOrigin: "left",
-              transform: on ? "scaleX(1)" : "scaleX(0)",
-              transition: `transform 1s cubic-bezier(0.16,1,0.3,1) ${d(0.2)}`,
-            }} />
-          </div>
-
-          {/* Name */}
-          <h2 style={{
-            fontSize: "clamp(2.8rem, 5.2vw, 4.6rem)",
-            letterSpacing: "-0.03em", lineHeight: 1,
-            color: "var(--text-primary)", margin: "0 0 10px",
-            fontFamily: "var(--font-bebas, 'Arial Narrow', sans-serif)",
-            fontWeight: 400,
-            opacity: on ? 1 : 0,
-            transform: on ? "translateY(0)" : "translateY(24px)",
-            transition: `opacity 0.9s ease ${d(0.15)}, transform 0.9s cubic-bezier(0.16,1,0.3,1) ${d(0.15)}`,
-          }}>
-            {project.name}
-          </h2>
-
-          {/* Tagline */}
-          <p style={{
-            fontSize: "clamp(0.85rem, 1.5vw, 1rem)",
-            color: project.accent, letterSpacing: "0.04em",
-            textTransform: "uppercase", margin: "0 0 28px",
-            fontFamily: "monospace",
-            opacity: on ? 1 : 0,
-            transform: on ? "translateY(0)" : "translateY(16px)",
-            transition: `opacity 0.9s ease ${d(0.25)}, transform 0.9s cubic-bezier(0.16,1,0.3,1) ${d(0.25)}`,
-          }}>
-            {project.tagline}
-          </p>
-
-          {/* Divider line */}
-          <div style={{ marginBottom: 24 }}>
-            <svg viewBox="0 0 500 2" style={{ width: "100%", maxWidth: 480, display: "block" }} fill="none">
-              <line x1="0" y1="1" x2="500" y2="1"
-                stroke={project.accent} strokeWidth="0.7"
-                strokeDasharray="500" strokeDashoffset={on ? "0" : "500"}
-                style={{ transition: `stroke-dashoffset 1.4s cubic-bezier(0.16,1,0.3,1) ${d(0.3)}` }} />
-            </svg>
-          </div>
-
-          {/* Body */}
-          <p style={{
-            fontSize: "clamp(0.875rem, 1.3vw, 0.97rem)",
-            lineHeight: 1.9, color: "var(--text-secondary)",
-            maxWidth: 460, margin: "0 0 32px",
-            opacity: on ? 1 : 0,
-            transform: on ? "translateY(0)" : "translateY(16px)",
-            transition: `opacity 0.9s ease ${d(0.35)}, transform 0.9s cubic-bezier(0.16,1,0.3,1) ${d(0.35)}`,
-          }}>
-            {project.body}
-          </p>
-
-          {/* Chips */}
-          <div style={{
-            display: "flex", flexWrap: "wrap", gap: 8,
-            opacity: on ? 1 : 0,
-            transform: on ? "translateY(0)" : "translateY(12px)",
-            transition: `opacity 0.9s ease ${d(0.45)}, transform 0.9s cubic-bezier(0.16,1,0.3,1) ${d(0.45)}`,
-          }}>
-            {project.chips.map(chip => (
-              <span key={chip} style={{
-                fontSize: 10, letterSpacing: "0.12em",
-                color: project.accent,
-                border: `0.5px solid ${project.accent}50`,
-                background: `${project.accent}0c`,
-                borderRadius: 3, padding: "5px 12px",
-                textTransform: "uppercase", fontFamily: "monospace",
-              }}>
-                {chip}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Right: Visual + Stat ── */}
-        <div style={{
-          direction: "ltr",
-          display: "flex", flexDirection: "column",
-          alignItems: isEven ? "flex-end" : "flex-start",
-          gap: 40,
-        }}>
-          {/* SVG Visual */}
-          <div style={{
-            width: "100%",
-            border: `0.5px solid ${project.accent}28`,
-            borderRadius: 12,
-            background: `${project.accent}06`,
-            padding: "24px 20px 8px",
-            opacity: on ? 1 : 0,
-            transform: on ? "translateY(0)" : "translateY(28px)",
-            transition: `opacity 1s ease ${d(0.3)}, transform 1s cubic-bezier(0.16,1,0.3,1) ${d(0.3)}`,
-          }}>
-            <Visual accent={project.accent} on={on} />
-          </div>
-
-          {/* Stat + Index */}
-          <div style={{
-            display: "flex", alignItems: "flex-end",
-            justifyContent: isEven ? "flex-end" : "flex-start",
-            gap: 28, width: "100%",
-          }}>
-            <StatBlock
-              stat={project.stat} statUnit={project.statUnit}
-              kpiLabel={project.kpiLabel} accent={project.accent} on={on}
-            />
-            <div style={{
-              fontFamily: "var(--font-bebas, 'Arial Narrow', sans-serif)",
-              fontSize: "clamp(5rem, 9vw, 8rem)", lineHeight: 1,
-              letterSpacing: "-0.06em", color: project.accent,
-              opacity: on ? 0.08 : 0,
-              transform: on ? "translateY(0)" : "translateY(30px)",
-              transition: `opacity 1.2s ease ${d(0.2)}, transform 1.2s cubic-bezier(0.16,1,0.3,1) ${d(0.2)}`,
-              userSelect: "none", fontWeight: 400,
-            }}>
-              {String(index + 1).padStart(2, "0")}
-            </div>
-          </div>
-
-          {/* Corner bracket */}
-          <div style={{
-            width: on ? 72 : 0, height: 72,
-            borderTop: `0.5px solid ${project.accent}`,
-            [isEven ? "borderRight" : "borderLeft"]: `0.5px solid ${project.accent}`,
-            opacity: on ? 0.5 : 0,
-            transition: `width 1.2s cubic-bezier(0.16,1,0.3,1) ${d(0.5)}, opacity 0.6s ease ${d(0.5)}`,
-            alignSelf: isEven ? "flex-end" : "flex-start",
-          }} />
-        </div>
-      </div>
-
-      {/* Bottom gradient line */}
-      <div style={{
-        position: "absolute", bottom: 0, left: "5vw", right: "5vw",
-        height: "0.5px",
-        background: `linear-gradient(to right, transparent, ${project.accent}38, transparent)`,
-      }} />
-    </section>
-  );
-}
-
-function Hero() {
-  const contentRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      if (contentRef.current) {
-        contentRef.current.style.transform = `translateY(${y * 0.4}px)`;
-        contentRef.current.style.opacity = String(Math.max(0, 1 - y / 500));
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const el = trackRef.current;
+    if (!el) return;
+    const fn = () => setActive(Math.round(el.scrollLeft / el.offsetWidth));
+    el.addEventListener("scroll", fn, { passive: true });
+    return () => el.removeEventListener("scroll", fn);
   }, []);
 
   return (
-    <ThemeHeroSection fullScreen align="center" contentClassName="relative !pb-0 justify-center mt-14">
-      <div ref={contentRef} className="relative z-10 w-full px-6 pt-20" style={{ textAlign: "center" }}>
-        <p className="hero-anim-2" style={{
-          fontSize: 10, letterSpacing: "0.32em", color: "var(--accent-hero)",
-          textTransform: "uppercase", marginBottom: 24, fontFamily: "monospace",
-        }}>
-          Eigensu — Selected Work
-        </p>
-
-        <h1 className="hero-anim-3 mt-14" style={{
-          fontSize: "clamp(3.8rem, 9vw, 8.5rem)",
-          letterSpacing: "0.02em", lineHeight: 0.95,
-          color: "var(--text-primary)", margin: "0 0 24px",
-          fontFamily: "var(--font-bebas, 'Arial Narrow', sans-serif)",
-          fontWeight: 400,
-        }}>
-          Projects
-          <br />
-          <span style={{ color: "var(--accent-hero)" }}>&amp; Partnerships</span>
-        </h1>
-
-        <p className="hero-anim-4" style={{
-          fontSize: "clamp(0.875rem, 1.6vw, 1rem)",
-          color: "var(--text-secondary)",
-          maxWidth: 480, margin: "0 auto 52px",
-          lineHeight: 1.85, letterSpacing: "0.01em",
-        }}>
-          Enterprise-grade outcomes delivered at scale — cloud, security, software engineering, and managed services.
-        </p>
-
-        <div className="hero-anim-5" style={{
-          display: "flex", alignItems: "center",
-          justifyContent: "center", gap: 20,
-        }}>
-          {["05 Projects", "03 Years", "14+ Clients"].map((item, i) => (
-            <span key={item} style={{
-              fontSize: 10, letterSpacing: "0.2em",
-              color: "var(--text-muted)", textTransform: "uppercase",
-              fontFamily: "monospace",
-            }}>
-              {item}
-              {i < 2 && <span style={{ marginLeft: 20, opacity: 0.25 }}>·</span>}
-            </span>
+    <div>
+      <style>{`#carousel-track::-webkit-scrollbar { display: none; }`}</style>
+      <div id="carousel-track" ref={trackRef} style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", scrollbarWidth: "none", gap: 16, paddingBottom: 4 }}>
+        {SLIDES.map((s, i) => (
+          <article key={i} style={{ flex: "0 0 clamp(260px, 32%, 360px)", scrollSnapAlign: "start", background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "24px 22px", display: "flex", flexDirection: "column", gap: 12 }}>
+            <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1px", textTransform: "uppercase" as const, color: "var(--accent)" }}>{s.tag}</span>
+            <h4 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", color: "var(--text)", margin: 0 }}>{s.title}</h4>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.65, flex: 1, margin: 0 }}>{s.body}</p>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: 14 }}>
+              <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1.5px", color: "var(--text-dim)" }}>{s.client}</span>
+              <span style={{ fontFamily: MONO, fontSize: "0.74rem", color: "var(--ok)" }}>{s.outcome}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 18 }}>
+        <div style={{ display: "flex", gap: 7 }}>
+          {SLIDES.map((_, i) => (
+            <button key={i} onClick={() => go(i)} style={{ width: active === i ? 22 : 7, height: 7, borderRadius: 4, border: "none", cursor: "pointer", background: active === i ? "var(--accent)" : "var(--border-strong)", transition: "all .25s", padding: 0 }} />
           ))}
         </div>
-
-        <div className="hero-anim-5" style={{
-          marginTop: 56, display: "flex",
-          flexDirection: "column", alignItems: "center", gap: 10,
-        }}>
-          <svg width="18" height="36" viewBox="0 0 18 36" fill="none">
-            <rect x="1" y="1" width="16" height="34" rx="8"
-              stroke="var(--accent-hero)" strokeWidth="0.8" />
-            <circle cx="9" cy="9" r="2.5" fill="var(--accent-hero)"
-              style={{ animation: "scrollDot 2s ease infinite" }} />
-          </svg>
+        <div style={{ display: "flex", gap: 10 }}>
+          {[{ l: "←", d: -1 }, { l: "→", d: 1 }].map(({ l, d }) => (
+            <button key={l} onClick={() => go(active + d)} style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--border-strong)", background: "var(--panel)", color: "var(--text)", fontSize: "1rem", cursor: "pointer", display: "grid", placeItems: "center" }}>{l}</button>
+          ))}
         </div>
       </div>
+    </div>
+  );
+}
 
-      <Ticker />
-    </ThemeHeroSection>
+/* ── Logos ────────────────────────────────────────────────────────────────── */
+
+const CLIENTS = ["NORTHWIND","VERTEX","HELIOS","ATLAS","MERIDIAN","QUANTA","ORBIT","LUMEN","NEXUS","SOLACE"];
+
+/* ── Dispatch Console ────────────────────────────────────────────────────── */
+
+function DispatchConsole() {
+  const [tick, setTick] = useState(true);
+  useEffect(() => { const id = setInterval(() => setTick(t => !t), 900); return () => clearInterval(id); }, []);
+  const BARS = [55, 70, 48, 88, 62, 95, 71, 80];
+  return (
+    <div style={{ background: "var(--bg-elev)", border: "1px solid var(--border-strong)", borderRadius: 14, overflow: "hidden", fontFamily: MONO }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 16px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
+        {["var(--err)","var(--warn)","var(--ok)"].map(c => <span key={c} style={{ width: 11, height: 11, borderRadius: "50%", background: c, opacity: c === "var(--err)" ? 0.8 : 0.4 }} />)}
+        <span style={{ marginLeft: 8, fontSize: "0.7rem", color: "var(--text-dim)", letterSpacing: "1px" }}>dispatch — live</span>
+      </div>
+      <div style={{ padding: 18 }}>
+        {[{ label: "orders_in_queue", val: "14", color: "var(--warn)" }, { label: "auto_routed_today", val: "1,986", color: "var(--ok)" }, { label: "exceptions", val: "2 pending", tag: true }].map(r => (
+          <div key={r.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 0", borderBottom: "1px solid var(--panel)" }}>
+            <span style={{ fontSize: "0.72rem", color: "var(--text-dim)" }}>{r.label}</span>
+            {r.tag ? <span style={{ fontFamily: MONO, fontSize: "0.66rem", padding: "3px 8px", borderRadius: 4, background: "rgba(255,107,107,0.12)", color: "var(--err)", border: "1px solid rgba(255,107,107,0.25)" }}>{r.val}</span>
+            : <span style={{ fontSize: "0.76rem", fontWeight: 700, color: r.color }}>{r.val}</span>}
+          </div>
+        ))}
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 52, marginTop: 16, marginBottom: 12 }}>
+          {BARS.map((h, i) => <div key={i} style={{ flex: 1, background: i === 5 ? "var(--accent)" : "var(--accent-line)", borderRadius: "3px 3px 0 0", height: `${h}%`, border: "1px solid var(--accent-line)", borderBottom: "none" }} />)}
+        </div>
+        <div style={{ fontSize: "0.7rem", color: "var(--text-dim)", paddingTop: 10, borderTop: "1px solid var(--panel)" }}>
+          <span style={{ color: "var(--accent)" }}>engine ▸</span> status: balanced
+          <span style={{ marginLeft: 4, display: "inline-block", width: 6, height: 12, background: "var(--accent)", verticalAlign: "middle", opacity: tick ? 0.9 : 0, transition: "opacity .15s" }} />
+        </div>
+      </div>
+    </div>
   );
 }
 
 export default function ProjectsPage() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const t = getThemeTokens(theme);
+  const carouselReveal  = useReveal();
+  const logosReveal     = useReveal();
+  const featuredReveal  = useReveal();
+  const ctaReveal       = useReveal();
 
   return (
     <div>
-      <style>{`
-        main *, main *::before, main *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+      {/* ── Hero ── */}
+      <ThemeHeroSection>
+        <Eyebrow muted>Projects // selected work</Eyebrow>
+        <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", maxWidth: "15ch", margin: "0 0 20px" }}>
+          Systems quietly <span style={{ color: "var(--accent)" }}>doing the work</span> right now.
+        </h1>
+        <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", lineHeight: 1.7 }}>
+          A sample of what we&apos;ve shipped. Each one a system that runs itself so the team behind it doesn&apos;t have to.
+        </p>
+      </ThemeHeroSection>
 
-        :root {
-          --hero-bg: ${t.pageBg};
-          --section-bg: ${t.contentBg};
-          --ticker-bg: ${isDark ? "rgba(2,6,8,0.92)" : "rgba(255,250,240,0.92)"};
-          --text-primary: ${t.heading};
-          --text-secondary: ${t.body};
-          --text-muted: ${t.muted};
-          --border: ${t.border};
-          --accent-hero: ${t.accent};
-        }
+      {/* ── Carousel ── */}
+      <section className="relative z-10 py-14 md:py-20 lg:py-24">
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div ref={carouselReveal.ref} style={{ opacity: carouselReveal.on ? 1 : 0, transform: carouselReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+            <Carousel />
+          </div>
+        </div>
+      </section>
 
-        body { background: var(--section-bg); color: var(--text-primary); overflow-x: hidden; }
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-thumb { background: var(--accent-hero); border-radius: 2px; }
+      {/* ── Client Logos ── */}
+      <section className="relative z-10 py-10 md:py-14" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div style={{ marginBottom: 36 }}>
+            <Eyebrow>Clients</Eyebrow>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3vw,2.4rem)", letterSpacing: "-0.02em", color: "var(--text)", margin: 0 }}>Teams that trust the machinery.</h2>
+          </div>
+          <div ref={logosReveal.ref} className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5" style={{ opacity: logosReveal.on ? 1 : 0, transition: "opacity .7s" }}>
+            {CLIENTS.map((c, i) => (
+              <div key={c} style={{ border: "1px solid var(--border)", borderRadius: 9, padding: "16px 10px", textAlign: "center", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "2px", color: "var(--text-dim)", opacity: logosReveal.on ? 1 : 0, transition: `opacity .6s ${i * 0.05}s` }}>{c}</div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        @keyframes ticker {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        @keyframes scrollDot {
-          0%, 100% { transform: translateY(0); opacity: 1; }
-          80%       { transform: translateY(14px); opacity: 0; }
-        }
+      {/* ── Featured Case Study ── */}
+      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div ref={featuredReveal.ref} style={{ opacity: featuredReveal.on ? 1 : 0, transition: "opacity .7s" }}>
+            <div className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center">
+              <div>
+                <Eyebrow>Featured // case study</Eyebrow>
+                <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>From 6 people routing orders to 0.</h3>
+                <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7, marginBottom: 22 }}>
+                  Northwind&apos;s dispatch desk was a bottleneck and a single point of failure. We modelled their routing rules, built an engine around them, and put humans back on exceptions only.
+                </p>
+                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 26px", display: "flex", flexDirection: "column", gap: 10 }}>
+                  {["2,000+ orders auto-routed every day","Exceptions surfaced in a live queue","Full audit trail for every decision"].map(item => (
+                    <li key={item} style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--text-muted)", fontSize: "0.9rem" }}>
+                      <span style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(56,232,176,0.12)", border: "1px solid rgba(56,232,176,0.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                        <svg viewBox="0 0 12 12" width={10} height={10} fill="none"><path d="M2 6l3 3 5-5" stroke="var(--ok)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>Start something like this</Link>
+              </div>
+              <DispatchConsole />
+            </div>
+          </div>
+        </div>
+      </section>
 
-        @media (max-width: 768px) {
-          [data-project-grid] {
-            grid-template-columns: 1fr !important;
-            direction: ltr !important;
-          }
-        }
-      `}</style>
-
-      <main>
-        <Hero />
-        {PROJECTS.map((project, index) => (
-          <ProjectSection key={project.id} project={project} index={index} />
-        ))}
-      </main>
+      {/* ── CTA ── */}
+      <section className="relative z-10 py-10 md:py-14">
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div ref={ctaReveal.ref} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaReveal.on ? 1 : 0, transform: ctaReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+            <div style={{ position: "absolute", width: 380, height: 260, background: "var(--accent)", filter: "blur(100px)", opacity: 0.17, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "22ch", margin: "0 auto 28px" }}>Your project could be the next one on this page.</h2>
+              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+                <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none" }}>Onboard a project</Link>
+                <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>Book a call</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
