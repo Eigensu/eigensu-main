@@ -203,7 +203,7 @@ export function ThemeHeroSection({
       <MoonRay visible />
       <GlowArcs theme={theme} />
       <div
-        className={`relative z-10 flex flex-1 flex-col pb-16 pt-[var(--hero-content-top)] md:pb-20 w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10 ${
+        className={`relative z-10 flex flex-1 flex-col pb-8 pt-[var(--hero-content-top)] md:pb-12 w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10 ${
           align === "center" ? "items-center text-center" : ""
         } ${contentClassName}`}
       >

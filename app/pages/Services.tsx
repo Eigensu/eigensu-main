@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
+import { Workflow, Globe, Box, Receipt, Trophy, BrainCircuit } from "lucide-react";
 
 const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
 const HEAD = "var(--font-head), 'Sora', sans-serif";
@@ -31,15 +32,18 @@ function useReveal(threshold = 0.08) {
 }
 
 const SERVICES = [
-  { idx: "01", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" strokeLinecap="round"/></svg>, title: "Operations Automation", body: "Event-driven pipelines that handle the repetitive, rules-based work humans shouldn't be touching — sync, route, reconcile, notify." },
-  { idx: "02", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>, title: "Internal Tooling", body: "Dashboards, admin consoles and internal products designed around your actual workflow — not a generic SaaS template." },
-  { idx: "03", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6"/></svg>, title: "Systems Integration", body: "Make your existing stack behave like one system — clean data contracts between ERPs, CRMs, finance and ops tools." },
+  { idx: "01", icon: <Globe strokeWidth={1.8} style={{ width: 22, height: 22, color: "var(--accent)" }} />, title: "Custom Web Platforms", body: "End-to-end bespoke product engineering. We build the core software that runs your business, not just a marketing site." },
+  { idx: "02", icon: <BrainCircuit strokeWidth={1.8} style={{ width: 22, height: 22, color: "var(--accent)" }} />, title: "AI Automation", body: "Deploy practical AI pipelines that parse unstructured data, draft responses, and make routine decisions." },
+  { idx: "03", icon: <Box strokeWidth={1.8} style={{ width: 22, height: 22, color: "var(--accent)" }} />, title: "Inventory Management", body: "Real-time stock syncing across multiple warehouses and ERPs, killing the monthly variance scramble." },
+  { idx: "04", icon: <Receipt strokeWidth={1.8} style={{ width: 22, height: 22, color: "var(--accent)" }} />, title: "Invoicing Systems", body: "Reconcile vendor invoices automatically. Stop paying humans to copy data from PDFs into your accounting software." },
+  { idx: "05", icon: <Workflow strokeWidth={1.8} style={{ width: 22, height: 22, color: "var(--accent)" }} />, title: "Systems Integration", body: "Connect the tools you already pay for so data flows once, cleanly, without a human in the middle." },
+  { idx: "06", icon: <Trophy strokeWidth={1.8} style={{ width: 22, height: 22, color: "var(--accent)" }} />, title: "SaaS Development", body: "From Fantasy Sports platforms to restaurant dispatch systems. We build scalable, multi-tenant architectures." },
 ];
 
 function CodeWindow({ filename, lines }: { filename: string; lines: { num: number; tokens: { type: string; text: string }[] }[] }) {
   const colors: Record<string, string> = { cm: "var(--text-dim)", kw: "var(--accent-4)", fn: "var(--ok)", str: "var(--warn)", num: "var(--err)", pun: "var(--text-muted)", def: "var(--text)" };
   return (
-    <div style={{ background: "var(--bg-elev)", border: "1px solid var(--border-strong)", borderRadius: 14, overflow: "hidden", fontFamily: MONO, fontSize: "0.78rem" }}>
+    <div style={{ background: "var(--bg-elev)", border: "1px solid var(--border-strong)", borderRadius: 14, overflow: "hidden", fontFamily: MONO, fontSize: "0.78rem", boxShadow: "0 32px 64px -24px rgba(0,0,0,0.8)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "11px 16px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
         {["var(--err)","var(--warn)","var(--ok)"].map(c => <span key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c, opacity: c === "var(--err)" ? 0.8 : 0.4 }} />)}
         <span style={{ marginLeft: 8, fontSize: "0.7rem", color: "var(--text-dim)", letterSpacing: "1px" }}>{filename}</span>
@@ -70,19 +74,41 @@ const INVOICE_LINES = [
   { num: 11, tokens: [{ type: "pun", text: "});" }] },
 ];
 
-const INTEGRATION_LINES = [
-  { num: 1,  tokens: [{ type: "kw",  text: "source" }, { type: "pun", text: ": " }, { type: "str", text: "crm.deals" }] },
-  { num: 2,  tokens: [{ type: "kw",  text: "target" }, { type: "pun", text: ": " }, { type: "str", text: "warehouse.revenue" }] },
-  { num: 3,  tokens: [{ type: "kw",  text: "mode" }, { type: "pun", text: ": " }, { type: "str", text: "stream" }] },
-  { num: 4,  tokens: [{ type: "kw",  text: "contract" }, { type: "pun", text: ":" }] },
-  { num: 5,  tokens: [{ type: "fn",  text: "  deal_id" }, { type: "pun", text: ": " }, { type: "kw", text: "string" }, { type: "pun", text: " !" }] },
-  { num: 6,  tokens: [{ type: "fn",  text: "  amount" }, { type: "pun", text: ": " }, { type: "kw", text: "number" }, { type: "pun", text: " !" }] },
-  { num: 7,  tokens: [{ type: "fn",  text: "  closed_at" }, { type: "pun", text: ": " }, { type: "kw", text: "timestamp" }] },
-  { num: 8,  tokens: [{ type: "kw",  text: "on_error" }, { type: "pun", text: ": " }, { type: "str", text: "dead_letter" }] },
-  { num: 9,  tokens: [{ type: "kw",  text: "alerts" }, { type: "pun", text: ":" }] },
-  { num: 10, tokens: [{ type: "fn",  text: '  channel' }, { type: "pun", text: ": " }, { type: "str", text: '"#ops-alerts"' }] },
-  { num: 11, tokens: [{ type: "fn",  text: "  threshold" }, { type: "pun", text: ": " }, { type: "num", text: "0.99" }] },
-];
+function AbstractDashboard() {
+  return (
+    <div style={{ background: "linear-gradient(180deg,var(--bg-elev-2),var(--bg-elev))", border: "1px solid var(--border-strong)", borderRadius: 14, padding: "20px", display: "flex", flexDirection: "column", gap: 16, boxShadow: "0 32px 64px -24px rgba(0,0,0,0.8)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border)", paddingBottom: 16 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+           {["var(--err)","var(--warn)","var(--ok)"].map(c => <span key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c, opacity: 0.6 }} />)}
+        </div>
+        <div style={{ height: 8, width: 80, background: "var(--border)", borderRadius: 4 }} />
+      </div>
+      <div style={{ display: "flex", gap: 16 }}>
+        <div style={{ width: 60, display: "flex", flexDirection: "column", gap: 12 }}>
+          {[1,2,3,4].map(i => <div key={i} style={{ height: 20, width: "100%", background: i === 1 ? "var(--accent-soft)" : "var(--panel)", borderRadius: 4, border: i === 1 ? "1px solid var(--accent-line)" : "none" }} />)}
+        </div>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ display: "flex", gap: 16 }}>
+            <div style={{ flex: 2, height: 90, background: "var(--panel)", borderRadius: 8, border: "1px solid var(--border)", display: "flex", alignItems: "flex-end", padding: 12, gap: 6 }}>
+               {[40, 70, 45, 90, 60, 85, 50, 75, 40, 95].map((h, i) => <div key={i} style={{ flex: 1, background: "linear-gradient(180deg,var(--accent),var(--accent-soft))", opacity: 0.9, borderRadius: "2px 2px 0 0", height: `${h}%` }} />)}
+            </div>
+            <div style={{ flex: 1, height: 90, background: "var(--panel)", borderRadius: 8, border: "1px solid var(--border)", display: "flex", justifyContent: "center", alignItems: "center" }}>
+               <div style={{ width: 44, height: 44, borderRadius: "50%", border: "5px solid var(--accent-soft)", borderRightColor: "var(--accent)" }} />
+            </div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {[1,2,3].map(i => (
+               <div key={i} style={{ height: 32, background: "var(--panel)", borderRadius: 6, border: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 12px", gap: 12 }}>
+                 <div style={{ width: 14, height: 14, borderRadius: 3, background: "var(--border-strong)" }} />
+                 <div style={{ width: "45%", height: 8, borderRadius: 4, background: "var(--border-strong)" }} />
+               </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const PROCESS = [
   { idx: "01", title: "Map",      body: "We sit with your team and document the workflow as it actually runs today." },
@@ -102,12 +128,18 @@ function CheckItem({ children }: { children: React.ReactNode }) {
   );
 }
 
+const FEATURED_CASES = [
+  { title: "DishPatch", desc: "A robust SaaS platform for restaurants to manage guest databases, monitor replies, and run campaigns natively on WhatsApp.", href: "/dispatch", tag: "SaaS Product" },
+  { title: "Fantasy Sports Engine", desc: "A highly concurrent platform scaling to millions of live socket connections during peak game times with sub-100ms latency.", href: "/projects", tag: "Custom Platform" }
+];
+
 export default function ServicesPage() {
-  const cardsReveal   = useReveal();
-  const d1Reveal      = useReveal();
-  const d2Reveal      = useReveal();
-  const processReveal = useReveal();
-  const ctaReveal     = useReveal();
+  const { ref: cardsRef, on: cardsOn }   = useReveal();
+  const { ref: d1Ref, on: d1On }         = useReveal();
+  const { ref: d2Ref, on: d2On }         = useReveal();
+  const { ref: caseRef, on: caseOn }     = useReveal();
+  const { ref: processRef, on: processOn } = useReveal();
+  const { ref: ctaRef, on: ctaOn }       = useReveal();
 
   return (
     <div>
@@ -115,19 +147,19 @@ export default function ServicesPage() {
       <ThemeHeroSection>
         <Eyebrow muted>Services // capabilities</Eyebrow>
         <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", maxWidth: "16ch", margin: "0 0 20px" }}>
-          Everything between <span style={{ color: "var(--accent)" }}>a problem</span> and a system that solves it.
+          Product engineering & <span style={{ color: "var(--accent)" }}>automation</span>.
         </h1>
         <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "52ch", lineHeight: 1.7 }}>
-          We don&apos;t sell seats or licences. We build the specific machinery your operation needs and hand it over running.
+          We design, architect, and deploy the bespoke software that runs your operation. From highly concurrent consumer platforms to mission-critical internal tools.
         </p>
       </ThemeHeroSection>
 
       {/* ── Service Cards ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24">
+      <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={cardsReveal.ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div ref={cardsRef} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((s, i) => (
-              <article key={s.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "24px 22px", position: "relative", display: "flex", flexDirection: "column", gap: 14, opacity: cardsReveal.on ? 1 : 0, transform: cardsReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
+              <article key={s.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "24px 22px", position: "relative", display: "flex", flexDirection: "column", gap: 14, opacity: cardsOn ? 1 : 0, transform: cardsOn ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
                 <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: "var(--text-dim)" }}>{s.idx}</span>
                 <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid var(--border-strong)", background: "var(--panel)" }}>{s.icon}</div>
                 <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", color: "var(--text)", margin: 0 }}>{s.title}</h3>
@@ -139,12 +171,12 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ── Deep Dive 1 ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
+      {/* ── Deep Dive 1 (Code) ── */}
+      <section className="relative z-10 py-12 md:py-16" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={d1Reveal.ref} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d1Reveal.on ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d1Reveal.on ? "translateY(0)" : "translateY(20px)" }}>
+          <div ref={d1Ref} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d1On ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d1On ? "translateY(0)" : "translateY(20px)" }}>
             <div>
-              <Eyebrow>Deep dive // 01</Eyebrow>
+              <Eyebrow>Deep dive // Infrastructure</Eyebrow>
               <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>Workflows you can read like a sentence.</h3>
               <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7, marginBottom: 22 }}>
                 Every automation we ship is declarative and versioned. No black-box drag-and-drop — your team can see exactly what triggers, what runs, and what happens on failure.
@@ -158,35 +190,55 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ── Deep Dive 2 (code left, text right) ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24">
+      {/* ── Deep Dive 2 (Product) ── */}
+      <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={d2Reveal.ref} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d2Reveal.on ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d2Reveal.on ? "translateY(0)" : "translateY(20px)" }}>
-            <CodeWindow filename="integration.config.yaml" lines={INTEGRATION_LINES} />
+          <div ref={d2Ref} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d2On ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d2On ? "translateY(0)" : "translateY(20px)" }}>
+            <AbstractDashboard />
             <div>
-              <Eyebrow>Deep dive // 02</Eyebrow>
-              <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>Integrations that don&apos;t break at 2am.</h3>
+              <Eyebrow>Deep dive // Interface</Eyebrow>
+              <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>Dashboards your team actually wants to use.</h3>
               <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7, marginBottom: 22 }}>
-                We define explicit contracts between your systems, so a field rename in one tool never silently corrupts another. Typed, validated, observable.
+                We don&apos;t just string together APIs. We build consumer-grade interfaces for your internal operators, mapping the UI to their exact mental model.
               </p>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-                {["Schema-validated payloads on every hop","Dead-letter handling for bad records","Live health metrics per connection"].map(item => <CheckItem key={item}>{item}</CheckItem>)}
+                {["Sub-100ms UI interactions","Tailored exclusively to your business logic","Live sockets for real-time collaboration"].map(item => <CheckItem key={item}>{item}</CheckItem>)}
               </ul>
             </div>
           </div>
         </div>
       </section>
 
+      {/* ── Featured Case Studies ── */}
+      <section className="relative z-10 py-12 md:py-16" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div style={{ maxWidth: 560, marginBottom: 48 }}>
+            <Eyebrow>In production</Eyebrow>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>Platforms we&apos;ve engineered.</h2>
+          </div>
+          <div ref={caseRef} className="grid gap-5 md:grid-cols-2" style={{ opacity: caseOn ? 1 : 0, transform: caseOn ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+            {FEATURED_CASES.map(fc => (
+               <article key={fc.title} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "32px", display: "flex", flexDirection: "column", gap: 16 }}>
+                 <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--accent-4)", padding: "4px 10px", border: "1px solid rgba(167,139,250,0.3)", borderRadius: 100, alignSelf: "flex-start" }}>{fc.tag}</span>
+                 <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.4rem", color: "var(--text)", margin: 0 }}>{fc.title}</h3>
+                 <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", lineHeight: 1.6, margin: 0, flex: 1 }}>{fc.desc}</p>
+                 <Link href={fc.href} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.95rem", padding: "12px 24px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none", alignSelf: "flex-start", marginTop: 12 }}>Read case study →</Link>
+               </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Process ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
+      <section className="relative z-10 py-12 md:py-16" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ maxWidth: 560, marginBottom: 48 }}>
             <Eyebrow>How we work</Eyebrow>
             <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>Four steps, no surprises.</h2>
           </div>
-          <div ref={processReveal.ref} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
+          <div ref={processRef} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
             {PROCESS.map((p, i) => (
-              <article key={p.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "22px 20px", opacity: processReveal.on ? 1 : 0, transform: processReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
+              <article key={p.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "22px 20px", opacity: processOn ? 1 : 0, transform: processOn ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
                 <Eyebrow muted>{p.idx}</Eyebrow>
                 <h3 style={{ fontFamily: HEAD, fontSize: "1.15rem", fontWeight: 700, color: "var(--text)", margin: "12px 0 10px" }}>{p.title}</h3>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.65 }}>{p.body}</p>
@@ -197,12 +249,12 @@ export default function ServicesPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="relative z-10 py-10 md:py-14">
+      <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={ctaReveal.ref} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaReveal.on ? 1 : 0, transform: ctaReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+          <div ref={ctaRef} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaOn ? 1 : 0, transform: ctaOn ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
             <div style={{ position: "absolute", width: 380, height: 260, background: "var(--accent)", filter: "blur(100px)", opacity: 0.17, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1 }}>
-              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "22ch", margin: "0 auto 28px" }}>Have a process that&apos;s begging to be automated?</h2>
+              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "22ch", margin: "0 auto 28px" }}>Scope your platform.</h2>
               <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
                 <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none" }}>Onboard a project</Link>
                 <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>Talk to us</Link>
