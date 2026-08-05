@@ -53,7 +53,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full">
+      <body className="min-h-full" suppressHydrationWarning>
         <ClientOnly>
           <PageShell>{children}</PageShell>
         </ClientOnly>

@@ -147,7 +147,7 @@ export default function ServicesPage() {
       <ThemeHeroSection>
         <Eyebrow muted>Services // capabilities</Eyebrow>
         <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", maxWidth: "16ch", margin: "0 0 20px" }}>
-          Product engineering & <span style={{ color: "var(--accent)" }}>automation</span>.
+          Enterprise product engineering & <span style={{ color: "var(--accent)" }}>automation</span>.
         </h1>
         <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "52ch", lineHeight: 1.7 }}>
           We design, architect, and deploy the bespoke software that runs your operation. From highly concurrent consumer platforms to mission-critical internal tools.
@@ -197,7 +197,7 @@ export default function ServicesPage() {
             <AbstractDashboard />
             <div>
               <Eyebrow>Deep dive // Interface</Eyebrow>
-              <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>Dashboards your team actually wants to use.</h3>
+              <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>Interfaces engineered for operational efficiency.</h3>
               <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7, marginBottom: 22 }}>
                 We don&apos;t just string together APIs. We build consumer-grade interfaces for your internal operators, mapping the UI to their exact mental model.
               </p>
@@ -234,7 +234,7 @@ export default function ServicesPage() {
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ maxWidth: 560, marginBottom: 48 }}>
             <Eyebrow>How we work</Eyebrow>
-            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>Four steps, no surprises.</h2>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>A rigorous, predictable engineering methodology.</h2>
           </div>
           <div ref={processRef} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
             {PROCESS.map((p, i) => (
@@ -257,7 +257,7 @@ export default function ServicesPage() {
               <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "22ch", margin: "0 auto 28px" }}>Scope your platform.</h2>
               <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
                 <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none" }}>Onboard a project</Link>
-                <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>Talk to us</Link>
+                <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>Consult an Engineer</Link>
               </div>
             </div>
           </div>

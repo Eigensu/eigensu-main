@@ -47,7 +47,7 @@ function FooterBreaker() {
             className="flex-1 text-center leading-none"
             style={{
               fontFamily: "var(--font-logo), 'Montserrat', sans-serif",
-              fontSize: "clamp(14rem, 30vw, 30rem)",
+              fontSize: "clamp(10rem, 21vw, 30rem)",
               lineHeight: 1,
               color: filled ? "var(--accent)" : "transparent",
               WebkitTextStroke: filled ? "0" : "2px var(--accent)",
