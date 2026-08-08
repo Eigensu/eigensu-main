@@ -289,18 +289,17 @@ export default function HomePage() {
               Internal systems
             </div>
             <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", margin: "0 0 20px" }}>
-              Internal systems that{" "}
-              <span style={{ color: "var(--accent)" }}>run themselves</span>.
+              Internal systems that <span style={{ color: "var(--accent)" }}>run your company</span>.
             </h1>
             <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", marginBottom: 32, lineHeight: 1.7 }}>
               Eigensu builds tailored software that streamlines internal management and optimises operations — so your teams stop fighting tools and start compounding output.
             </p>
             <div className="hero-anim-4 flex flex-wrap gap-4 mt-2">
               <BtnPrimary onClick={openModal}>
-                Book a Demo
+                Schedule Technical Demo
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{ width: 15, height: 15 }}><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </BtnPrimary>
-              <BtnGhost href="/onboard">Start a Project</BtnGhost>
+              <BtnGhost href="/onboard">Scope Your Platform</BtnGhost>
               <BtnTertiary onClick={() => {}}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{ width: 15, height: 15 }}><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 Watch Demo
@@ -321,12 +320,12 @@ export default function HomePage() {
       <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ maxWidth: 580, marginBottom: 48 }}>
-            <Eyebrow>What we do</Eyebrow>
+            <Eyebrow>Core Capabilities</Eyebrow>
             <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>
-              Built for the unglamorous parts{" "}
-              <span style={{ background: "linear-gradient(120deg,var(--text) 30%,var(--accent) 130%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>that run the company.</span>
+              Engineered for the critical systems{" "}
+              <span style={{ background: "linear-gradient(120deg,var(--text) 30%,var(--accent) 130%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>that run your company.</span>
             </h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", marginTop: 16, lineHeight: 1.7 }}>Three disciplines, one outcome: less manual work, fewer errors, faster decisions.</p>
+            <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", marginTop: 16, lineHeight: 1.7 }}>Three core capabilities. One unified outcome: reduced manual overhead, eliminated errors, and accelerated decision-making.</p>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map(s => <ServiceCard key={s.idx} s={s} />)}
@@ -345,7 +344,7 @@ export default function HomePage() {
       <section className="relative z-10 py-12 md:py-16" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ maxWidth: 560, marginBottom: 48 }}>
-            <Eyebrow>Proof</Eyebrow>
+            <Eyebrow>Production Evidence</Eyebrow>
             <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>Selected outcomes.</h2>
           </div>
           <Carousel />
@@ -363,11 +362,11 @@ export default function HomePage() {
       <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <CtaBlock
-            heading="Tell us what's slowing your operation down."
-            sub="We'll map it, scope it, and show you what automating it looks like — usually within a week."
-            primary="Onboard a project"
+            heading="Identify the bottleneck in your operation."
+            sub="We will map your workflows, define a technical scope, and demonstrate a scalable automation path—typically within one week."
+            primary="Scope Your Platform"
             primaryHref="/onboard"
-            ghost="Book a call"
+            ghost="Consult an Engineer"
             ghostFn={openModal}
           />
         </div>
