@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { GoArrowUpRight } from "react-icons/go";
@@ -51,7 +52,9 @@ function CardNav({
   theme = "dark",
   onToggleTheme,
 }: CardNavProps) {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
@@ -190,6 +193,15 @@ function CardNav({
     return () => window.removeEventListener("resize", handleResize);
   }, [applyOpenState, applyClosedState]);
 
+  useLayoutEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const openMenu = useCallback(() => {
     if (isOpenRef.current || isAnimatingRef.current) return;
     const navEl = navRef.current;
@@ -256,8 +268,10 @@ function CardNav({
     <div className="card-nav-container fixed left-1/2 z-[90] top-6 w-[92%] max-w-[860px] -translate-x-1/2">
       <nav
         ref={navRef}
-        className={`card-nav ${isOpen ? "open" : ""} relative block overflow-hidden rounded-xl p-0 shadow-lg will-change-[height]`}
-        style={{ backgroundColor: baseColor }}
+        className={`card-nav ${isOpen ? "open" : ""} relative block overflow-hidden rounded-xl p-0 shadow-lg will-change-[height] transition-all duration-300 ${
+          scrolled || isOpen ? "backdrop-blur-md border border-[var(--border)]" : "bg-transparent border border-transparent"
+        }`}
+        style={{ backgroundColor: scrolled || isOpen ? baseColor : "transparent" }}
       >
         <div className="card-nav-top absolute inset-x-0 top-0 z-[2] flex h-[60px] items-center justify-between p-2 pl-[1.1rem]">
           <button
@@ -357,22 +371,27 @@ function CardNav({
                 {item.label}
               </div>
               <div className="nav-card-links mt-auto flex flex-col gap-0.5">
-                {item.links.map((lnk) => (
-                  <Link
-                    key={`${lnk.label}-${lnk.href}`}
-                    href={lnk.href}
-                    className="nav-card-link inline-flex cursor-pointer items-center gap-1.5 text-[15px] no-underline transition-opacity duration-300 hover:opacity-75 md:text-base"
-                    style={{ fontFamily: "var(--font-body), 'Hanken Grotesk', sans-serif" }}
-                    aria-label={lnk.ariaLabel}
-                    onClick={(event) => {
-                      onLinkClick?.(lnk, event);
-                      if (isOpenRef.current) closeMenu();
-                    }}
-                  >
-                    <GoArrowUpRight className="shrink-0" aria-hidden="true" />
-                    {lnk.label}
-                  </Link>
-                ))}
+                {item.links.map((lnk) => {
+                  const isActive = pathname === lnk.href;
+                  return (
+                    <Link
+                      key={`${lnk.label}-${lnk.href}`}
+                      href={lnk.href}
+                      className={`nav-card-link group/link inline-flex cursor-pointer items-center gap-1.5 text-[15px] no-underline transition-all duration-300 hover:text-[var(--accent)] md:text-base ${
+                        isActive ? "text-[var(--accent)] font-semibold" : ""
+                      }`}
+                      style={{ fontFamily: "var(--font-body), 'Hanken Grotesk', sans-serif" }}
+                      aria-label={lnk.ariaLabel}
+                      onClick={(event) => {
+                        onLinkClick?.(lnk, event);
+                        if (isOpenRef.current) closeMenu();
+                      }}
+                    >
+                      <GoArrowUpRight className={`shrink-0 transition-transform duration-300 group-hover/link:translate-x-[2px] group-hover/link:-translate-y-[2px] ${isActive ? "translate-x-[2px] -translate-y-[2px]" : ""}`} aria-hidden="true" />
+                      {lnk.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -458,7 +477,7 @@ export default function Navigation({
   onContact?: () => void;
   setTheme?: (t: Theme) => void;
 }) {
-  const baseColor       = "var(--nav-bg)";
+  const baseColor       = theme === "dark" ? "rgba(10, 15, 20, 0.75)" : "rgba(255, 255, 255, 0.85)";
   const menuColor       = "var(--text)";
   const buttonBgColor   = "var(--accent)";
   const buttonTextColor = "var(--on-accent)";

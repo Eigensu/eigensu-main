@@ -86,16 +86,15 @@ html[data-theme="light"] {
   --text-muted:    #475569;
   --text-dim:      #94a3b8;
 
-  /* Accent — LIGHT uses main's amber primary (matches existing theme-aware
-     components which use rgba(245,158,11,…) in light mode). */
-  --accent:        #d97706;   /* amber (deep enough for cream) */
-  --accent-2:      #0a9985;   /* teal */
+  /* Accent — LIGHT uses main's teal primary to match mint requirement. */
+  --accent:        #0a9985;   /* teal/mint */
+  --accent-2:      #d97706;   /* amber */
   --accent-3:      #0284c7;   /* blue */
   --accent-4:      #15803d;   /* green */
   --accent-5:      #e11d48;   /* red */
-  --accent-soft:   rgba(245, 158, 11, 0.12);
-  --accent-line:   rgba(217, 119, 6, 0.32);
-  --on-accent:     #2a1800;   /* dark text on a filled amber button */
+  --accent-soft:   rgba(10, 153, 133, 0.12);
+  --accent-line:   rgba(10, 153, 133, 0.32);
+  --on-accent:     #ffffff;   /* white text on filled teal button */
 
   /* Functional status */
   --ok:            #0a9985;
@@ -105,7 +104,7 @@ html[data-theme="light"] {
   /* Decorative */
   --grid-line:     rgba(15, 23, 42, 0.04);
   --vignette:      rgba(15, 23, 42, 0.05);
-  --glow:          rgba(245, 158, 11, 0.16);
+  --glow:          rgba(10, 153, 133, 0.16);
 
   /* Nav surfaces */
   --nav-bg:        rgba(255, 255, 255, 0.9);
@@ -137,6 +136,16 @@ html[data-theme="light"] {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 body {
   background: var(--bg);

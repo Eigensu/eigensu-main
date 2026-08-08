@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useModal } from "./components/PageShell";
 import { ThemeHeroSection } from "./components/ThemeHero";
+import { Workflow, LayoutDashboard, Network } from "lucide-react";
+import { POSTS } from "./pages/Blog";
 
 const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
 const HEAD = "var(--font-head), 'Sora', sans-serif";
@@ -23,15 +25,24 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 
 function BtnPrimary({ href, onClick, children }: { href?: string; onClick?: () => void; children: React.ReactNode }) {
-  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none", whiteSpace: "nowrap" as const };
-  if (href) return <Link href={href} style={s}>{children}</Link>;
-  return <button type="button" onClick={onClick} style={s}>{children}</button>;
+  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.95rem", padding: "12px 24px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none", whiteSpace: "nowrap" as const };
+  const className = "transition-all duration-300 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 focus:ring-offset-[var(--bg)]";
+  if (href) return <Link href={href} style={s} className={className}>{children}</Link>;
+  return <button type="button" onClick={onClick} style={s} className={className}>{children}</button>;
 }
 
 function BtnGhost({ href, onClick, children }: { href?: string; onClick?: () => void; children: React.ReactNode }) {
-  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none", whiteSpace: "nowrap" as const };
-  if (href) return <Link href={href} style={s}>{children}</Link>;
-  return <button type="button" onClick={onClick} style={s}>{children}</button>;
+  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.95rem", padding: "12px 24px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none", whiteSpace: "nowrap" as const };
+  const className = "transition-all duration-300 hover:bg-[var(--panel)] hover:border-[var(--accent-line)] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]";
+  if (href) return <Link href={href} style={s} className={className}>{children}</Link>;
+  return <button type="button" onClick={onClick} style={s} className={className}>{children}</button>;
+}
+
+function BtnTertiary({ href, onClick, children }: { href?: string; onClick?: () => void; children: React.ReactNode }) {
+  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.95rem", padding: "12px 24px", borderRadius: 100, color: "var(--text-muted)", border: "1px solid transparent", textDecoration: "none", whiteSpace: "nowrap" as const };
+  const className = "transition-all duration-300 hover:text-[var(--text)] hover:bg-[var(--panel)] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]";
+  if (href) return <Link href={href} style={s} className={className}>{children}</Link>;
+  return <button type="button" onClick={onClick} style={s} className={className}>{children}</button>;
 }
 
 /* ── useReveal ───────────────────────────────────────────────────────────── */
@@ -94,7 +105,7 @@ const TICKER_ITEMS = ["NORTHWIND LOGISTICS","VERTEX MANUFACTURING","HELIOS RETAI
 function Ticker() {
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
   return (
-    <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", overflow: "hidden", padding: "20px 0", background: "var(--bg-elev-2)", position: "relative", zIndex: 1 }}>
+    <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", overflow: "hidden", padding: "16px 0", background: "var(--bg-elev-2)", position: "relative", zIndex: 1, maskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)" }}>
       <div style={{ display: "flex", gap: 56, width: "max-content", animation: "tickerScroll 28s linear infinite" }}>
         {items.map((item, i) => (
           <span key={i} style={{ fontFamily: MONO, fontSize: "0.82rem", color: "var(--text-muted)", letterSpacing: "1px", whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: 10 }}>
@@ -110,9 +121,9 @@ function Ticker() {
 /* ── Services Teaser ─────────────────────────────────────────────────────── */
 
 const SERVICES = [
-  { idx: "01", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>, title: "Operations Automation", body: "Replace spreadsheets and manual workflows with pipelines that trigger, route and reconcile on their own." },
-  { idx: "02", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>, title: "Internal Tooling", body: "Custom dashboards, admin panels and internal apps that fit your process instead of forcing you into a template." },
-  { idx: "03", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6"/></svg>, title: "Systems Integration", body: "Connect the tools you already pay for so data flows once, cleanly, without a human in the middle." },
+  { idx: "01", icon: <Workflow strokeWidth={1.8} style={{ width: 22, height: 22, color: "var(--accent)" }} />, title: "Operations Automation", body: "Replace spreadsheets and manual workflows with pipelines that trigger, route and reconcile on their own." },
+  { idx: "02", icon: <LayoutDashboard strokeWidth={1.8} style={{ width: 22, height: 22, color: "var(--accent)" }} />, title: "Internal Tooling", body: "Custom dashboards, admin panels and internal apps that fit your process instead of forcing you into a template." },
+  { idx: "03", icon: <Network strokeWidth={1.8} style={{ width: 22, height: 22, color: "var(--accent)" }} />, title: "Systems Integration", body: "Connect the tools you already pay for so data flows once, cleanly, without a human in the middle." },
 ];
 
 function ServiceCard({ s }: { s: typeof SERVICES[0] }) {
@@ -143,9 +154,9 @@ function StatsStrip() {
   const { ref, on } = useReveal();
   return (
     <div ref={ref} style={{ border: "1px solid var(--border)", borderRadius: 14, background: "linear-gradient(180deg,var(--bg-elev-2),var(--bg-elev))", overflow: "hidden", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
-      <div className="g-stats">
+      <div className="grid grid-cols-2 lg:grid-cols-4">
         {STATS.map((s, i) => (
-          <div key={s.lbl} style={{ padding: "clamp(24px,4vw,40px) clamp(18px,3vw,28px)", borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none", borderBottom: i < 2 ? "1px solid var(--border)" : "none" }}>
+          <div key={s.lbl} className={`p-6 md:p-8 border-[var(--border)] ${i % 2 === 0 ? "border-r" : ""} ${i < 2 ? "border-b lg:border-b-0" : ""} ${i !== 3 ? "lg:border-r" : ""}`}>
             <div style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.8rem,3.5vw,2.8rem)", letterSpacing: "-0.03em", color: "var(--text)" }}>
               {s.num}<span style={{ color: "var(--accent)" }}>{s.unit}</span>
             </div>
@@ -225,6 +236,42 @@ function CtaBlock({ heading, sub, primary, primaryHref, ghost, ghostFn }: { head
   );
 }
 
+/* ── Insights Preview ────────────────────────────────────────────────────── */
+
+function InsightsPreview() {
+  const { ref, on } = useReveal();
+  const recentPosts = POSTS.slice(0, 3);
+  return (
+    <div ref={ref} style={{ opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32 }}>
+        <div>
+          <Eyebrow>Writing</Eyebrow>
+          <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.2rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>Insights & updates</h2>
+        </div>
+        <div className="hidden sm:block">
+          <BtnGhost href="/blog">Read all →</BtnGhost>
+        </div>
+      </div>
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {recentPosts.map((post) => (
+          <article key={post.slug} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "26px 24px", display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--accent)" }}>{post.category}</span>
+              <span style={{ fontFamily: MONO, fontSize: "0.68rem", color: "var(--text-dim)" }}>{post.readTime}</span>
+            </div>
+            <h3 style={{ fontFamily: HEAD, fontSize: "1.05rem", fontWeight: 700, color: "var(--text)", marginTop: 12, marginBottom: 8, lineHeight: 1.3 }}>{post.title}</h3>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", lineHeight: 1.6, flex: 1 }}>{post.excerpt}</p>
+            <Link href={`/blog/${post.slug}`} style={{ fontFamily: MONO, fontSize: "0.74rem", letterSpacing: "0.5px", color: "var(--text)", marginTop: 16, display: "inline-flex", gap: 6, alignItems: "center", textDecoration: "none" }}>Read article →</Link>
+          </article>
+        ))}
+      </div>
+      <div className="mt-6 sm:hidden">
+        <BtnGhost href="/blog">Read all →</BtnGhost>
+      </div>
+    </div>
+  );
+}
+
 /* ── Page ────────────────────────────────────────────────────────────────── */
 
 export default function HomePage() {
@@ -248,13 +295,16 @@ export default function HomePage() {
             <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", marginBottom: 32, lineHeight: 1.7 }}>
               Eigensu builds tailored software that streamlines internal management and optimises operations — so your teams stop fighting tools and start compounding output.
             </p>
-            <div className="hero-anim-4 flex flex-wrap gap-3">
-              <BtnPrimary href="/onboard">
-                Start a Project
+            <div className="hero-anim-4 flex flex-wrap gap-4 mt-2">
+              <BtnPrimary onClick={openModal}>
+                Book a Demo
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{ width: 15, height: 15 }}><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </BtnPrimary>
-              <BtnGhost href="/projects">See our work</BtnGhost>
-              <BtnGhost onClick={openModal}>Book a call</BtnGhost>
+              <BtnGhost href="/onboard">Start a Project</BtnGhost>
+              <BtnTertiary onClick={() => {}}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{ width: 15, height: 15 }}><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Watch Demo
+              </BtnTertiary>
             </div>
           </div>
           {/* Right */}
@@ -268,7 +318,7 @@ export default function HomePage() {
       <Ticker />
 
       {/* ── Services teaser ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24">
+      <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ maxWidth: 580, marginBottom: 48 }}>
             <Eyebrow>What we do</Eyebrow>
@@ -285,14 +335,14 @@ export default function HomePage() {
       </section>
 
       {/* ── Stats ── */}
-      <section className="relative z-10 py-10 md:py-14">
+      <section className="relative z-10 py-8 md:py-12">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <StatsStrip />
         </div>
       </section>
 
       {/* ── Carousel ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
+      <section className="relative z-10 py-12 md:py-16" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ maxWidth: 560, marginBottom: 48 }}>
             <Eyebrow>Proof</Eyebrow>
@@ -302,8 +352,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Insights Preview ── */}
+      <section className="relative z-10 py-12 md:py-16" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <InsightsPreview />
+        </div>
+      </section>
+
       {/* ── CTA ── */}
-      <section className="relative z-10 py-10 md:py-14">
+      <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <CtaBlock
             heading="Tell us what's slowing your operation down."
@@ -318,10 +375,6 @@ export default function HomePage() {
 
       <style>{`
         @keyframes tickerScroll { to { transform: translateX(-50%); } }
-        @media (min-width: 1024px) {
-          .g-stats > div:nth-child(odd) { border-right: 1px solid var(--border) !important; }
-          .g-stats > div:nth-child(-n+2) { border-bottom: none !important; }
-        }
       `}</style>
     </div>
   );
