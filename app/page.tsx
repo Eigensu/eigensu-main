@@ -135,8 +135,7 @@ function LogoLoopRow({ logos, direction, duration, siya = false }: { logos: type
 function ClientsBand() {
   return (
     <div style={{ padding: "56px 0", textAlign: "center", background: "var(--ember)", borderRadius: 48, position: "relative", zIndex: 1, overflow: "hidden" }}>
-      <p style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: MONO, fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.06em", color: "var(--cream)", background: "var(--wine)", border: "1px solid rgba(59,10,34,0.2)", padding: "9px 16px", borderRadius: 100, margin: "0 auto 44px" }}>
-        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--cream)", flexShrink: 0 }} />
+      <p style={{ fontFamily: MONO, fontSize: "0.82rem", fontWeight: 700, letterSpacing: "0.06em", color: "var(--cream)", margin: "0 auto 44px", maxWidth: "46ch" }}>
         Teams of all sizes trust Eigensu to run the systems behind their operation.
       </p>
       <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
@@ -159,7 +158,7 @@ const BUTTER_LIGHT = "#FFE9AD";
 
 function ServiceCard({ s }: { s: typeof SERVICES[0] }) {
   const { ref, on } = useReveal();
-  const isPeri = s.idx === "03";
+  const isPeri = true;
   return (
     <article ref={ref} style={{ background: isPeri ? "var(--peri)" : "var(--basil)", border: isPeri ? "1px solid var(--peri)" : "1px solid var(--basil)", borderRadius: 14, padding: "26px 24px", position: "relative", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .6s, transform .6s" }}>
       <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: isPeri ? "rgba(59,10,34,0.45)" : "rgba(255,233,173,0.45)" }}>{s.idx}</span>

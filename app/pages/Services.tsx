@@ -127,7 +127,7 @@ export default function ServicesPage() {
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div ref={cardsReveal.ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((s, i) => {
-              const isPeri = s.idx === "03";
+              const isPeri = true;
               return (
                 <article key={s.idx} style={{ background: isPeri ? "var(--peri)" : "var(--basil)", border: isPeri ? "1px solid var(--peri)" : "1px solid var(--basil)", borderRadius: 14, padding: "24px 22px", position: "relative", display: "flex", flexDirection: "column", gap: 14, opacity: cardsReveal.on ? 1 : 0, transform: cardsReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
                   <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: isPeri ? "rgba(59,10,34,0.45)" : "rgba(255,233,173,0.45)" }}>{s.idx}</span>
