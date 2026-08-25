@@ -35,6 +35,7 @@ export function useModal() {
 
 export default function PageShell({ children }: { children: React.ReactNode }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   // Initialised from the data-theme the no-FOUC script (layout.tsx) already set,
   // falling back to "dark". Reading it here keeps React in sync with the DOM.
   const [theme, setTheme] = useState<Theme>(() => {

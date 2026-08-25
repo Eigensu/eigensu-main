@@ -6,7 +6,7 @@ import { useTheme } from "../components/PageShell";
 import { ThemeHeroSection } from "../components/ThemeHero";
 import { getThemeTokens } from "../lib/themeTokens";
 
-const POSTS = [
+export const POSTS = [
   {
     slug: "zero-downtime-cloud-migration",
     category: "Cloud",

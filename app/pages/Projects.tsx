@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
 
 const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
@@ -30,81 +30,14 @@ function useReveal(threshold = 0.08) {
   return { ref, on };
 }
 
-/* ── Carousel ────────────────────────────────────────────────────────────── */
-
-const SLIDES = [
-  { tag: "Logistics",    title: "Dispatch automation",      body: "A self-balancing dispatch engine that replaced a manual routing desk, handling 2,000+ orders daily without intervention.",     client: "NORTHWIND", outcome: "−71% manual hrs" },
-  { tag: "Manufacturing",title: "Inventory reconciliation", body: "Real-time stock synchronisation across four plants and three ERP systems, eliminating the monthly variance scramble.",         client: "VERTEX",    outcome: "99.4% accuracy" },
-  { tag: "Finance",      title: "Approval routing",         body: "Policy-aware approval flows that route, escalate, and audit themselves — cutting the average cycle from days to minutes.",    client: "ATLAS",     outcome: "8h → 40m" },
-  { tag: "Retail",       title: "Ops command centre",       body: "A single console unifying nine in-store systems into one live operational view for regional managers.",                       client: "HELIOS",    outcome: "9 tools → 1" },
-  { tag: "Healthcare",   title: "Intake digitisation",      body: "Paper intake replaced with a validated digital workflow feeding straight into the records system.",                           client: "MERIDIAN",  outcome: "−92% errors" },
-  { tag: "R&D",          title: "Experiment tracker",       body: "Internal product giving lab teams one place to log, compare, and reproduce experiments across sites.",                        client: "QUANTA",    outcome: "+40% throughput" },
-];
-
-function Carousel() {
-  const [active, setActive] = useState(0);
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  const go = useCallback((idx: number) => {
-    const clamped = Math.max(0, Math.min(SLIDES.length - 1, idx));
-    setActive(clamped);
-    const el = trackRef.current;
-    if (!el) return;
-    el.scrollTo({ left: el.offsetWidth * clamped, behavior: "smooth" });
-  }, []);
-
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const fn = () => setActive(Math.round(el.scrollLeft / el.offsetWidth));
-    el.addEventListener("scroll", fn, { passive: true });
-    return () => el.removeEventListener("scroll", fn);
-  }, []);
-
-  return (
-    <div>
-      <style>{`#carousel-track::-webkit-scrollbar { display: none; }`}</style>
-      <div id="carousel-track" ref={trackRef} style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", scrollbarWidth: "none", gap: 16, paddingBottom: 4 }}>
-        {SLIDES.map((s, i) => (
-          <article key={i} style={{ flex: "0 0 clamp(260px, 32%, 360px)", scrollSnapAlign: "start", background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "24px 22px", display: "flex", flexDirection: "column", gap: 12 }}>
-            <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1px", textTransform: "uppercase" as const, color: "var(--accent)" }}>{s.tag}</span>
-            <h4 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", color: "var(--text)", margin: 0 }}>{s.title}</h4>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.65, flex: 1, margin: 0 }}>{s.body}</p>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: 14 }}>
-              <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1.5px", color: "var(--text-dim)" }}>{s.client}</span>
-              <span style={{ fontFamily: MONO, fontSize: "0.74rem", color: "var(--ok)" }}>{s.outcome}</span>
-            </div>
-          </article>
-        ))}
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 18 }}>
-        <div style={{ display: "flex", gap: 7 }}>
-          {SLIDES.map((_, i) => (
-            <button key={i} onClick={() => go(i)} style={{ width: active === i ? 22 : 7, height: 7, borderRadius: 4, border: "none", cursor: "pointer", background: active === i ? "var(--accent)" : "var(--border-strong)", transition: "all .25s", padding: 0 }} />
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          {[{ l: "←", d: -1 }, { l: "→", d: 1 }].map(({ l, d }) => (
-            <button key={l} onClick={() => go(active + d)} style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--border-strong)", background: "var(--panel)", color: "var(--text)", fontSize: "1rem", cursor: "pointer", display: "grid", placeItems: "center" }}>{l}</button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ── Logos ────────────────────────────────────────────────────────────────── */
-
-const CLIENTS = ["NORTHWIND","VERTEX","HELIOS","ATLAS","MERIDIAN","QUANTA","ORBIT","LUMEN","NEXUS","SOLACE"];
-
-/* ── Dispatch Console ────────────────────────────────────────────────────── */
+/* ── Dispatch Console Graphic ──────────────────────────────────────────────── */
 
 function DispatchConsole() {
   const [tick, setTick] = useState(true);
   useEffect(() => { const id = setInterval(() => setTick(t => !t), 900); return () => clearInterval(id); }, []);
   const BARS = [55, 70, 48, 88, 62, 95, 71, 80];
   return (
-    <div style={{ background: "var(--bg-elev)", border: "1px solid var(--border-strong)", borderRadius: 14, overflow: "hidden", fontFamily: MONO }}>
+    <div style={{ width: "100%", maxWidth: 600, background: "var(--bg-elev)", border: "1px solid var(--border-strong)", borderRadius: 14, overflow: "hidden", fontFamily: MONO, boxShadow: "0 32px 64px -24px rgba(0,0,0,0.8)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 16px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
         {["var(--err)","var(--warn)","var(--ok)"].map(c => <span key={c} style={{ width: 11, height: 11, borderRadius: "50%", background: c, opacity: c === "var(--err)" ? 0.8 : 0.4 }} />)}
         <span style={{ marginLeft: 8, fontSize: "0.7rem", color: "var(--text-dim)", letterSpacing: "1px" }}>dispatch — live</span>
@@ -129,82 +62,152 @@ function DispatchConsole() {
   );
 }
 
+/* ── Case Study Data ─────────────────────────────────────────────────────── */
+
+const CASE_STUDIES = [
+  {
+    industry: "Logistics",
+    client: "Northwind",
+    title: "Zero-touch dispatch automation.",
+    summary: "Northwind's dispatch desk was a bottleneck and a single point of failure. We modelled their routing rules, built an engine around them, and put humans back on exceptions only.",
+    challenge: "6 full-time dispatchers were manually assigning 2,000+ daily orders to a fleet of 150 drivers. Rule complexity meant training took months, and surge days caused massive backlogs and SLA failures.",
+    solution: "We engineered a self-balancing Node.js routing engine that ingests the order stream, calculates optimal drops based on live vehicle telemetry, and dispatches directly to driver mobile apps.",
+    impact: { metric: "−71%", label: "reduction in manual routing hours, while scaling order volume by 2.5x." },
+    tech: ["Node.js", "Redis", "PostgreSQL", "React Native", "WebSockets"],
+    graphic: <DispatchConsole />
+  },
+  {
+    industry: "Manufacturing",
+    client: "Vertex",
+    title: "Live inventory reconciliation.",
+    summary: "Real-time stock synchronisation across four plants and three legacy ERP systems, eliminating the monthly variance scramble.",
+    challenge: "Stock counts across 4 geographic sites were reconciled manually at month-end. Discrepancies led to halted production lines, emergency air-freight costs, and untrustworthy financial reporting.",
+    solution: "We built an event-driven middleware layer that subscribes to physical scans and legacy ERP updates, standardising the data contract and broadcasting live state to a unified command centre.",
+    impact: { metric: "99.4%", label: "inventory accuracy across all facilities with zero month-end downtime." },
+    tech: ["Go", "Kafka", "GraphQL", "Next.js"],
+    graphic: null
+  },
+  {
+    industry: "Finance",
+    client: "Atlas",
+    title: "Algorithmic approval routing.",
+    summary: "Policy-aware approval flows that route, escalate, and audit themselves — cutting the average cycle from days to minutes.",
+    challenge: "Capital expenditure requests were trapped in endless email chains and generic SaaS workflows that couldn't handle Atlas's multi-layered, dynamic compliance rules across jurisdictions.",
+    solution: "We delivered a custom rules engine. Employees submit requests via a clean internal portal; the engine evaluates the payload against financial policies and instantly pings the correct executive via Slack.",
+    impact: { metric: "40m", label: "average approval cycle, down from a sprawling 8-day average." },
+    tech: ["Python", "Temporal", "Slack API", "React"],
+    graphic: null
+  }
+];
+
+function CaseStudyCard({ data }: { data: typeof CASE_STUDIES[0] }) {
+  const { ref, on } = useReveal();
+
+  return (
+    <article ref={ref} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 16, overflow: "hidden", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s", display: "flex", flexDirection: "column" }}>
+      {data.graphic && (
+        <div style={{ padding: "40px 20px", background: "linear-gradient(180deg, var(--panel), var(--bg-elev))", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "center" }}>
+          {data.graphic}
+        </div>
+      )}
+      
+      <div style={{ padding: "clamp(24px, 4vw, 48px)" }}>
+        {/* Header */}
+        <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
+          <span style={{ fontFamily: MONO, fontSize: "0.75rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--accent)" }}>{data.industry}</span>
+          <span style={{ color: "var(--text-dim)" }}>/</span>
+          <span style={{ fontFamily: MONO, fontSize: "0.75rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--text-dim)" }}>{data.client}</span>
+        </div>
+        <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem, 3vw, 2.6rem)", letterSpacing: "-0.02em", color: "var(--text)", marginBottom: 16 }}>{data.title}</h3>
+        <p style={{ color: "var(--text-muted)", fontSize: "clamp(1rem, 1.4vw, 1.1rem)", lineHeight: 1.7, maxWidth: "65ch", marginBottom: 40 }}>{data.summary}</p>
+        
+        {/* Narrative Arc */}
+        <div className="grid gap-8 md:grid-cols-3" style={{ paddingBottom: 40, borderBottom: "1px solid var(--border)", marginBottom: 40 }}>
+          <div>
+            <h4 style={{ fontFamily: MONO, fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--err)", marginBottom: 12 }}>The Problem</h4>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", lineHeight: 1.6 }}>{data.challenge}</p>
+          </div>
+          <div>
+            <h4 style={{ fontFamily: MONO, fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--accent)", marginBottom: 12 }}>The Solution</h4>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", lineHeight: 1.6 }}>{data.solution}</p>
+          </div>
+          <div>
+            <h4 style={{ fontFamily: MONO, fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--ok)", marginBottom: 12 }}>The Result</h4>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 8 }}>
+               <span style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "2.8rem", letterSpacing: "-0.03em", color: "var(--text)", lineHeight: 1 }}>{data.impact.metric}</span>
+            </div>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", lineHeight: 1.6 }}>{data.impact.label}</p>
+          </div>
+        </div>
+
+        {/* Tech & CTA */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24 }}>
+           <div>
+             <h4 style={{ fontFamily: MONO, fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--text-dim)", marginBottom: 12 }}>Technologies</h4>
+             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+               {data.tech.map((t: string) => <span key={t} style={{ background: "var(--panel)", border: "1px solid var(--border-strong)", borderRadius: 6, padding: "6px 12px", fontFamily: MONO, fontSize: "0.75rem", color: "var(--text-muted)" }}>{t}</span>)}
+             </div>
+           </div>
+           <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 24px", borderRadius: 100, background: "transparent", color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>Start a project like this →</Link>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* ── Logos ────────────────────────────────────────────────────────────────── */
+
+const CLIENTS = ["NORTHWIND","VERTEX","HELIOS","ATLAS","MERIDIAN","QUANTA","ORBIT","LUMEN","NEXUS","SOLACE"];
+
+/* ── Main Page ───────────────────────────────────────────────────────────── */
+
 export default function ProjectsPage() {
-  const carouselReveal  = useReveal();
-  const logosReveal     = useReveal();
-  const featuredReveal  = useReveal();
-  const ctaReveal       = useReveal();
+  const { ref: logosRef, on: logosOn } = useReveal();
+  const { ref: ctaRef, on: ctaOn }     = useReveal();
 
   return (
     <div>
       {/* ── Hero ── */}
       <ThemeHeroSection>
-        <Eyebrow muted>Projects // selected work</Eyebrow>
+        <Eyebrow muted>Projects // case studies</Eyebrow>
         <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", maxWidth: "15ch", margin: "0 0 20px" }}>
           Systems quietly <span style={{ color: "var(--accent)" }}>doing the work</span> right now.
         </h1>
         <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", lineHeight: 1.7 }}>
-          A sample of what we&apos;ve shipped. Each one a system that runs itself so the team behind it doesn&apos;t have to.
+          We don&apos;t just string APIs together. We architect robust software engines that solve complex operational bottlenecks. Here is proof.
         </p>
       </ThemeHeroSection>
 
-      {/* ── Carousel ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24">
+      {/* ── Premium Case Studies Stack ── */}
+      <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={carouselReveal.ref} style={{ opacity: carouselReveal.on ? 1 : 0, transform: carouselReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
-            <Carousel />
-          </div>
-        </div>
-      </section>
-
-      {/* ── Client Logos ── */}
-      <section className="relative z-10 py-10 md:py-14" style={{ borderTop: "1px solid var(--border)" }}>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div style={{ marginBottom: 36 }}>
-            <Eyebrow>Clients</Eyebrow>
-            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3vw,2.4rem)", letterSpacing: "-0.02em", color: "var(--text)", margin: 0 }}>Teams that trust the machinery.</h2>
-          </div>
-          <div ref={logosReveal.ref} className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5" style={{ opacity: logosReveal.on ? 1 : 0, transition: "opacity .7s" }}>
-            {CLIENTS.map((c, i) => (
-              <div key={c} style={{ border: "1px solid var(--border)", borderRadius: 9, padding: "16px 10px", textAlign: "center", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "2px", color: "var(--text-dim)", opacity: logosReveal.on ? 1 : 0, transition: `opacity .6s ${i * 0.05}s` }}>{c}</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "clamp(40px, 6vw, 64px)" }}>
+            {CASE_STUDIES.map((study, i) => (
+              <CaseStudyCard key={i} data={study} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Featured Case Study ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
+      {/* ── Client Logos ── */}
+      <section className="relative z-10 py-12 md:py-16" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={featuredReveal.ref} style={{ opacity: featuredReveal.on ? 1 : 0, transition: "opacity .7s" }}>
-            <div className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center">
-              <div>
-                <Eyebrow>Featured // case study</Eyebrow>
-                <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>From 6 people routing orders to 0.</h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7, marginBottom: 22 }}>
-                  Northwind&apos;s dispatch desk was a bottleneck and a single point of failure. We modelled their routing rules, built an engine around them, and put humans back on exceptions only.
-                </p>
-                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 26px", display: "flex", flexDirection: "column", gap: 10 }}>
-                  {["2,000+ orders auto-routed every day","Exceptions surfaced in a live queue","Full audit trail for every decision"].map(item => (
-                    <li key={item} style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--text-muted)", fontSize: "0.9rem" }}>
-                      <span style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(15,77,46,0.12)", border: "1px solid rgba(15,77,46,0.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-                        <svg viewBox="0 0 12 12" width={10} height={10} fill="none"><path d="M2 6l3 3 5-5" stroke="var(--ok)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>Start something like this</Link>
-              </div>
-              <DispatchConsole />
-            </div>
+          <div style={{ marginBottom: 36 }}>
+            <Eyebrow>Clients</Eyebrow>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3vw,2.4rem)", letterSpacing: "-0.02em", color: "var(--text)", margin: 0 }}>Teams that trust the machinery.</h2>
+          </div>
+          <div ref={logosRef} className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5" style={{ opacity: logosOn ? 1 : 0, transition: "opacity .7s" }}>
+            {CLIENTS.map((c, i) => (
+              <div key={c} style={{ border: "1px solid var(--border)", borderRadius: 9, padding: "16px 10px", textAlign: "center", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "2px", color: "var(--text-dim)", opacity: logosOn ? 1 : 0, transition: `opacity .6s ${i * 0.05}s` }}>{c}</div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section className="relative z-10 py-10 md:py-14">
+      <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={ctaReveal.ref} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaReveal.on ? 1 : 0, transform: ctaReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+          <div ref={ctaRef} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaOn ? 1 : 0, transform: ctaOn ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
             <div style={{ position: "absolute", width: 380, height: 260, background: "var(--accent)", filter: "blur(100px)", opacity: 0.17, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1 }}>
               <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "22ch", margin: "0 auto 28px" }}>Your project could be the next one on this page.</h2>
