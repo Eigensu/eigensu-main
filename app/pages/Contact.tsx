@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
 
-const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
-const HEAD = "var(--font-head), 'Sora', sans-serif";
-const BODY = "var(--font-body), 'Hanken Grotesk', sans-serif";
+const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
+const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
+const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 
 function useReveal(threshold = 0.08) {
   const ref = useRef<HTMLDivElement>(null);
@@ -59,11 +59,11 @@ export default function ContactPage() {
           <div ref={gridReveal.ref} className="grid gap-10 md:gap-14 md:grid-cols-2 md:items-start" style={{ opacity: gridReveal.on ? 1 : 0, transition: "opacity .7s, transform .7s", transform: gridReveal.on ? "translateY(0)" : "translateY(20px)" }}>
             {/* Info panel */}
             <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(56,232,176,0.08)", border: "1px solid rgba(56,232,176,0.2)", borderRadius: 100, padding: "7px 14px", marginBottom: 32 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(15,77,46,0.08)", border: "1px solid rgba(15,77,46,0.2)", borderRadius: 100, padding: "7px 14px", marginBottom: 32 }}>
                 <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--ok)", boxShadow: "0 0 8px var(--ok)", animation: "availPulse 2s infinite" }} />
                 <span style={{ fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "1px", color: "var(--ok)" }}>Currently accepting new projects</span>
               </div>
-              <style>{`@keyframes availPulse { 0%,100%{box-shadow:0 0 0 0 rgba(56,232,176,.5)} 70%{box-shadow:0 0 0 8px rgba(56,232,176,0)} }`}</style>
+              <style>{`@keyframes availPulse { 0%,100%{box-shadow:0 0 0 0 rgba(15,77,46,.5)} 70%{box-shadow:0 0 0 8px rgba(15,77,46,0)} }`}</style>
 
               <div>
                 {INFO_ITEMS.map((item, i) => (
@@ -89,7 +89,7 @@ export default function ContactPage() {
             <div style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "28px 26px" }}>
               {sent ? (
                 <div style={{ textAlign: "center", padding: "36px 0" }}>
-                  <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(56,232,176,0.1)", border: "1px solid rgba(56,232,176,0.3)", display: "grid", placeItems: "center", margin: "0 auto 18px" }}>
+                  <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(15,77,46,0.1)", border: "1px solid rgba(15,77,46,0.3)", display: "grid", placeItems: "center", margin: "0 auto 18px" }}>
                     <svg viewBox="0 0 24 24" fill="none" width={22} height={22}><path d="M5 13l4 4L19 7" stroke="var(--ok)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
                   <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.3rem", color: "var(--text)", marginBottom: 10 }}>Message sent.</h3>

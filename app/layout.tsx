@@ -1,31 +1,31 @@
 import type { Metadata } from "next";
-import { Montserrat, Sora, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Sans, Space_Mono } from "next/font/google";
 import "./globals.css";
 import PageShell from "./components/PageShell";
 import ClientOnly from "./components/ClientOnly";
 
-const montserrat = Montserrat({
+const bricolageLogo = Bricolage_Grotesque({
   variable: "--font-logo",
   subsets: ["latin"],
   weight: ["700", "800"],
 });
 
-const sora = Sora({
+const bricolageHead = Bricolage_Grotesque({
   variable: "--font-head",
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["500", "600", "700", "800"],
 });
 
-const hankenGrotesk = Hanken_Grotesk({
+const instrumentSans = Instrument_Sans({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const spaceMono = Space_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -43,7 +43,7 @@ export default function RootLayout({
       lang="en"
       data-theme="dark"
       suppressHydrationWarning
-      className={`${montserrat.variable} ${sora.variable} ${hankenGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${bricolageLogo.variable} ${bricolageHead.variable} ${instrumentSans.variable} ${spaceMono.variable} h-full antialiased`}
     >
       <head>
         {/* Set the theme before first paint to avoid a flash of the wrong palette. */}

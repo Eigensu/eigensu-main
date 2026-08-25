@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
 
-const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
-const HEAD = "var(--font-head), 'Sora', sans-serif";
-const BODY = "var(--font-body), 'Hanken Grotesk', sans-serif";
+const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
+const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
+const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 
 function Eyebrow({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
   return (

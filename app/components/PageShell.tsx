@@ -3,7 +3,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import Footer from "./Footer";
 import Navigation from "./Navigation";
-import { CelestialLayer } from "./ThemeHero";
 import LetsTalkDrawer from "./LetsTalkModal";
 
 type ModalContextValue = {
@@ -61,9 +60,8 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
       <ModalContext.Provider value={{ openModal, closeModal, isModalOpen }}>
         <div className="font-body min-h-screen flex flex-col">
           <Navigation theme={theme} onContact={openModal} setTheme={setTheme} />
-          <CelestialLayer theme={theme} />
           <main className="flex-1">{children}</main>
-          <Footer onOpenModal={openModal} />
+          <Footer />
           <LetsTalkDrawer open={isModalOpen} onClose={closeModal} theme={theme} />
         </div>
       </ModalContext.Provider>

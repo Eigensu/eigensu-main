@@ -1,287 +1,287 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 
-const SOLUTIONS_LINKS = [
+const SERVICES_LINKS = [
   { label: "Operations Automation", href: "/services" },
   { label: "Internal Tooling",      href: "/services" },
   { label: "Systems Integration",   href: "/services" },
+  { label: "Case Studies",          href: "/projects" },
+];
+
+const RESOURCES_LINKS = [
+  { label: "Insights",  href: "/blog" },
+  { label: "Changelog", href: "#" },
+  { label: "Pricing",   href: "#" },
+  { label: "Security",  href: "#" },
 ];
 
 const COMPANY_LINKS = [
   { label: "About",    href: "/about" },
   { label: "Projects", href: "/projects" },
-  { label: "Contact",  href: "/contact" },
+  { label: "Careers",  href: "/careers" },
+  { label: "FAQ",      href: "#" },
 ];
 
-const CONNECT_LINKS = [
-  { label: "LinkedIn",   href: "#" },
-  { label: "X / Twitter", href: "#" },
-  { label: "GitHub",     href: "#" },
+const HELP_LINKS = [
+  { label: "Contact",        href: "/contact" },
+  { label: "Support",        href: "mailto:hello@eigensu.in" },
+  { label: "Status",         href: "#" },
+  { label: "Legal policies", href: "#" },
 ];
 
-const BREAKER_LETTERS: { char: string; filled: boolean }[] = [
-  { char: "E", filled: false },
-  { char: "I", filled: true  },
-  { char: "G", filled: false },
-  { char: "E", filled: true  },
-  { char: "N", filled: false },
-  { char: "S", filled: false },
-  { char: "U", filled: true  },
+const SOCIAL_LINKS = [
+  { label: "X / Twitter", href: "#", glyph: "𝕏" },
+  { label: "LinkedIn",    href: "#", glyph: "in" },
+  { label: "GitHub",      href: "#", glyph: "◐" },
+  { label: "YouTube",     href: "#", glyph: "▶" },
 ];
 
-function FooterBreaker() {
+function FooterLink({ href, children }: { href: string; children: ReactNode }) {
+  if (href.startsWith("/")) {
+    return (
+      <Link href={href}>
+        {children}
+        <span className="footer-arrow">↗</span>
+      </Link>
+    );
+  }
   return (
-    <div
-      aria-hidden="true"
-      className="relative w-full overflow-hidden select-none"
-      style={{
-        background: "var(--bg)",
-        height: "clamp(110px, 16vw, 200px)",
-      }}
-    >
-      <div className="absolute inset-0 flex items-center justify-between">
-        {BREAKER_LETTERS.map(({ char, filled }, index) => (
-          <span
-            key={`${char}-${index}`}
-            className="flex-1 text-center leading-none"
-            style={{
-              fontFamily: "var(--font-logo), 'Montserrat', sans-serif",
-              fontSize: "clamp(14rem, 30vw, 30rem)",
-              lineHeight: 1,
-              color: filled ? "var(--accent)" : "transparent",
-              WebkitTextStroke: filled ? "0" : "2px var(--accent)",
-              paintOrder: "stroke fill",
-              marginLeft: index === 0 ? 0 : "-0.04em",
-              zIndex: filled ? 2 : 1,
-              position: "relative",
-            }}
-          >
-            {char}
-          </span>
+    <a href={href}>
+      {children}
+      <span className="footer-arrow">↗</span>
+    </a>
+  );
+}
+
+function FooterLinkGroup({
+  title,
+  color,
+  links,
+}: {
+  title: string;
+  color: "peri" | "cream";
+  links: { label: string; href: string }[];
+}) {
+  return (
+    <div className="footer-link-group">
+      <h4 style={{ color: color === "peri" ? "var(--peri)" : "var(--cream)" }}>{title}</h4>
+      <ul>
+        {links.map((link) => (
+          <li key={link.label}>
+            <FooterLink href={link.href}>{link.label}</FooterLink>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
 
-function IconArrow() {
+function FooterSun() {
   return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    <svg className="footer-sun" viewBox="0 0 440 220" width="440" height="220" aria-hidden="true">
+      <path d="M0,220 A220,220 0 0 1 440,220 Z" fill="var(--peri)" />
+      <path id="footerSunTextArc" d="M60,220 A160,160 0 0 1 380,220" fill="none" />
+      <a href="mailto:hello@eigensu.in">
+        <text fontFamily="var(--font-mono), 'Space Mono', monospace" fontWeight={700} fontSize={16} letterSpacing={2} fill="var(--cream)">
+          <textPath href="#footerSunTextArc" startOffset="50%" textAnchor="middle">
+            hello@eigensu.in
+          </textPath>
+        </text>
+      </a>
     </svg>
   );
 }
 
-export default function Footer({ onOpenModal }: { onOpenModal: () => void }) {
-  const border    = "var(--border)";
-  const textMuted = "var(--text-muted)";
-  const textDim   = "var(--text-dim)";
-  const textPri   = "var(--text)";
-  const dotGrid   = "radial-gradient(circle, var(--border) 1px, transparent 1px)";
-
+export default function Footer() {
   return (
-    <>
-      {/* CTA section */}
-      <section
-        className="relative w-full overflow-hidden"
-        style={{ background: "var(--bg-elev-2)", borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}` }}
-      >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{ backgroundImage: dotGrid, backgroundSize: "24px 24px" }}
-        />
-        <div className="relative z-10 mx-auto max-w-[1200px] px-6 py-16 md:py-20">
-          <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-            <div>
-              <h2
-                style={{
-                  fontFamily: "var(--font-head), 'Sora', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
-                  letterSpacing: "-0.025em",
-                  lineHeight: 1.18,
-                  color: textPri,
-                  maxWidth: "18ch",
-                }}
-              >
-                Tell us what&apos;s slowing your operation down.
-              </h2>
-              <p className="mt-5 max-w-md text-base leading-7" style={{ color: textMuted }}>
-                We&apos;ll map it, scope it, and show you what automating it looks like — usually within a week.
-              </p>
-            </div>
-            <div
-              className="rounded-2xl p-7"
-              style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${border}` }}
-            >
-              <p className="text-sm leading-7" style={{ color: textMuted }}>
-                We build systems for teams that want clear communication, fast delivery, and long-term reliability — not just a vendor.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href="/onboard"
-                  className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:opacity-90"
-                  style={{
-                    background: "var(--accent)",
-                    color: "var(--on-accent)",
-                    fontFamily: "var(--font-body), 'Hanken Grotesk', sans-serif",
-                    boxShadow: "0 0 0 1px var(--accent-line), 0 8px 30px -8px var(--accent)",
-                  }}
-                >
-                  Onboard a project
-                </Link>
-                <button
-                  type="button"
-                  onClick={onOpenModal}
-                  className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:opacity-80"
-                  style={{
-                    color: textPri,
-                    borderColor: "rgba(255,255,255,0.16)",
-                    fontFamily: "var(--font-body), 'Hanken Grotesk', sans-serif",
-                  }}
-                >
-                  <IconArrow />
-                  Book a call
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <footer className="footer">
+      <FooterSun />
 
-      {/* Breaker */}
-      <FooterBreaker />
-
-      {/* Footer bottom */}
-      <footer style={{ background: "var(--bg)", borderTop: `1px solid ${border}` }}>
-        <div className="mx-auto max-w-[1200px] px-6 py-14 md:py-16">
-          <div className="mb-12 grid grid-cols-2 gap-10 md:grid-cols-4 md:gap-8">
-
-            {/* Brand */}
-            <div className="col-span-2 md:col-span-1">
-              <div
-                className="mb-3 inline-flex items-center gap-2"
-                style={{
-                  fontFamily: "var(--font-logo), 'Montserrat', sans-serif",
-                  fontWeight: 800,
-                  fontSize: "1.1rem",
-                  letterSpacing: "1.5px",
-                  textTransform: "uppercase",
-                  color: textPri,
-                }}
-              >
-                <span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--accent)", boxShadow: "0 0 10px var(--accent)" }} />
-                EIGENSU
-              </div>
-              <p className="mb-4 text-sm leading-6" style={{ color: textMuted }}>
-                Tailored systems and products for internal management and operations optimisation.
-              </p>
-              <a
-                href="mailto:hello@eigensu.in"
-                className="text-sm transition-opacity hover:opacity-70"
-                style={{ color: textMuted }}
-              >
-                hello@eigensu.in
-              </a>
-            </div>
-
-            {/* Solutions */}
-            <div>
-              <h5
-                className="mb-4 text-xs uppercase tracking-[2px]"
-                style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textDim }}
-              >
-                Solutions
-              </h5>
-              <ul className="flex flex-col gap-2.5">
-                {SOLUTIONS_LINKS.map((link) => (
-                  <li key={link.label}>
-                    <Link href={link.href} className="text-sm transition-opacity hover:opacity-70" style={{ color: textMuted }}>
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <h5
-                className="mb-4 text-xs uppercase tracking-[2px]"
-                style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textDim }}
-              >
-                Company
-              </h5>
-              <ul className="flex flex-col gap-2.5">
-                {COMPANY_LINKS.map((link) => (
-                  <li key={link.label}>
-                    <Link href={link.href} className="text-sm transition-opacity hover:opacity-70" style={{ color: textMuted }}>
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Connect */}
-            <div>
-              <h5
-                className="mb-4 text-xs uppercase tracking-[2px]"
-                style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textDim }}
-              >
-                Connect
-              </h5>
-              <ul className="flex flex-col gap-2.5">
-                {CONNECT_LINKS.map((link) => (
-                  <li key={link.label}>
-                    <a href={link.href} className="text-sm transition-opacity hover:opacity-70" style={{ color: textMuted }}>
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div style={{ height: "0.5px", background: border, marginBottom: 20 }} />
-
-          {/* Bottom bar */}
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p
-              className="text-xs"
-              style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textDim }}
-            >
-              &copy; {new Date().getFullYear()} Eigensu. All rights reserved.
+      <div className="footer-main">
+        <div className="footer-wrap">
+          <div className="footer-hero">
+            <p className="footer-lockup">
+              <span>EIGEN</span>
+              <span className="fl-su">SU</span>
             </p>
-            <span
-              className="inline-flex items-center gap-2 text-xs"
-              style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace", color: textMuted }}
-            >
-              <span
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: "var(--ok)",
-                  boxShadow: "0 0 10px var(--ok)",
-                  animation: "footerPulse 2s infinite",
-                }}
-              />
-              All systems operational
-            </span>
+
+            <div className="footer-links-grid">
+              <FooterLinkGroup title="Services"  color="peri"  links={SERVICES_LINKS} />
+              <FooterLinkGroup title="Resources" color="cream" links={RESOURCES_LINKS} />
+              <FooterLinkGroup title="Company"   color="peri"  links={COMPANY_LINKS} />
+              <FooterLinkGroup title="Help"      color="cream" links={HELP_LINKS} />
+            </div>
+          </div>
+
+          <div className="footer-bottom">
+            <div className="footer-bottom-left">
+              <div className="footer-social">
+                {SOCIAL_LINKS.map((s, i) => (
+                  <a key={s.label} href={s.href} aria-label={s.label} style={{ color: i % 2 === 0 ? "var(--cream)" : "var(--peri)" }}>
+                    {s.glyph}
+                  </a>
+                ))}
+              </div>
+              <span className="footer-addr">2261 Market Street #5039, San Francisco, CA 94114</span>
+            </div>
+            <div className="footer-bottom-meta">
+              <span>&copy; {new Date().getFullYear()} Eigensu. All rights reserved.</span>
+              <span className="meta-sep">&middot;</span>
+              <a href="#">Privacy policy</a>
+              <span className="meta-sep">&middot;</span>
+              <a href="#">Terms</a>
+            </div>
           </div>
         </div>
-      </footer>
+      </div>
 
       <style>{`
-        @keyframes footerPulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(56,232,176,0.5); }
-          70%       { box-shadow: 0 0 0 8px rgba(56,232,176,0); }
+        .footer{
+          position:relative;
+          overflow-x:hidden;
+          background:var(--wine);
+          color:var(--cream);
+        }
+        .footer-sun{
+          position:absolute;
+          left:55%;
+          bottom:0;
+          transform:translateX(-50%);
+          width:440px;
+          height:220px;
+          z-index:0;
+        }
+        .footer-sun path{ pointer-events:none; }
+        .footer-sun a{ pointer-events:auto; cursor:pointer; }
+        .footer-sun a text{ transition:.2s ease; }
+        .footer-sun a:hover text{ fill:#fff; }
+
+        .footer-main{ padding:28px 0 0; position:relative; z-index:1; }
+        .footer-wrap{ width:min(1380px, calc(100% - 48px)); margin:0 auto; }
+
+        .footer-hero{
+          display:grid;
+          grid-template-columns:1.1fr 1fr;
+          gap:6px;
+          align-items:start;
+          padding-bottom:56px;
+        }
+
+        .footer-lockup{
+          margin:0 0 0 -14px;
+          width:100%;
+          container-type:inline-size;
+        }
+        .footer-lockup span{
+          display:block;
+          width:100%;
+          margin:0;
+          padding:0;
+          font-family:var(--font-head), 'Bricolage Grotesque', sans-serif;
+          font-weight:800;
+          font-size:clamp(4.8rem, 40cqw, 20rem);
+          line-height:.78;
+          letter-spacing:-.045em;
+          color:var(--cream);
+          white-space:nowrap;
+        }
+        .footer-lockup .fl-su{ color:var(--peri); }
+
+        .footer-links-grid{
+          display:grid;
+          grid-template-columns:repeat(2,1fr);
+          gap:44px 48px;
+          padding-top:44px;
+          text-align:right;
+        }
+        .footer-link-group h4{
+          font-family:var(--font-head), 'Bricolage Grotesque', sans-serif;
+          font-weight:700;
+          font-size:1.35rem;
+          line-height:1;
+          letter-spacing:-.02em;
+          margin:0 0 18px;
+        }
+        .footer-link-group ul{
+          list-style:none;
+          margin:0;
+          padding:0;
+          display:grid;
+          gap:12px;
+          justify-items:end;
+        }
+        .footer-link-group a{
+          font-size:.92rem;
+          color:rgba(251,243,228,.72);
+          text-decoration:none;
+          display:inline-flex;
+          align-items:center;
+          gap:6px;
+        }
+        .footer-link-group a:hover{ color:#fff; }
+        .footer-arrow{
+          display:inline-block;
+          opacity:0;
+          transform:translateX(-4px);
+          transition:opacity .2s ease, transform .2s ease;
+          font-size:.78em;
+        }
+        .footer-link-group a:hover .footer-arrow{ opacity:1; transform:translateX(0); }
+
+        .footer-bottom{
+          padding:26px 0;
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:20px;
+          flex-wrap:wrap;
+          color:rgba(251,243,228,.55);
+          font-family:var(--font-mono), 'Space Mono', monospace;
+          font-size:11px;
+          font-weight:700;
+          letter-spacing:.03em;
+        }
+        .footer-bottom-left{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+        .footer-addr{
+          color:rgba(251,243,228,.7);
+          line-height:1.5;
+          font-size:.88rem;
+          font-weight:600;
+        }
+        .footer-social{ display:flex; gap:20px; }
+        .footer-social a{
+          display:grid;
+          place-items:center;
+          font-size:1.3rem;
+          font-weight:700;
+          text-decoration:none;
+          transition:.25s ease;
+        }
+        .footer-social a:hover{ transform:translateY(-3px) scale(1.12); }
+        .footer-bottom-meta{
+          display:flex;
+          align-items:center;
+          gap:10px;
+          flex-wrap:wrap;
+          font-family:var(--font-body), 'Instrument Sans', sans-serif;
+          font-size:.88rem;
+          font-weight:600;
+          letter-spacing:0;
+        }
+        .footer-bottom-meta a{ color:var(--peri); font-weight:700; text-decoration:none; }
+        .footer-bottom-meta a:hover{ color:#fff; }
+        .footer-bottom-meta .meta-sep{ color:rgba(251,243,228,.35); }
+
+        @media(max-width:900px){
+          .footer-hero{ grid-template-columns:1fr; gap:36px; }
+          .footer-links-grid{ grid-template-columns:1fr 1fr; gap:32px 40px; }
+        }
+        @media(max-width:750px){
+          .footer-bottom{ flex-direction:column; align-items:flex-start; }
         }
       `}</style>
-    </>
+    </footer>
   );
 }

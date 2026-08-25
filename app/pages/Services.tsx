@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
 
-const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
-const HEAD = "var(--font-head), 'Sora', sans-serif";
-const BODY = "var(--font-body), 'Hanken Grotesk', sans-serif";
+const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
+const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
+const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 
 function Eyebrow({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
   return (
@@ -94,7 +94,7 @@ const PROCESS = [
 function CheckItem({ children }: { children: React.ReactNode }) {
   return (
     <li style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--text-muted)", fontSize: "0.9rem" }}>
-      <span style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(56,232,176,0.12)", border: "1px solid rgba(56,232,176,0.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+      <span style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(15,77,46,0.12)", border: "1px solid rgba(15,77,46,0.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
         <svg viewBox="0 0 12 12" width={10} height={10} fill="none"><path d="M2 6l3 3 5-5" stroke="var(--ok)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
       </span>
       {children}
@@ -126,15 +126,18 @@ export default function ServicesPage() {
       <section className="relative z-10 py-14 md:py-20 lg:py-24">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div ref={cardsReveal.ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map((s, i) => (
-              <article key={s.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "24px 22px", position: "relative", display: "flex", flexDirection: "column", gap: 14, opacity: cardsReveal.on ? 1 : 0, transform: cardsReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
-                <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: "var(--text-dim)" }}>{s.idx}</span>
-                <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid var(--border-strong)", background: "var(--panel)" }}>{s.icon}</div>
-                <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", color: "var(--text)", margin: 0 }}>{s.title}</h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.65, flex: 1, margin: 0 }}>{s.body}</p>
-                <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "0.5px", color: "var(--accent)", textDecoration: "none", marginTop: "auto" }}>Scope this →</Link>
-              </article>
-            ))}
+            {SERVICES.map((s, i) => {
+              const isPeri = s.idx === "03";
+              return (
+                <article key={s.idx} style={{ background: isPeri ? "var(--peri)" : "var(--basil)", border: isPeri ? "1px solid var(--peri)" : "1px solid var(--basil)", borderRadius: 14, padding: "24px 22px", position: "relative", display: "flex", flexDirection: "column", gap: 14, opacity: cardsReveal.on ? 1 : 0, transform: cardsReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
+                  <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: isPeri ? "rgba(59,10,34,0.45)" : "rgba(255,233,173,0.45)" }}>{s.idx}</span>
+                  <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: isPeri ? "1px solid var(--wine)" : "1px solid #FFE9AD", background: isPeri ? "var(--wine)" : "#FFE9AD" }}>{s.icon}</div>
+                  <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", color: isPeri ? "var(--wine)" : "#FFE9AD", margin: 0 }}>{s.title}</h3>
+                  <p style={{ color: isPeri ? "rgba(59,10,34,0.78)" : "rgba(255,233,173,0.8)", fontSize: "0.9rem", lineHeight: 1.65, flex: 1, margin: 0 }}>{s.body}</p>
+                  <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "0.5px", color: isPeri ? "var(--wine)" : "#FFE9AD", textDecoration: "none", marginTop: "auto" }}>Scope this →</Link>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>

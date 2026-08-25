@@ -12,11 +12,12 @@ const hoursOptions = ["Part-time (20 hrs)", "Full-time (40 hrs)"];
 const aiTools = ["Cursor", "GitHub Copilot", "Supermaven", "Windsurf", "Other"];
 
 function fieldSurface(isDark: boolean) {
+  void isDark;
   return {
-    background: isDark ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.78)",
-    borderColor: isDark ? "rgba(255,255,255,0.10)" : "rgba(15,23,42,0.10)",
-    color: isDark ? "#ffffff" : "#0f172a",
-    colorScheme: isDark ? "dark" : "light",
+    background: "rgba(255,255,255,0.78)",
+    borderColor: "rgba(59,10,34,0.10)",
+    color: "#3B0A22",
+    colorScheme: "light",
   } as const;
 }
 
@@ -78,7 +79,7 @@ function DropdownField({
             background: surfaceColor,
             borderColor,
             color: textColor,
-            boxShadow: open ? `0 0 0 2px ${isDark ? "rgba(0,200,180,0.18)" : "rgba(245,158,11,0.18)"}` : "none",
+            boxShadow: open ? "0 0 0 2px rgba(240,73,31,0.18)" : "none",
           }}
         >
           <span style={{ color: value ? textColor : mutedColor }}>{value || placeholder}</span>
@@ -91,12 +92,12 @@ function DropdownField({
           <div
             role="listbox"
             className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden rounded-2xl border shadow-2xl"
-            style={{ background: isDark ? "#0f141a" : "rgba(255,255,255,0.98)", borderColor }}
+            style={{ background: "rgba(255,255,255,0.98)", borderColor }}
           >
             <button
               type="button"
               className="w-full px-4 py-3 text-left text-sm"
-              style={{ color: mutedColor, background: isDark ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)" }}
+              style={{ color: mutedColor, background: "rgba(59,10,34,0.02)" }}
               onClick={() => { setValue(""); setOpen(false); }}
             >
               {placeholder}
@@ -112,10 +113,10 @@ function DropdownField({
                   className="w-full px-4 py-3 text-left text-sm transition"
                   style={{
                     color: textColor,
-                    background: selected ? (isDark ? "rgba(0,200,180,0.14)" : "rgba(245,158,11,0.12)") : "transparent",
+                    background: selected ? "rgba(240,73,31,0.12)" : "transparent",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.05)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = selected ? (isDark ? "rgba(0,200,180,0.14)" : "rgba(245,158,11,0.12)") : "transparent"; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(59,10,34,0.05)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = selected ? "rgba(240,73,31,0.12)" : "transparent"; }}
                   onClick={() => { setValue(option); setOpen(false); }}
                 >
                   {option}
@@ -142,7 +143,7 @@ function StepIndicator({ step, isDark, accent, muted }: { step: number; isDark: 
             <div
               className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-all"
               style={{
-                background: active || done ? accent : isDark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)",
+                background: active || done ? accent : "rgba(59,10,34,0.08)",
                 color: active || done ? "#fff" : muted,
               }}
             >
@@ -158,7 +159,7 @@ function StepIndicator({ step, isDark, accent, muted }: { step: number; isDark: 
               {label}
             </span>
             {i < steps.length - 1 && (
-              <div className="ml-2 h-px w-8 md:w-16" style={{ background: isDark ? "rgba(255,255,255,0.10)" : "rgba(15,23,42,0.10)" }} />
+              <div className="ml-2 h-px w-8 md:w-16" style={{ background: "rgba(59,10,34,0.10)" }} />
             )}
           </div>
         );
@@ -180,16 +181,16 @@ export default function CareersPage() {
   const muted = t.muted;
   const accent = t.accent;
   const accentSoft = t.accentSoft;
-  const panel = isDark ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.74)";
-  const chipBg = isDark ? "rgba(255,255,255,0.05)" : "rgba(15,23,42,0.04)";
-  const sectionBg = isDark ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.60)";
+  const panel = "rgba(255,255,255,0.74)";
+  const chipBg = "rgba(59,10,34,0.04)";
+  const sectionBg = "rgba(255,255,255,0.60)";
 
   // Shared dropdown props
   const dropdownShared = {
     isDark,
     labelColor: body,
     borderColor: border,
-    surfaceColor: isDark ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.78)",
+    surfaceColor: "rgba(255,255,255,0.78)",
     textColor: heading,
     mutedColor: muted,
   };
@@ -208,7 +209,7 @@ export default function CareersPage() {
       {/* ── Hero ── */}
       <ThemeHeroSection contentClassName="mx-auto w-full max-w-7xl">
         <div
-          className="hero-anim-3 relative overflow-hidden rounded-[36px] border px-6 py-12 shadow-[0_20px_60px_rgba(15,23,42,0.08)] md:px-10 md:py-16 lg:px-12"
+          className="hero-anim-3 relative overflow-hidden rounded-[36px] border px-6 py-12 shadow-[0_20px_60px_rgba(59,10,34,0.08)] md:px-10 md:py-16 lg:px-12"
           style={{ background: sectionBg, borderColor: border }}
         >
           <div className="space-y-6 max-w-2xl">
@@ -230,8 +231,8 @@ export default function CareersPage() {
               href="#application-form"
               className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
               style={{
-                background: `linear-gradient(135deg, ${accent}, ${isDark ? "#0099cc" : "#f59e0b"})`,
-                boxShadow: isDark ? "0 18px 40px rgba(0,200,180,0.18)" : "0 18px 40px rgba(245,158,11,0.20)",
+                background: `linear-gradient(135deg, ${accent}, #FFC53D)`,
+                boxShadow: "0 18px 40px rgba(240,73,31,0.20)",
               }}
             >
               Apply Now
@@ -249,9 +250,9 @@ export default function CareersPage() {
         <div
           className="w-full border-y p-6 sm:p-8 md:p-10 lg:px-14 xl:px-20"
           style={{
-            background: isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.78)",
+            background: "rgba(255,255,255,0.78)",
             borderColor: border,
-            boxShadow: isDark ? "0 18px 60px rgba(0,0,0,0.16)" : "0 18px 60px rgba(15,23,42,0.06)",
+            boxShadow: "0 18px 60px rgba(59,10,34,0.06)",
           }}
         >
           <div className="mx-auto grid w-full max-w-none gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
@@ -341,8 +342,8 @@ export default function CareersPage() {
                       onClick={() => setStep(2)}
                       className="inline-flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-semibold text-white transition hover:scale-[1.01] active:scale-[0.99]"
                       style={{
-                        background: `linear-gradient(135deg, ${accent}, ${isDark ? "#0099cc" : "#f59e0b"})`,
-                        boxShadow: isDark ? "0 18px 44px rgba(0,200,180,0.18)" : "0 18px 44px rgba(245,158,11,0.20)",
+                        background: `linear-gradient(135deg, ${accent}, #FFC53D)`,
+                        boxShadow: "0 18px 44px rgba(240,73,31,0.20)",
                       }}
                     >
                       Continue →
@@ -377,7 +378,7 @@ export default function CareersPage() {
                       <div className="grid gap-3 md:grid-cols-2">
                         {aiTools.map((tool) => (
                           <label key={tool} className="flex items-center gap-3 rounded-2xl border px-4 py-3.5 text-sm" style={{ background: chipBg, borderColor: border, color: body }}>
-                            <input type="checkbox" className="h-4 w-4 rounded border-slate-400 text-teal-500 focus:ring-teal-500" />
+                            <input type="checkbox" className="h-4 w-4 rounded border-slate-400 text-orange-600 focus:ring-orange-600" />
                             {tool}
                           </label>
                         ))}
@@ -439,8 +440,8 @@ export default function CareersPage() {
                       type="submit"
                       className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-semibold text-white transition hover:scale-[1.01] active:scale-[0.99]"
                       style={{
-                        background: `linear-gradient(135deg, ${accent}, ${isDark ? "#0099cc" : "#f59e0b"})`,
-                        boxShadow: isDark ? "0 18px 44px rgba(0,200,180,0.18)" : "0 18px 44px rgba(245,158,11,0.20)",
+                        background: `linear-gradient(135deg, ${accent}, #FFC53D)`,
+                        boxShadow: "0 18px 44px rgba(240,73,31,0.20)",
                       }}
                     >
                       Submit Application

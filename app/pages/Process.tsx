@@ -77,14 +77,15 @@ function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
 
   /* ── Texture builder ── */
   function makeTexture(d: boolean) {
+    void d;
     const S = 1024;
     const tc = document.createElement("canvas");
     tc.width = S; tc.height = S;
     const ctx = tc.getContext("2d")!;
-    ctx.fillStyle = d ? "#0b1220" : "#d4e4f7";
+    ctx.fillStyle = "#F4E9D6";
     ctx.fillRect(0, 0, S, S);
     // grid lines
-    ctx.strokeStyle = d ? "rgba(91,158,245,0.08)" : "rgba(26,111,232,0.06)";
+    ctx.strokeStyle = "rgba(59,10,34,0.08)";
     ctx.lineWidth = 0.8;
     for (let lat = -80; lat <= 80; lat += 20) {
       const y = ((lat + 90) / 180) * S;
@@ -104,12 +105,12 @@ function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
       [0.88, 0.32, 0.06, 0.1], [0.92, 0.45, 0.05, 0.08], [0.44, 0.72, 0.08, 0.06],
       [0.5, 0.76, 0.04, 0.04], [0.18, 0.14, 0.12, 0.08], [0.3, 0.1, 0.06, 0.06], [0.7, 0.12, 0.04, 0.05],
     ];
-    ctx.fillStyle = d ? "#1a3060" : "#8fb8df";
+    ctx.fillStyle = "#5A1435";
     lands.forEach(([cx, cy, rx, ry]) => {
       ctx.beginPath(); ctx.ellipse(cx * S, cy * S, rx * S, ry * S, 0, 0, Math.PI * 2); ctx.fill();
     });
     // dots
-    const dc = d ? "rgba(100,170,255,0.55)" : "rgba(26,111,232,0.45)";
+    const dc = "rgba(240,73,31,0.55)";
     for (let py = 8; py < S; py += 14) {
       for (let px = 8; px < S; px += 14) {
         const latR = ((py / S) - 0.5) * Math.PI;
@@ -148,7 +149,8 @@ function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
     });
     const g = new T.BufferGeometry();
     g.setAttribute("position", new T.Float32BufferAttribute(pts, 3));
-    return new T.Points(g, new T.PointsMaterial({ color: d ? 0x6ab0ff : 0x1A6FE8, size: 0.026, sizeAttenuation: true }));
+    void d;
+    return new T.Points(g, new T.PointsMaterial({ color: 0xF0491F, size: 0.026, sizeAttenuation: true }));
   }
   let cityDots = makeCityDots(dark);
   scene.add(cityDots);
@@ -156,9 +158,9 @@ function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
   /* ── Lights ── */
   const ambient = new T.AmbientLight(0xffffff, dark ? 0.7 : 1.0);
   scene.add(ambient);
-  const dir = new T.DirectionalLight(0x4488ff, dark ? 1.1 : 0.6);
+  const dir = new T.DirectionalLight(0xFFC53D, dark ? 1.1 : 0.6);
   dir.position.set(3, 2, 3); scene.add(dir);
-  const rim = new T.DirectionalLight(0x1a6fe8, 0.3);
+  const rim = new T.DirectionalLight(0xF0491F, 0.3);
   rim.position.set(-3, -1, -2); scene.add(rim);
 
   /* ── Theme update ── */
@@ -325,18 +327,16 @@ export default function ProcessPage() {
   const t = getThemeTokens(theme);
   const ac = t.accent;
   const bg = t.contentBg;
-  const card = dark ? "rgba(255,255,255,0.05)" : "#FFFFFF";
+  const card = "#FFFFFF";
   const tp = t.heading;
   const ts = t.body;
   const tm = t.muted;
   const br = t.border;
-  const brs = dark ? "rgba(255,255,255,0.14)" : "rgba(15,23,42,0.16)";
-  const pill = dark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.05)";
+  const brs = "rgba(59,10,34,0.16)";
+  const pill = "rgba(59,10,34,0.05)";
   const tagB = t.accentSoft;
   const tagT = ac;
-  const glow = dark
-    ? "radial-gradient(circle, rgba(0,200,180,0.25) 0%, transparent 68%)"
-    : "radial-gradient(circle, rgba(251,191,36,0.18) 0%, transparent 68%)";
+  const glow = "radial-gradient(circle, rgba(240,73,31,0.18) 0%, transparent 68%)";
 
   return (
     <div style={{ background: bg, color: tp, minHeight: "100vh", transition: "background .65s ease, color .3s", overflowX: "hidden" }}>

@@ -79,25 +79,26 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
   };
 
   /* ── tokens ── */
-  const drawerBg   = isDark ? "#0f1117"              : "#fafaf8";
-  const heading    = isDark ? "#ffffff"               : "#0a0a0a";
-  const subtext    = isDark ? "rgba(255,255,255,.42)" : "rgba(10,10,10,.50)";
-  const divider    = isDark ? "rgba(255,255,255,.08)" : "rgba(0,0,0,.08)";
-  const inputBdr   = isDark ? "rgba(255,255,255,.13)" : "rgba(0,0,0,.14)";
-  const inputClr   = isDark ? "#ffffff"               : "#0a0a0a";
-  const labelClr   = isDark ? "rgba(255,255,255,.38)" : "rgba(0,0,0,.42)";
-  const reqClr     = isDark ? "rgba(255,255,255,.28)" : "rgba(0,0,0,.28)";
+  void isDark;
+  const drawerBg   = "#FBF3E4";
+  const heading    = "#3B0A22";
+  const subtext    = "rgba(59,10,34,.55)";
+  const divider    = "rgba(59,10,34,.14)";
+  const inputBdr   = "rgba(59,10,34,.16)";
+  const inputClr   = "#3B0A22";
+  const labelClr   = "rgba(59,10,34,.48)";
+  const reqClr     = "rgba(59,10,34,.32)";
   const focusBdr   = "var(--accent)";
-  const cardBg     = isDark ? "rgba(255,255,255,.04)" : "rgba(0,0,0,.04)";
-  const cardBdr    = isDark ? "rgba(255,255,255,.07)" : "rgba(0,0,0,.07)";
-  const errClr     = "#ff5757";
+  const cardBg     = "rgba(59,10,34,.04)";
+  const cardBdr    = "rgba(59,10,34,.10)";
+  const errClr     = "#F0491F";
   const linkAccent = "var(--accent)";
   const btnBg      = linkAccent;
   const btnTxt     = "var(--on-accent)";
   const btnHoverShadow = "var(--accent-line)";
-  const btnIconBg  = isDark ? "rgba(2,6,8,0.14)" : "rgba(255,255,255,0.22)";
-  const overlayBg  = isDark ? "rgba(0,0,0,.55)"       : "rgba(0,0,0,.35)";
-  const closeBg    = isDark ? "rgba(255,255,255,.10)"  : "rgba(0,0,0,.08)";
+  const btnIconBg  = "rgba(255,255,255,0.30)";
+  const overlayBg  = "rgba(59,10,34,.35)";
+  const closeBg    = "rgba(59,10,34,.08)";
 
   if (!open && !visible) return null;
 
@@ -124,14 +125,14 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
           z-index: 9999;
           overflow-y: auto; overflow-x: hidden;
           scrollbar-width: none;
-          font-family: var(--font-body), "Hanken Grotesk", sans-serif;
+          font-family: var(--font-body), "Instrument Sans", sans-serif;
           animation: ltDrawIn .48s cubic-bezier(.22,1,.36,1) both;
         }
         .lt-drawer.out { animation: ltDrawOut .42s cubic-bezier(.4,0,1,1) both; }
         .lt-drawer::-webkit-scrollbar { display: none; }
 
         .lt-drawer h2 {
-          font-family: var(--font-head), "Sora", sans-serif;
+          font-family: var(--font-head), "Bricolage Grotesque", sans-serif;
           font-weight: 400;
           letter-spacing: 0.02em;
         }
@@ -145,7 +146,7 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
         .lt-field-hint,
         .lt-card-eyebrow,
         .lt-card-value {
-          font-family: var(--font-body), "Hanken Grotesk", sans-serif;
+          font-family: var(--font-body), "Instrument Sans", sans-serif;
         }
 
         .lt-body {
