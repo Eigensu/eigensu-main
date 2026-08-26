@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Eyebrow } from "./shared";
+import { Container, Eyebrow, useReveal } from "./shared";
 import { MODULES_STYLES } from "./modules/styles";
 import {
   GuestIntelligenceTile,
@@ -22,6 +22,8 @@ ${MODULES_STYLES}
 `;
 
 export default function ModulesSection() {
+  const { ref, on } = useReveal(0.05);
+
   return (
     <section id="dsp-modules" className="dsp-modules">
       <style>{STYLES}</style>
@@ -33,7 +35,7 @@ export default function ModulesSection() {
           restaurant you manage.
         </p>
 
-        <div className="bb-board">
+        <div ref={ref} className={`bb-board ${on ? "is-in" : ""}`}>
           <GuestIntelligenceTile />
           <SmartSegmentationTile />
           <CampaignEngineTile />
