@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
 
-const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
-const HEAD = "var(--font-head), 'Sora', sans-serif";
-const BODY = "var(--font-body), 'Hanken Grotesk', sans-serif";
+const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
+const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
+const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 
 const PROJECT_TYPES = [
   { title: "Operations Automation", desc: "Pipelines, workflows, reconciliation" },
@@ -60,7 +60,7 @@ export default function OnboardPage() {
       <div>
         <ThemeHeroSection>
           <div style={{ textAlign: "center" }}>
-            <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(56,232,176,0.1)", border: "1px solid rgba(56,232,176,0.25)", display: "grid", placeItems: "center", margin: "0 auto 24px" }}>
+            <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(15,77,46,0.1)", border: "1px solid rgba(15,77,46,0.25)", display: "grid", placeItems: "center", margin: "0 auto 24px" }}>
               <svg viewBox="0 0 24 24" fill="none" width={28} height={28}><path d="M5 13l4 4L19 7" stroke="var(--ok)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
             <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,4vw,2.8rem)", letterSpacing: "-0.02em", color: "var(--text)", marginBottom: 14 }}>Project received.</h2>

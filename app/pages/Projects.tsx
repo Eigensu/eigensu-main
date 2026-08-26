@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
 
-const MONO = "var(--font-mono), 'JetBrains Mono', ui-monospace, monospace";
-const HEAD = "var(--font-head), 'Sora', sans-serif";
-const BODY = "var(--font-body), 'Hanken Grotesk', sans-serif";
+const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
+const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
+const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 
 function Eyebrow({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
   return (
@@ -46,7 +46,7 @@ function DispatchConsole() {
         {[{ label: "orders_in_queue", val: "14", color: "var(--warn)" }, { label: "auto_routed_today", val: "1,986", color: "var(--ok)" }, { label: "exceptions", val: "2 pending", tag: true }].map(r => (
           <div key={r.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 0", borderBottom: "1px solid var(--panel)" }}>
             <span style={{ fontSize: "0.72rem", color: "var(--text-dim)" }}>{r.label}</span>
-            {r.tag ? <span style={{ fontFamily: MONO, fontSize: "0.66rem", padding: "3px 8px", borderRadius: 4, background: "rgba(255,107,107,0.12)", color: "var(--err)", border: "1px solid rgba(255,107,107,0.25)" }}>{r.val}</span>
+            {r.tag ? <span style={{ fontFamily: MONO, fontSize: "0.66rem", padding: "3px 8px", borderRadius: 4, background: "rgba(240,73,31,0.12)", color: "var(--err)", border: "1px solid rgba(240,73,31,0.25)" }}>{r.val}</span>
             : <span style={{ fontSize: "0.76rem", fontWeight: 700, color: r.color }}>{r.val}</span>}
           </div>
         ))}

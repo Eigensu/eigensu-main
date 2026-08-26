@@ -82,12 +82,7 @@ function PostCard({ post, t, index }: PostCardProps) {
         borderColor: t.border,
         width: "340px",
         flexShrink: 0,
-        boxShadow:
-          index === 0
-            ? t.isDark
-              ? "0 20px 60px rgba(0,0,0,0.22)"
-              : "0 20px 60px rgba(15,23,42,0.06)"
-            : "none",
+        boxShadow: index === 0 ? "0 20px 60px rgba(59,10,34,0.10)" : "none",
       }}
     >
       <div className="flex items-center justify-between gap-3">

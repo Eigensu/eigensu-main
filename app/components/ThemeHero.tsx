@@ -56,83 +56,6 @@ function Starfield({ visible }: { visible: boolean }) {
   );
 }
 
-function MoonRay({ visible }: { visible: boolean }) {
-  const RAYS = [
-    { angle: -62, w: 9 }, { angle: -48, w: 14 }, { angle: -36, w: 10 },
-    { angle: -24, w: 18 }, { angle: -14, w: 12 }, { angle: -5, w: 20 },
-    { angle: 5, w: 20 }, { angle: 14, w: 12 }, { angle: 24, w: 18 },
-    { angle: 36, w: 10 }, { angle: 48, w: 14 }, { angle: 62, w: 9 },
-  ];
-  const cx = 450;
-  const cy = 52;
-  const len = 480;
-  return (
-    <div
-      className="flex justify-center"
-      style={{
-        position: "absolute",
-        top: "-6%",
-        left: "50%",
-        transform: "translateX(-50%)",
-        width: "100%",
-        zIndex: 2,
-        pointerEvents: "none",
-        overflow: "hidden",
-        opacity: visible ? 1 : 0,
-        visibility: visible ? "visible" : "hidden",
-        transition: "opacity 0.8s ease, visibility 0.8s ease",
-      }}
-    >
-      <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 900, overflow: "hidden" }}>
-        <defs>
-          <linearGradient id="moonRayFade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.22" />
-            <stop offset="60%" stopColor="var(--accent)" stopOpacity="0.07" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
-          </linearGradient>
-          <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#dbeafe" stopOpacity="1" />
-            <stop offset="35%"  stopColor="#93c5fd" stopOpacity="0.9" />
-            <stop offset="70%"  stopColor="var(--accent)" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="moonHalo" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="var(--accent)" stopOpacity="0.18" />
-            <stop offset="60%"  stopColor="var(--accent)" stopOpacity="0.07" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
-          </radialGradient>
-          <filter id="moonRayBlur"><feGaussianBlur stdDeviation="7" /></filter>
-          <filter id="moonDiscBlur"><feGaussianBlur stdDeviation="2.5" /></filter>
-          <filter id="moonHaloBlur"><feGaussianBlur stdDeviation="18" /></filter>
-        </defs>
-        {RAYS.map(({ angle, w }, i) => {
-          const rad = (angle * Math.PI) / 180;
-          const tx = cx + Math.sin(rad) * len;
-          const ty = cy + Math.cos(rad) * len;
-          const px = -Math.cos(rad);
-          const py = Math.sin(rad);
-          return (
-            <polygon
-              key={i}
-              points={`${cx + px * 1.5},${cy + py * 1.5} ${cx - px * 1.5},${cy - py * 1.5} ${tx - px * w},${ty - py * w} ${tx + px * w},${ty + py * w}`}
-              fill="url(#moonRayFade)"
-              filter="url(#moonRayBlur)"
-              opacity="0.85"
-            />
-          );
-        })}
-        <ellipse cx={cx} cy={cy} rx="160" ry="160" fill="url(#moonHalo)" filter="url(#moonHaloBlur)" />
-        <circle cx={cx} cy={cy} r="38" fill="url(#moonGlow)" filter="url(#moonDiscBlur)" />
-        <circle cx={cx} cy={cy} r="22" fill="#dbeafe" opacity="0.97" />
-        <circle cx="444" cy="46" r="10" fill="white" opacity="0.55" />
-        <circle cx="458" cy="56" r="4" fill="#93c5fd" opacity="0.35" />
-        <circle cx="442" cy="60" r="2.5" fill="#93c5fd" opacity="0.25" />
-        <circle cx="453" cy="44" r="2" fill="#93c5fd" opacity="0.2" />
-      </svg>
-    </div>
-  );
-}
-
 function GlowArcs({ theme: _theme }: { theme: Theme }) {
   const bottomGlow = "radial-gradient(ellipse at center, var(--glow) 0%, transparent 70%)";
   const sideGlow   = "radial-gradient(ellipse at center, var(--glow) 0%, transparent 70%)";
@@ -200,10 +123,9 @@ export function ThemeHeroSection({
     >
       <style>{HERO_ANIM_STYLES}</style>
       <Starfield visible={theme !== "light"} />
-      <MoonRay visible />
       <GlowArcs theme={theme} />
       <div
-        className={`relative z-10 flex flex-1 flex-col pb-8 pt-[var(--hero-content-top)] md:pb-12 w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10 ${
+        className={`relative z-10 flex flex-1 flex-col pb-16 pt-[var(--hero-content-top)] md:pb-20 w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10 ${
           align === "center" ? "items-center text-center" : ""
         } ${contentClassName}`}
       >

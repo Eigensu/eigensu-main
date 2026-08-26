@@ -62,7 +62,7 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
         <div className="font-body min-h-screen flex flex-col">
           <Navigation theme={theme} onContact={openModal} setTheme={setTheme} />
           <main className="flex-1">{children}</main>
-          <Footer onOpenModal={openModal} />
+          <Footer />
           <LetsTalkDrawer open={isModalOpen} onClose={closeModal} theme={theme} />
         </div>
       </ModalContext.Provider>
