@@ -55,12 +55,12 @@ function OpsConsole() {
   useEffect(() => { const id = setInterval(() => setTick(t => !t), 850); return () => clearInterval(id); }, []);
   const BARS = [42, 61, 38, 78, 55, 90, 47, 68, 83, 59, 72, 95];
   return (
-    <div style={{ background: "var(--wine)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 28, padding: 14, overflow: "hidden", boxShadow: "24px 30px 60px rgba(59,10,34,0.28)" }}>
+    <div style={{ background: "var(--cream)", border: "1px solid rgba(59,10,34,0.14)", borderRadius: 28, padding: 14, overflow: "hidden", boxShadow: "24px 30px 60px rgba(59,10,34,0.28)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 10px 15px" }}>
         <div style={{ display: "flex", gap: 8 }}>
           {["#FF7661","var(--butter)","#65C58A"].map(c => <i key={c} style={{ width: 9, height: 9, borderRadius: "50%", display: "block", background: c }} />)}
         </div>
-        <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(251,243,228,0.55)" }}>ops_console — live</span>
+        <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(59,10,34,0.55)" }}>ops_console — live</span>
       </div>
       <div style={{ background: "#260616", borderRadius: 18, padding: 18 }}>
         {[
@@ -74,7 +74,7 @@ function OpsConsole() {
           </div>
         ))}
         <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 95, padding: "15px 12px", border: "1px solid rgba(251,243,228,0.1)", borderRadius: 10, marginTop: 14 }}>
-          {BARS.map((h, i) => <div key={i} style={{ flex: 1, background: "var(--ember)", opacity: 0.9, borderRadius: "3px 3px 0 0", height: `${h}%` }} />)}
+          {BARS.map((h, i) => <div key={i} style={{ flex: 1, background: i % 4 === 2 ? "var(--peri)" : "var(--ember)", opacity: 0.9, borderRadius: "3px 3px 0 0", height: `${h}%` }} />)}
         </div>
         <div style={{ marginTop: 10, background: "#12030a", borderRadius: 9, padding: "12px 13px", fontFamily: MONO, fontSize: "0.68rem", color: "rgba(251,243,228,0.62)" }}>
           <b style={{ color: "#72D69A" }}>eigensu ▸</b>
@@ -321,7 +321,6 @@ export default function HomePage() {
     <div>
       {/* ── Hero ── */}
       <ThemeHeroSection fullScreen contentClassName="pb-8" background="var(--wine)" className="rounded-b-[48px] z-[2]">
-        <div style={{ position: "absolute", width: 560, height: 560, right: -160, bottom: -220, background: "var(--butter)", borderRadius: "50%", opacity: 0.28, filter: "blur(2px)", zIndex: 0, pointerEvents: "none" }} />
         <div className="grid w-full gap-8 min-[900px]:grid-cols-[1.12fr_0.88fr] min-[900px]:items-center" style={{ position: "relative", zIndex: 1 }}>
           {/* Left */}
           <div style={{ marginLeft: "clamp(-8px,-1.6vw,-24px)" }}>
