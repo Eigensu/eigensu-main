@@ -104,6 +104,7 @@ type ThemeHeroSectionProps = {
   contentClassName?: string;
   fullScreen?: boolean;
   align?: "center" | "start";
+  background?: string;
 };
 
 export function ThemeHeroSection({
@@ -112,6 +113,7 @@ export function ThemeHeroSection({
   contentClassName = "",
   fullScreen = false,
   align = "start",
+  background,
 }: ThemeHeroSectionProps) {
   const { theme } = useTheme();
   const { sectionBg } = getThemeTokens(theme);
@@ -119,7 +121,7 @@ export function ThemeHeroSection({
   return (
     <section
       className={`relative flex flex-col overflow-hidden ${fullScreen ? "min-h-screen" : "min-h-[82vh]"} ${className}`}
-      style={{ background: sectionBg }}
+      style={{ background: background ?? sectionBg }}
     >
       <style>{HERO_ANIM_STYLES}</style>
       <Starfield visible={theme !== "light"} />

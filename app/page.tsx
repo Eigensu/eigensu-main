@@ -13,8 +13,7 @@ const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 
 function Eyebrow({ children, color = "var(--accent)" }: { children: React.ReactNode; color?: string }) {
   return (
-    <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color, marginBottom: 18 }}>
-      <span style={{ width: 7, height: 7, borderRadius: "50%", background: color, boxShadow: `0 0 10px ${color}`, flexShrink: 0 }} />
+    <div style={{ display: "inline-flex", alignItems: "center", fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color, marginBottom: 18 }}>
       {children}
     </div>
   );
@@ -134,10 +133,7 @@ function LogoLoopRow({ logos, direction, duration, siya = false }: { logos: type
 
 function ClientsBand() {
   return (
-    <div style={{ padding: "56px 0", textAlign: "center", background: "var(--ember)", borderRadius: 48, position: "relative", zIndex: 1, overflow: "hidden" }}>
-      <p style={{ fontFamily: MONO, fontSize: "0.82rem", fontWeight: 700, letterSpacing: "0.06em", color: "var(--cream)", margin: "0 auto 44px", maxWidth: "46ch" }}>
-        Teams of all sizes trust Eigensu to run the systems behind their operation.
-      </p>
+    <div style={{ padding: "104px 0", marginTop: -48, textAlign: "center", background: "var(--ember)", borderRadius: 0, position: "relative", zIndex: 1, overflow: "hidden" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
         <LogoLoopRow logos={CLIENTS_ROW_1} direction="left" duration={30} siya />
         <LogoLoopRow logos={CLIENTS_ROW_2} direction="right" duration={34} />
@@ -154,20 +150,17 @@ const SERVICES = [
   { idx: "03", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6"/></svg>, title: "Systems Integration", body: "Connect the tools you already pay for so data flows once, cleanly, without a human in the middle." },
 ];
 
-const BUTTER_LIGHT = "#FFE9AD";
-
 function ServiceCard({ s }: { s: typeof SERVICES[0] }) {
   const { ref, on } = useReveal();
-  const isPeri = true;
   return (
-    <article ref={ref} style={{ background: isPeri ? "var(--peri)" : "var(--basil)", border: isPeri ? "1px solid var(--peri)" : "1px solid var(--basil)", borderRadius: 14, padding: "26px 24px", position: "relative", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .6s, transform .6s" }}>
-      <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: isPeri ? "rgba(59,10,34,0.45)" : "rgba(255,233,173,0.45)" }}>{s.idx}</span>
-      <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: isPeri ? "1px solid var(--wine)" : `1px solid ${BUTTER_LIGHT}`, background: isPeri ? "var(--wine)" : BUTTER_LIGHT, marginBottom: 18 }}>
+    <article ref={ref} style={{ background: "#fff", border: "2px solid var(--wine)", borderRadius: 18, padding: "26px 24px 30px", position: "relative", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .6s, transform .6s" }}>
+      <span style={{ position: "absolute", top: 22, right: 24, fontFamily: MONO, fontSize: "0.7rem", color: "rgba(59,10,34,0.35)" }}>{s.idx}</span>
+      <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid var(--wine)", background: "var(--wine)", marginBottom: 18 }}>
         {s.icon}
       </div>
-      <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginBottom: 10, color: isPeri ? "var(--wine)" : BUTTER_LIGHT }}>{s.title}</h3>
-      <p style={{ color: isPeri ? "rgba(59,10,34,0.78)" : "rgba(255,233,173,0.8)", fontSize: "0.9rem", lineHeight: 1.65 }}>{s.body}</p>
-      <Link href="/services" style={{ fontFamily: MONO, fontSize: "0.74rem", letterSpacing: "0.5px", color: isPeri ? "var(--wine)" : BUTTER_LIGHT, marginTop: 16, display: "inline-flex", gap: 6, alignItems: "center" }}>Explore →</Link>
+      <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginBottom: 10, color: "var(--wine)" }}>{s.title}</h3>
+      <p style={{ color: "rgba(59,10,34,0.78)", fontSize: "0.9rem", lineHeight: 1.65 }}>{s.body}</p>
+      <Link href="/services" style={{ fontFamily: MONO, fontSize: "0.74rem", letterSpacing: "0.5px", color: "var(--accent)", marginTop: 16, display: "inline-flex", gap: 6, alignItems: "center" }}>Explore →</Link>
     </article>
   );
 }
@@ -184,14 +177,18 @@ const STATS = [
 function StatsStrip() {
   const { ref, on } = useReveal();
   return (
-    <div ref={ref} style={{ border: "1px solid var(--border)", borderRadius: 14, background: "linear-gradient(180deg,var(--bg-elev-2),var(--bg-elev))", overflow: "hidden", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+    <div ref={ref} style={{ border: "2px solid var(--wine)", borderRadius: 16, background: "#fff", overflow: "hidden", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
       <div className="g-stats">
         {STATS.map((s, i) => (
-          <div key={s.lbl} style={{ padding: "clamp(24px,4vw,40px) clamp(18px,3vw,28px)", borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none", borderBottom: i < 2 ? "1px solid var(--border)" : "none" }}>
-            <div style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.8rem,3.5vw,2.8rem)", letterSpacing: "-0.03em", color: "var(--text)" }}>
+          <div
+            key={s.lbl}
+            className={`${i % 2 === 0 ? "border-r-2" : ""} ${i < 2 ? "border-b-2" : ""} lg:border-b-0 ${i < STATS.length - 1 ? "lg:border-r-2" : "lg:border-r-0"}`}
+            style={{ padding: "26px 22px", borderColor: "var(--wine)" }}
+          >
+            <div style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.6rem,3.6vw,2.5rem)", letterSpacing: "-0.03em", color: "var(--text)" }}>
               {s.num}<span style={{ color: "var(--accent)" }}>{s.unit}</span>
             </div>
-            <div style={{ fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--text-muted)", marginTop: 6 }}>{s.lbl}</div>
+            <div style={{ fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--wine-2)", marginTop: 8 }}>{s.lbl}</div>
           </div>
         ))}
       </div>
@@ -199,7 +196,7 @@ function StatsStrip() {
   );
 }
 
-/* ── Carousel ────────────────────────────────────────────────────────────── */
+/* ── Outcomes ────────────────────────────────────────────────────────────── */
 
 const SLIDES = [
   { tag: "Logistics",    title: "Dispatch automation",      body: "Replaced a 6-person routing desk with a self-balancing engine handling 2,000+ orders/day.", client: "NORTHWIND", outcome: "−71% manual hrs" },
@@ -209,39 +206,35 @@ const SLIDES = [
   { tag: "Healthcare",   title: "Intake digitisation",      body: "Paper intake replaced with a validated workflow feeding straight into the records system.", client: "MERIDIAN",  outcome: "−92% errors" },
 ];
 
-function Carousel({ dark = false }: { dark?: boolean }) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [activeIdx, setActiveIdx] = useState(0);
+function OutcomesGrid() {
   const { ref, on } = useReveal(0.08);
-
-  const slideWidth = () => (trackRef.current?.children[0] as HTMLElement)?.offsetWidth + 20 || 360;
-  const goTo = (i: number) => trackRef.current?.scrollTo({ left: i * slideWidth(), behavior: "smooth" });
-  const onScroll = () => setActiveIdx(Math.round((trackRef.current?.scrollLeft || 0) / slideWidth()));
+  const [hero, ...rest] = SLIDES;
 
   return (
     <div ref={ref} style={{ opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
-      <div ref={trackRef} onScroll={onScroll} style={{ display: "flex", gap: 16, overflowX: "auto", scrollSnapType: "x mandatory", padding: "4px 2px 16px", scrollbarWidth: "none" }}>
-        {SLIDES.map(slide => (
-          <article key={slide.client} style={{ scrollSnapAlign: "start", flex: "0 0 clamp(280px, 30%, 360px)", background: dark ? "rgba(251,243,228,0.06)" : "var(--bg-elev)", border: dark ? "1px solid rgba(251,243,228,0.14)" : "1px solid var(--border)", borderRadius: 14, padding: "24px 22px" }}>
-            <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1px", textTransform: "uppercase", color: dark ? "var(--butter)" : "var(--accent-4)", padding: "3px 9px", border: dark ? "1px solid rgba(255,197,61,0.35)" : "1px solid rgba(167,139,250,0.3)", borderRadius: 100, display: "inline-block" }}>{slide.tag}</span>
-            <h4 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", margin: "16px 0 10px", color: dark ? "var(--cream)" : "var(--text)" }}>{slide.title}</h4>
-            <p style={{ color: dark ? "rgba(251,243,228,0.68)" : "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.65 }}>{slide.body}</p>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 20, paddingTop: 16, borderTop: dark ? "1px solid rgba(251,243,228,0.14)" : "1px solid var(--border)", fontFamily: MONO, fontSize: "0.72rem" }}>
-              <span style={{ color: dark ? "rgba(251,243,228,0.5)" : "var(--text-dim)" }}>{slide.client}</span>
-              <span style={{ color: dark ? "#72D69A" : "var(--ok)" }}>{slide.outcome}</span>
-            </div>
-          </article>
-        ))}
+      <div
+        className="grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-9"
+        style={{ paddingBottom: 32, borderBottom: "1px solid rgba(251,243,228,0.18)", marginBottom: 20 }}
+      >
+        <div style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(3.2rem,8vw,5.6rem)", letterSpacing: "-0.045em", lineHeight: 0.85, color: "#72D69A" }}>{hero.outcome}</div>
+        <div>
+          <span style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--butter)" }}>{hero.tag}</span>
+          <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.4rem", letterSpacing: "-0.02em", margin: "8px 0 10px" }}>{hero.title}</h3>
+          <p style={{ color: "rgba(251,243,228,0.68)", fontSize: "0.92rem", lineHeight: 1.6, maxWidth: "52ch", marginBottom: 8 }}>{hero.body}</p>
+          <div style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.5px", color: "rgba(251,243,228,0.48)" }}>{hero.client}</div>
+        </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-        <div style={{ display: "flex", gap: 7 }}>
-          {SLIDES.map((_, i) => <button key={i} onClick={() => goTo(i)} style={{ width: i === activeIdx ? 22 : 7, height: 7, borderRadius: 4, background: i === activeIdx ? "var(--accent)" : dark ? "rgba(251,243,228,0.3)" : "var(--border-strong)", border: "none", cursor: "pointer", transition: "all .25s", padding: 0 }} />)}
-        </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          {[{ l: "←", d: -1 }, { l: "→", d: 1 }].map(({ l, d }) => (
-            <button key={l} onClick={() => goTo(activeIdx + d)} style={{ width: 40, height: 40, borderRadius: "50%", border: dark ? "1px solid rgba(251,243,228,0.3)" : "1px solid var(--border-strong)", display: "grid", placeItems: "center", background: "none", color: dark ? "var(--cream)" : "var(--text)", cursor: "pointer" }}>{l}</button>
-          ))}
-        </div>
+
+      <div>
+        {rest.map(slide => (
+          <div key={slide.client} className="flex items-center justify-between gap-4" style={{ padding: "14px 0", borderBottom: "1px solid rgba(251,243,228,0.12)" }}>
+            <div className="flex items-baseline gap-3" style={{ minWidth: 0 }}>
+              <span style={{ flexShrink: 0, width: 96, fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--butter)" }}>{slide.tag}</span>
+              <span className="truncate" style={{ fontFamily: HEAD, fontWeight: 600, fontSize: "0.88rem", color: "rgba(251,243,228,0.85)" }}>{slide.title} — {slide.client}</span>
+            </div>
+            <span style={{ flexShrink: 0, fontFamily: MONO, fontSize: "0.78rem", color: "#72D69A" }}>{slide.outcome}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -327,16 +320,16 @@ export default function HomePage() {
   return (
     <div>
       {/* ── Hero ── */}
-      <ThemeHeroSection fullScreen contentClassName="pb-8">
+      <ThemeHeroSection fullScreen contentClassName="pb-8" background="var(--wine)" className="rounded-b-[48px] z-[2]">
         <div style={{ position: "absolute", width: 560, height: 560, right: -160, bottom: -220, background: "var(--butter)", borderRadius: "50%", opacity: 0.28, filter: "blur(2px)", zIndex: 0, pointerEvents: "none" }} />
         <div className="grid w-full gap-8 min-[900px]:grid-cols-[1.12fr_0.88fr] min-[900px]:items-center" style={{ position: "relative", zIndex: 1 }}>
           {/* Left */}
           <div style={{ marginLeft: "clamp(-8px,-1.6vw,-24px)" }}>
-            <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(2.6rem,7vw,6.4rem)", lineHeight: 0.92, letterSpacing: "-0.045em", color: "var(--text)", margin: "0 0 24px" }}>
+            <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(2.6rem,7vw,6.4rem)", lineHeight: 0.92, letterSpacing: "-0.045em", color: "var(--cream)", margin: "0 0 24px" }}>
               Internal systems that{" "}
-              <span style={{ color: "var(--accent)" }}>run themselves</span>.
+              <span style={{ color: "var(--accent)" }}>run themselves</span>
             </h1>
-            <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", marginBottom: 32, lineHeight: 1.7 }}>
+            <p className="hero-anim-4" style={{ color: "rgba(251,243,228,0.82)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", marginBottom: 32, lineHeight: 1.7 }}>
               Eigensu builds tailored software that streamlines internal management and optimises operations — so your teams stop fighting tools and start compounding output.
             </p>
             <div className="hero-anim-4 flex flex-wrap gap-3">
@@ -344,8 +337,8 @@ export default function HomePage() {
                 Start a Project
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{ width: 15, height: 15 }}><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </BtnPrimary>
-              <BtnGhost href="/projects">See our work</BtnGhost>
-              <BtnGhost onClick={openModal}>Book a call</BtnGhost>
+              <BtnGhost href="/projects" invert>See our work</BtnGhost>
+              <BtnGhost onClick={openModal} invert>Book a call</BtnGhost>
             </div>
           </div>
           {/* Right */}
@@ -359,7 +352,7 @@ export default function HomePage() {
       <ClientsBand />
 
       {/* ── Services teaser ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ overflow: "hidden" }}>
+      <section className="relative z-10 pt-[104px] pb-14 md:pt-[128px] md:pb-20 lg:pt-[144px] lg:pb-24" style={{ overflow: "hidden", background: "var(--bg)", borderRadius: "48px 48px 0 0", marginTop: -48 }}>
         <div style={{ position: "absolute", width: 300, height: 300, left: -110, top: 40, background: "var(--butter)", borderRadius: "50%", opacity: 0.22, filter: "blur(1px)", zIndex: 0, pointerEvents: "none" }} />
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ maxWidth: 580, marginBottom: 48 }}>
@@ -377,8 +370,12 @@ export default function HomePage() {
       </section>
 
       {/* ── Stats ── */}
-      <section className="relative z-10 py-10 md:py-14">
+      <section className="relative z-10 py-10 md:py-14" style={{ background: "var(--bg)" }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div style={{ maxWidth: 480, marginBottom: 28 }}>
+            <Eyebrow>Track record</Eyebrow>
+            <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7 }}>Four years in, and the systems we shipped are still running themselves.</p>
+          </div>
           <StatsStrip />
         </div>
       </section>
@@ -390,7 +387,7 @@ export default function HomePage() {
             <Eyebrow color="var(--butter)">Proof</Eyebrow>
             <h2 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(2rem,4.2vw,4rem)", letterSpacing: "-0.04em", lineHeight: 0.98, color: "var(--cream)" }}>Selected outcomes.</h2>
           </div>
-          <Carousel dark />
+          <OutcomesGrid />
         </div>
       </section>
 
