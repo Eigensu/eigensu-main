@@ -65,8 +65,11 @@ function FooterLinkGroup({
   links: { label: string; href: string }[];
 }) {
   return (
-    <div className="footer-link-group">
-      <h4 style={{ color: color === "peri" ? "var(--peri)" : "var(--cream)" }}>{title}</h4>
+    <details className="footer-link-group">
+      <summary style={{ color: color === "peri" ? "var(--peri)" : "var(--cream)" }}>
+        {title}
+        <svg className="footer-caret" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </summary>
       <ul>
         {links.map((link) => (
           <li key={link.label}>
@@ -74,7 +77,7 @@ function FooterLinkGroup({
           </li>
         ))}
       </ul>
-    </div>
+    </details>
   );
 }
 
@@ -124,6 +127,7 @@ export default function Footer() {
                   </a>
                 ))}
               </div>
+              <a href="mailto:hello@eigensu.in" className="footer-email-inline">hello@eigensu.in</a>
               <span className="footer-addr">2261 Market Street #5039, San Francisco, CA 94114</span>
             </div>
             <div className="footer-bottom-meta">
@@ -196,22 +200,31 @@ export default function Footer() {
           padding-top:44px;
           text-align:right;
         }
-        .footer-link-group h4{
+        .footer-link-group summary{
           font-family:var(--font-head), 'Bricolage Grotesque', sans-serif;
           font-weight:700;
           font-size:1.35rem;
           line-height:1;
           letter-spacing:-.02em;
           margin:0 0 18px;
+          display:flex;
+          align-items:center;
+          justify-content:flex-end;
+          gap:8px;
+          list-style:none;
+          cursor:default;
         }
+        .footer-link-group summary::-webkit-details-marker{ display:none; }
+        .footer-link-group summary::marker{ content:""; }
+        .footer-caret{ display:none; flex-shrink:0; transition:transform .25s ease; }
         .footer-link-group ul{
           list-style:none;
           margin:0;
           padding:0;
-          display:grid;
           gap:12px;
           justify-items:end;
         }
+        .footer-link-group[open] > ul{ display:grid; }
         .footer-link-group a{
           font-size:.92rem;
           color:rgba(251,243,228,.72);
@@ -260,6 +273,16 @@ export default function Footer() {
           transition:.25s ease;
         }
         .footer-social a:hover{ transform:translateY(-3px) scale(1.12); }
+        .footer-email-inline{
+          display:none;
+          font-family:var(--font-mono), 'Space Mono', monospace;
+          font-size:.78rem;
+          font-weight:700;
+          letter-spacing:.03em;
+          color:var(--peri);
+          text-decoration:none;
+        }
+        .footer-email-inline:hover{ color:#fff; }
         .footer-bottom-meta{
           display:flex;
           align-items:center;
@@ -274,12 +297,31 @@ export default function Footer() {
         .footer-bottom-meta a:hover{ color:#fff; }
         .footer-bottom-meta .meta-sep{ color:rgba(251,243,228,.35); }
 
+        @media(min-width:901px){
+          .footer-link-group ul{ display:grid; }
+        }
         @media(max-width:900px){
-          .footer-hero{ grid-template-columns:1fr; gap:36px; }
-          .footer-links-grid{ grid-template-columns:1fr 1fr; gap:32px 40px; }
+          .footer-main{ padding-top:18px; }
+          .footer-hero{ grid-template-columns:1fr; gap:22px; padding-bottom:28px; }
+          .footer-lockup span{ font-size:clamp(2.6rem, 27cqw, 5.6rem); }
+          .footer-links-grid{ grid-template-columns:1fr 1fr; gap:8px 28px; padding-top:16px; }
+          .footer-link-group{ border-bottom:1px solid rgba(251,243,228,.14); }
+          .footer-link-group summary{ font-size:1rem; margin:0; padding:14px 0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+          .footer-caret{ display:block; }
+          .footer-link-group[open] .footer-caret{ transform:rotate(180deg); }
+          .footer-link-group ul{ gap:10px; padding:2px 0 16px; }
+          .footer-link-group a{ font-size:.78rem; }
+          .footer-bottom{ padding:16px 0; }
+          .footer-sun{ display:none; }
+          .footer-email-inline{ display:inline-flex; align-items:center; }
         }
         @media(max-width:750px){
           .footer-bottom{ flex-direction:column; align-items:flex-start; }
+        }
+        @media(max-width:480px){
+          .footer-links-grid{ gap:4px 22px; }
+          .footer-link-group summary{ font-size:.94rem; padding:12px 0; }
+          .footer-link-group a{ font-size:.74rem; }
         }
       `}</style>
     </footer>
