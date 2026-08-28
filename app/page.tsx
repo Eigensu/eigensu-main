@@ -243,9 +243,9 @@ function OutcomesGrid() {
 /* ── Insights ────────────────────────────────────────────────────────────── */
 
 const INSIGHTS = [
-  { tag: "Operations",  time: "6 min", title: "Why spreadsheets fail at scale", body: "The hidden cost of manual reconciliation and the tipping point where automation pays for itself." },
-  { tag: "Product",     time: "4 min", title: "Designing tools operators actually want", body: "Consumer-grade UX principles applied to internal dashboards, and why it matters for adoption." },
-  { tag: "Engineering", time: "8 min", title: "Declarative workflows over drag-and-drop", body: "Why versioned, code-first automation beats black-box builders for anything mission-critical." },
+  { tag: "Operations",  time: "6 min", slug: "why-spreadsheets-fail-at-scale", title: "Why spreadsheets fail at scale", body: "The hidden cost of manual reconciliation and the tipping point where automation pays for itself." },
+  { tag: "Product",     time: "4 min", slug: "tools-operators-actually-want",  title: "Designing tools operators actually want", body: "Consumer-grade UX principles applied to internal dashboards, and why it matters for adoption." },
+  { tag: "Engineering", time: "8 min", slug: "declarative-workflows",          title: "Declarative workflows over drag-and-drop", body: "Why versioned, code-first automation beats black-box builders for anything mission-critical." },
 ];
 
 /* ── CTA block ───────────────────────────────────────────────────────────── */
@@ -407,7 +407,7 @@ export default function HomePage() {
                 </div>
                 <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.35rem", letterSpacing: "-0.02em", margin: "18px 0 10px", color: "var(--text)" }}>{post.title}</h3>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.65 }}>{post.body}</p>
-                <Link href="/blog" style={{ marginTop: "auto", paddingTop: 18, fontFamily: MONO, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--accent)", display: "inline-flex", alignItems: "center", gap: 6 }}>Read article →</Link>
+                <Link href={`/blog/${post.slug}`} style={{ marginTop: "auto", paddingTop: 18, fontFamily: MONO, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--accent)", display: "inline-flex", alignItems: "center", gap: 6 }}>Read article →</Link>
               </article>
             ))}
           </div>
