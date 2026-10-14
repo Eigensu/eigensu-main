@@ -26,7 +26,7 @@ export default function ModulesSection() {
   const { ref, on } = useReveal(0.05);
 
   return (
-    <section id="dsp-modules" className="dsp-modules">
+    <section data-sample="true" id="dsp-modules" className="dsp-modules">
       <style>{STYLES}</style>
       <Container>
         <Eyebrow>THE {PRODUCT.name.toUpperCase()} PLATFORM</Eyebrow>
@@ -56,6 +56,7 @@ export default function ModulesSection() {
             </div>
           </div>
         </div>
+        <p style={{ marginTop: 18, fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".06em", color: "var(--muted)" }}>Sample data, for illustration.</p>
       </Container>
     </section>
   );

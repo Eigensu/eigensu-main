@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { ThemeHeroSection } from "../components/ThemeHero";
+import LegalPage, { type LegalSection } from "../components/content/LegalPage";
 import { pageMetadata } from "../lib/metadata";
+import { robotsFor } from "../content/status";
 import { SITE } from "../lib/site";
 
 // DRAFT — requires legal review before launch. TODO(owner): legal review; registered
 // entity name and address; retention periods; grievance officer details if required.
-const LAST_UPDATED = "14 October 2026";
+// Linked from the enquiry forms' consent checkbox, so it stays linked while in review.
+const UPDATED = "2026-10-14";
 
 export const metadata: Metadata = {
   ...pageMetadata({
@@ -13,14 +15,10 @@ export const metadata: Metadata = {
     description: "How Eigensu collects, uses and protects the details you share through this website.",
     path: "/privacy",
   }),
-  // Kept out of search results until the draft has been reviewed.
-  robots: { index: false, follow: true },
+  robots: robotsFor("review"),
 };
 
-const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
-const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
-
-const SECTIONS: { heading: string; body: React.ReactNode }[] = [
+const SECTIONS: LegalSection[] = [
   {
     heading: "Who we are",
     body: (
@@ -90,41 +88,18 @@ const SECTIONS: { heading: string; body: React.ReactNode }[] = [
   },
   {
     heading: "Changes to this policy",
-    body: <p>If we change this policy we will update this page and the date below.</p>,
+    body: <p>If we change this policy we will update this page and its &ldquo;last updated&rdquo; date.</p>,
   },
 ];
 
 export default function PrivacyPage() {
   return (
-    <div>
-      <ThemeHeroSection>
-        <div style={{ fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase", color: "var(--text-dim)", marginBottom: 16 }}>
-          Legal // privacy
-        </div>
-        <h1 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", margin: "0 0 20px" }}>
-          Privacy policy
-        </h1>
-        <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "52ch", lineHeight: 1.7 }}>
-          How we handle the details you share with us through this website. Last updated {LAST_UPDATED}.
-        </p>
-      </ThemeHeroSection>
-
-      <section className="relative z-10 py-14 md:py-20">
-        <div className="legal w-full max-w-[760px] mx-auto px-5 sm:px-8">
-          {SECTIONS.map((s) => (
-            <section key={s.heading} style={{ marginBottom: 36 }}>
-              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.35rem", color: "var(--text)", marginBottom: 12 }}>{s.heading}</h2>
-              {s.body}
-            </section>
-          ))}
-        </div>
-      </section>
-
-      <style>{`
-        .legal p, .legal li { color: var(--text-muted); font-size: 0.98rem; line-height: 1.75; margin-bottom: 12px; }
-        .legal ul { list-style: disc; padding-left: 22px; margin-bottom: 12px; }
-        .legal a { color: var(--accent); text-decoration: underline; }
-      `}</style>
-    </div>
+    <LegalPage
+      path="/privacy"
+      title="Privacy policy"
+      intro="How we handle the details you share with us through this website."
+      updated={UPDATED}
+      sections={SECTIONS}
+    />
   );
 }

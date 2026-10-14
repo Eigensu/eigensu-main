@@ -93,11 +93,10 @@ export default function Hero() {
       <div className="dsp-hero-grid">
         <div>
           <h1>
-            Turn every guest, outlet and interaction into something <span>you can act on</span>.
+            WhatsApp marketing software for <span>restaurants, salons and gyms</span>.
           </h1>
           <p>
-            {PRODUCT.name} brings your guest data, segmentation, campaigns, conversations,
-            analytics and restaurant operations into one connected platform.
+            {PRODUCT.description} Guest data, segments, campaigns, conversations and reporting in one connected platform.
           </p>
           <div className="btn-row">
             <DemoButton className="btn btn-primary" location="hero">
