@@ -3,17 +3,20 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
+import { ConsentCheckbox, FormError, FormGuard, useEnquiryForm } from "../components/forms/FormGuard";
+import { BUDGETS, ENQUIRY_FIELDS, PROJECT_TYPES as PROJECT_TYPE_TITLES, REFERRALS, TIMELINES, validateField } from "../lib/enquiry";
 
 const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
 const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
 const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 
-const PROJECT_TYPES = [
-  { title: "Operations Automation", desc: "Pipelines, workflows, reconciliation" },
-  { title: "Internal Tooling",      desc: "Dashboards, admin apps" },
-  { title: "Systems Integration",   desc: "Connecting existing tools" },
-  { title: "Not sure yet",          desc: "Help me figure it out" },
+const PROJECT_TYPE_DESCRIPTIONS = [
+  "Pipelines, workflows, reconciliation",
+  "Dashboards, admin apps",
+  "Connecting existing tools",
+  "Help me figure it out",
 ];
+const PROJECT_TYPES = PROJECT_TYPE_TITLES.map((title, i) => ({ title, desc: PROJECT_TYPE_DESCRIPTIONS[i] }));
 
 const inputStyle: React.CSSProperties = {
   width: "100%", fontFamily: BODY, fontSize: "0.92rem",
@@ -27,9 +30,11 @@ const labelStyle: React.CSSProperties = {
   textTransform: "uppercase", color: "var(--text-dim)", marginBottom: 8, display: "block",
 };
 
-function BtnPrimary({ children, onClick, type = "button" }: { children: React.ReactNode; onClick?: () => void; type?: "button" | "submit" }) {
+const errStyle: React.CSSProperties = { color: "var(--err)", fontSize: 12, marginTop: 6 };
+
+function BtnPrimary({ children, onClick, type = "button", disabled = false }: { children: React.ReactNode; onClick?: () => void; type?: "button" | "submit"; disabled?: boolean }) {
   return (
-    <button type={type} onClick={onClick} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", border: "none", cursor: "pointer", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)" }}>
+    <button type={type} onClick={onClick} disabled={disabled} style={{ opacity: disabled ? 0.7 : 1, display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "11px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", border: "none", cursor: "pointer", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)" }}>
       {children}
     </button>
   );
@@ -47,15 +52,31 @@ const ArrowRight = () => <svg viewBox="0 0 24 24" fill="none" width={15} height=
 
 export default function OnboardPage() {
   const [step, setStep] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
+  const { state, pending, onSubmit, errors } = useEnquiryForm("onboard");
+  const [s1Errors, setS1Errors] = useState<Record<string, string>>({});
 
   const [s1, setS1] = useState({ name: "", role: "", company: "", email: "" });
-  const [s2, setS2] = useState({ projectType: 0, scope: "", timeline: "ASAP", budget: "Under ₹5L" });
-  const [s3, setS3] = useState({ notes: "", referral: "Referral" });
+  const [s2, setS2] = useState({ projectType: 0, scope: "", timeline: TIMELINES[0] as string, budget: BUDGETS[0] as string });
+  const [s3, setS3] = useState({ notes: "", referral: REFERRALS[0] as string });
 
   const STEPS = ["About you", "The project", "Confirm"];
 
-  if (submitted) {
+  const continueFromStep1 = () => {
+    const errs: Record<string, string> = {};
+    for (const name of ["name", "role", "company", "email"] as const) {
+      const err = validateField(ENQUIRY_FIELDS.onboard[name], s1[name].trim());
+      if (err) errs[name] = err;
+    }
+    setS1Errors(errs);
+    if (!Object.keys(errs).length) setStep(1);
+  };
+
+  // Server-side field errors from steps 1 and 2, shown on the confirm step.
+  const earlierErrors = Object.entries(errors)
+    .filter(([name]) => name !== "consent" && name !== "notes" && name !== "referral")
+    .map(([name, msg]) => `${ENQUIRY_FIELDS.onboard[name]?.label ?? name}: ${msg}`);
+
+  if (state.status === "success") {
     return (
       <div>
         <ThemeHeroSection>
@@ -115,15 +136,15 @@ export default function OnboardPage() {
                 <p style={{ fontFamily: BODY, color: "var(--text-muted)", marginBottom: 26, fontSize: "0.9rem" }}>So we know who we&apos;re talking to.</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div><label style={labelStyle}>Full name</label><input value={s1.name} onChange={e => setS1(s => ({ ...s, name: e.target.value }))} placeholder="Jane Doe" style={inputStyle} /></div>
-                    <div><label style={labelStyle}>Role</label><input value={s1.role} onChange={e => setS1(s => ({ ...s, role: e.target.value }))} placeholder="Head of Operations" style={inputStyle} /></div>
+                    <div><label htmlFor="ob-name" style={labelStyle}>Full name</label><input id="ob-name" autoComplete="name" value={s1.name} onChange={e => setS1(s => ({ ...s, name: e.target.value }))} placeholder="Jane Doe" style={inputStyle} aria-invalid={s1Errors.name ? true : undefined} />{s1Errors.name && <p style={errStyle}>{s1Errors.name}</p>}</div>
+                    <div><label htmlFor="ob-role" style={labelStyle}>Role</label><input id="ob-role" autoComplete="organization-title" value={s1.role} onChange={e => setS1(s => ({ ...s, role: e.target.value }))} placeholder="Head of Operations" style={inputStyle} /></div>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div><label style={labelStyle}>Company</label><input value={s1.company} onChange={e => setS1(s => ({ ...s, company: e.target.value }))} placeholder="Acme Inc." style={inputStyle} /></div>
-                    <div><label style={labelStyle}>Work email</label><input type="email" value={s1.email} onChange={e => setS1(s => ({ ...s, email: e.target.value }))} placeholder="jane@acme.com" style={inputStyle} /></div>
+                    <div><label htmlFor="ob-company" style={labelStyle}>Company</label><input id="ob-company" autoComplete="organization" value={s1.company} onChange={e => setS1(s => ({ ...s, company: e.target.value }))} placeholder="Acme Inc." style={inputStyle} /></div>
+                    <div><label htmlFor="ob-email" style={labelStyle}>Work email</label><input id="ob-email" type="email" autoComplete="email" value={s1.email} onChange={e => setS1(s => ({ ...s, email: e.target.value }))} placeholder="jane@acme.com" style={inputStyle} aria-invalid={s1Errors.email ? true : undefined} />{s1Errors.email && <p style={errStyle}>{s1Errors.email}</p>}</div>
                   </div>
                   <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: 8 }}>
-                    <BtnPrimary onClick={() => setStep(1)}>Continue <ArrowRight /></BtnPrimary>
+                    <BtnPrimary onClick={continueFromStep1}>Continue <ArrowRight /></BtnPrimary>
                   </div>
                 </div>
               </div>
@@ -148,27 +169,21 @@ export default function OnboardPage() {
                 </div>
 
                 <div style={{ marginBottom: 20 }}>
-                  <label style={labelStyle}>Describe the scope</label>
-                  <textarea value={s2.scope} onChange={e => setS2(s => ({ ...s, scope: e.target.value }))} placeholder="What's the process today, and what would 'solved' look like?" rows={4} style={{ ...inputStyle, resize: "vertical" }} />
+                  <label htmlFor="ob-scope" style={labelStyle}>Describe the scope</label>
+                  <textarea id="ob-scope" maxLength={5000} value={s2.scope} onChange={e => setS2(s => ({ ...s, scope: e.target.value }))} placeholder="What's the process today, and what would 'solved' look like?" rows={4} style={{ ...inputStyle, resize: "vertical" }} />
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2" style={{ marginBottom: 28, gap: 16 }}>
                   <div>
-                    <label style={labelStyle}>Timeline</label>
-                    <select value={s2.timeline} onChange={e => setS2(s => ({ ...s, timeline: e.target.value }))} style={inputStyle}>
-                      <option>ASAP</option>
-                      <option>1–3 months</option>
-                      <option>3–6 months</option>
-                      <option>Just exploring</option>
+                    <label htmlFor="ob-timeline" style={labelStyle}>Timeline</label>
+                    <select id="ob-timeline" value={s2.timeline} onChange={e => setS2(s => ({ ...s, timeline: e.target.value }))} style={inputStyle}>
+                      {TIMELINES.map(t => <option key={t}>{t}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label style={labelStyle}>Budget range</label>
-                    <select value={s2.budget} onChange={e => setS2(s => ({ ...s, budget: e.target.value }))} style={inputStyle}>
-                      <option>Under ₹5L</option>
-                      <option>₹5L – ₹15L</option>
-                      <option>₹15L – ₹40L</option>
-                      <option>₹40L+</option>
+                    <label htmlFor="ob-budget" style={labelStyle}>Budget range</label>
+                    <select id="ob-budget" value={s2.budget} onChange={e => setS2(s => ({ ...s, budget: e.target.value }))} style={inputStyle}>
+                      {BUDGETS.map(b => <option key={b}>{b}</option>)}
                     </select>
                   </div>
                 </div>
@@ -182,29 +197,41 @@ export default function OnboardPage() {
 
             {/* Step 3 */}
             {step === 2 && (
-              <form onSubmit={e => { e.preventDefault(); setSubmitted(true); }}>
+              <form onSubmit={onSubmit} style={{ position: "relative" }}>
+                <FormGuard />
+                <input type="hidden" name="name" value={s1.name} />
+                <input type="hidden" name="role" value={s1.role} />
+                <input type="hidden" name="company" value={s1.company} />
+                <input type="hidden" name="email" value={s1.email} />
+                <input type="hidden" name="projectType" value={PROJECT_TYPES[s2.projectType].title} />
+                <input type="hidden" name="scope" value={s2.scope} />
+                <input type="hidden" name="timeline" value={s2.timeline} />
+                <input type="hidden" name="budget" value={s2.budget} />
                 <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.4rem", color: "var(--text)", marginBottom: 8 }}>Confirm &amp; submit</h3>
                 <p style={{ fontFamily: BODY, color: "var(--text-muted)", marginBottom: 26, fontSize: "0.9rem" }}>Anything else we should know before we reach out?</p>
 
                 <div style={{ marginBottom: 20 }}>
-                  <label style={labelStyle}>Additional notes (optional)</label>
-                  <textarea value={s3.notes} onChange={e => setS3(s => ({ ...s, notes: e.target.value }))} placeholder="Links, context, constraints, deadlines..." rows={4} style={{ ...inputStyle, resize: "vertical" }} />
+                  <label htmlFor="ob-notes" style={labelStyle}>Additional notes (optional)</label>
+                  <textarea id="ob-notes" name="notes" maxLength={5000} value={s3.notes} onChange={e => setS3(s => ({ ...s, notes: e.target.value }))} placeholder="Links, context, constraints, deadlines..." rows={4} style={{ ...inputStyle, resize: "vertical" }} />
                 </div>
 
                 <div style={{ marginBottom: 28 }}>
-                  <label style={labelStyle}>How did you hear about us?</label>
-                  <select value={s3.referral} onChange={e => setS3(s => ({ ...s, referral: e.target.value }))} style={inputStyle}>
-                    <option>Referral</option>
-                    <option>Search</option>
-                    <option>Social</option>
-                    <option>Other</option>
+                  <label htmlFor="ob-referral" style={labelStyle}>How did you hear about us?</label>
+                  <select id="ob-referral" name="referral" value={s3.referral} onChange={e => setS3(s => ({ ...s, referral: e.target.value }))} style={inputStyle}>
+                    {REFERRALS.map(r => <option key={r}>{r}</option>)}
                   </select>
                 </div>
 
+                <ConsentCheckbox textColor="var(--text-muted)" error={errors.consent} style={{ marginBottom: 20 }} />
+                <FormError
+                  style={{ marginBottom: 20 }}
+                  message={state.status === "error" ? [state.message, ...earlierErrors].filter(Boolean).join(" ") : undefined}
+                />
+
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <BtnGhost onClick={() => setStep(1)}>Back</BtnGhost>
-                  <BtnPrimary type="submit">
-                    Submit project
+                  <BtnPrimary type="submit" disabled={pending}>
+                    {pending ? "Sending…" : "Submit project"}
                     <svg viewBox="0 0 24 24" fill="none" width={15} height={15}><path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </BtnPrimary>
                 </div>

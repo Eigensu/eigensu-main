@@ -1,6 +1,6 @@
 "use client";
 
-import { useModal } from "../../components/PageShell";
+import { DemoButton, WhatsAppLink } from "../../components/cta";
 import { Eyebrow, useReveal } from "./shared";
 import { PRODUCT } from "../../lib/site";
 
@@ -12,6 +12,8 @@ const STYLES = `
 .dsp-cta .bd{font-size:.95rem;max-width:46ch;margin:18px auto 30px;color:#FFE2D8;line-height:1.5;}
 .dsp-cta .btn{display:inline-flex;align-items:center;border-radius:8px;padding:14px 36px;background:var(--wine);color:var(--cream);text-decoration:none;font-family:var(--font-body);font-weight:700;font-size:.85rem;border:none;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;}
 .dsp-cta .btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px -6px rgba(59,10,34,.5);}
+.dsp-cta .btn-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.dsp-cta .btn-ghost{background:transparent;color:var(--cream);border:1px solid rgba(251,243,228,.5);}
 .dsp-cta .mono{margin-top:22px;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(251,243,228,.6);}
 @media(prefers-reduced-motion:reduce){
   .dsp-cta-inner{transition:none !important;opacity:1 !important;transform:none !important;}
@@ -19,7 +21,6 @@ const STYLES = `
 `;
 
 export default function CtaSection() {
-  const { openModal } = useModal();
   const { ref, on } = useReveal(0.2);
 
   return (
@@ -39,9 +40,14 @@ export default function CtaSection() {
           <br />
           one system — so you can finally act on what&rsquo;s happening.
         </p>
-        <button type="button" className="btn" onClick={openModal}>
-          See {PRODUCT.name} in Action →
-        </button>
+        <div className="btn-row">
+          <DemoButton className="btn" location="footer_cta">
+            Book a demo →
+          </DemoButton>
+          <WhatsAppLink className="btn btn-ghost" location="footer_cta">
+            Message us on WhatsApp
+          </WhatsAppLink>
+        </div>
         <p className="mono">One platform. Your data. Your restaurant.</p>
       </div>
     </section>

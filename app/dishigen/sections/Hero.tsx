@@ -1,7 +1,5 @@
-"use client";
-
-import { useModal } from "../../components/PageShell";
-import { PRODUCT } from "../../lib/site";
+import { DemoButton, WhatsAppLink } from "../../components/cta";
+import { PRODUCT, whatsappHref } from "../../lib/site";
 
 const HERO_STYLES = `
 .dsp-hero{
@@ -83,7 +81,6 @@ const MESSAGES: { dir: "out" | "in"; text: string; time: string; tick?: boolean 
 ];
 
 export default function Hero() {
-  const { openModal } = useModal();
 
   return (
     <section className="dsp-hero">
@@ -103,12 +100,18 @@ export default function Hero() {
             analytics and restaurant operations into one connected platform.
           </p>
           <div className="btn-row">
-            <button type="button" className="btn btn-primary" onClick={openModal}>
-              Book a Demo
-            </button>
-            <a href="#dsp-modules" className="btn btn-ghost">
-              Explore the Platform
-            </a>
+            <DemoButton className="btn btn-primary" location="hero">
+              Book a demo
+            </DemoButton>
+            {whatsappHref() ? (
+              <WhatsAppLink className="btn btn-ghost" location="hero">
+                Message us on WhatsApp
+              </WhatsAppLink>
+            ) : (
+              <a href="#dsp-modules" className="btn btn-ghost">
+                Explore the Platform
+              </a>
+            )}
           </div>
         </div>
 

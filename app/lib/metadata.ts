@@ -4,9 +4,11 @@ import { SITE } from "./site";
 /**
  * Per-page metadata with a canonical URL and matching Open Graph / Twitter tags.
  * Child `openGraph` objects replace the parent's rather than merging, so every
- * page builds the full set here. The share image comes from app/opengraph-image.tsx
- * (or a route-level one), which Next.js applies on top of this.
+ * page builds the full set here, including the default share image from
+ * app/opengraph-image.tsx. A route-level opengraph-image file takes precedence.
  */
+const DEFAULT_IMAGE = { url: "/opengraph-image", width: 1200, height: 630, alt: `${SITE.name}: systems for internal operations` };
+
 export function pageMetadata({
   title,
   description,
@@ -31,11 +33,13 @@ export function pageMetadata({
       url: path,
       title: fullTitle,
       description,
+      images: [DEFAULT_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
       description,
+      images: [DEFAULT_IMAGE],
     },
   };
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
+import { FEATURES, PRODUCT } from "../lib/site";
 
 const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
 const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
@@ -63,6 +64,7 @@ function DispatchConsole() {
 }
 
 /* ── Case Study Data ─────────────────────────────────────────────────────── */
+// Placeholder case studies, hidden until real ones exist (see FEATURES.caseStudies).
 
 const CASE_STUDIES = [
   {
@@ -157,6 +159,7 @@ function CaseStudyCard({ data }: { data: typeof CASE_STUDIES[0] }) {
 
 /* ── Logos ────────────────────────────────────────────────────────────────── */
 
+// Placeholder names, hidden with the case studies.
 const CLIENTS = ["NORTHWIND","VERTEX","HELIOS","ATLAS","MERIDIAN","QUANTA","ORBIT","LUMEN","NEXUS","SOLACE"];
 
 /* ── Main Page ───────────────────────────────────────────────────────────── */
@@ -174,11 +177,24 @@ export default function ProjectsPage() {
           Systems quietly <span style={{ color: "var(--accent)" }}>doing the work</span> right now.
         </h1>
         <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", lineHeight: 1.7 }}>
-          We don&apos;t just string APIs together. We architect robust software engines that solve complex operational bottlenecks. Here is proof.
+          We don&apos;t just string APIs together. We architect robust software engines that solve complex operational bottlenecks.
         </p>
       </ThemeHeroSection>
 
+      {/* ── Product we build and run ── */}
+      <section className="relative z-10 py-12 md:py-16">
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <article style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 16, padding: "clamp(24px, 4vw, 48px)" }}>
+            <div style={{ fontFamily: MONO, fontSize: "0.75rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--accent)", marginBottom: 16 }}>Our product</div>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem, 3vw, 2.6rem)", letterSpacing: "-0.02em", color: "var(--text)", marginBottom: 16 }}>{PRODUCT.name}</h2>
+            <p style={{ color: "var(--text-muted)", fontSize: "clamp(1rem, 1.4vw, 1.1rem)", lineHeight: 1.7, maxWidth: "65ch", marginBottom: 28 }}>{PRODUCT.description}</p>
+            <Link href={PRODUCT.path} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 24px", borderRadius: 100, background: "transparent", color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>See {PRODUCT.name} →</Link>
+          </article>
+        </div>
+      </section>
+
       {/* ── Premium Case Studies Stack ── */}
+      {FEATURES.caseStudies && (
       <section className="relative z-10 py-12 md:py-16">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ display: "flex", flexDirection: "column", gap: "clamp(40px, 6vw, 64px)" }}>
@@ -188,8 +204,10 @@ export default function ProjectsPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── Client Logos ── */}
+      {FEATURES.caseStudies && (
       <section className="relative z-10 py-12 md:py-16" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ marginBottom: 36 }}>
@@ -203,6 +221,7 @@ export default function ProjectsPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── CTA ── */}
       <section className="relative z-10 py-12 md:py-16">

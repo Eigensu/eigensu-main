@@ -23,6 +23,16 @@ export const PRODUCT = {
     "Dishigen is a WhatsApp and email marketing platform for businesses built on repeat visits, made by Eigensu in Mumbai.",
 } as const;
 
+/**
+ * Sections hidden until real content exists. The code stays so it can be
+ * switched back on. TODO(owner): supply real, permitted case studies and posts.
+ */
+export const FEATURES = {
+  caseStudies: false,
+  // Also re-add app/blog/page.tsx (rendering app/pages/Blog.tsx) when this is turned on.
+  blog: false,
+} as const;
+
 /** Booking link for "Book a demo". When unset, the button opens the enquiry drawer. */
 export const DEMO_URL = process.env.NEXT_PUBLIC_DEMO_URL || "";
 

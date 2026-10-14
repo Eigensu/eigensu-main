@@ -9,7 +9,6 @@ import { PRODUCT } from "../lib/site";
 type CardNavLink = {
   label: string;
   href: string;
-  ariaLabel: string;
 };
 
 export type CardNavItem = {
@@ -315,6 +314,8 @@ function CardNav({
         <div
           className="card-nav-content absolute top-[60px] right-0 bottom-0 left-0 z-[1] flex flex-col items-stretch justify-start gap-2 p-2 md:flex-row md:items-end md:gap-3"
           aria-hidden={!isOpen}
+          // Keeps the hidden menu links out of the tab order while collapsed.
+          inert={!isOpen}
         >
           {items.slice(0, 3).map((item, idx) => (
             <div
@@ -336,7 +337,6 @@ function CardNav({
                     href={lnk.href}
                     className="nav-card-link inline-flex cursor-pointer items-center gap-1.5 text-[15px] no-underline transition-opacity duration-300 hover:opacity-75 md:text-base"
                     style={{ fontFamily: "var(--font-body), 'Instrument Sans', sans-serif" }}
-                    aria-label={lnk.ariaLabel}
                     onClick={(event) => {
                       onLinkClick?.(lnk, event);
                       if (isOpenRef.current) closeMenu();
@@ -386,8 +386,8 @@ function buildNavItems(): CardNavItem[] {
       bgColor: cardA,
       textColor: text,
       links: [
-        { label: "Home",     href: "/",         ariaLabel: "Go to home" },
-        { label: "Services", href: "/services", ariaLabel: "View services" },
+        { label: "Home",     href: "/" },
+        { label: "Services", href: "/services" },
       ],
     },
     {
@@ -395,8 +395,8 @@ function buildNavItems(): CardNavItem[] {
       bgColor: cardB,
       textColor: text,
       links: [
-        { label: "Projects", href: "/projects", ariaLabel: "View projects" },
-        { label: PRODUCT.name, href: PRODUCT.path, ariaLabel: `View ${PRODUCT.name}` },
+        { label: "Projects", href: "/projects" },
+        { label: PRODUCT.name, href: PRODUCT.path },
       ],
     },
     {
@@ -404,8 +404,8 @@ function buildNavItems(): CardNavItem[] {
       bgColor: cardC,
       textColor: text,
       links: [
-        { label: "About",   href: "/about",   ariaLabel: "About Eigensu" },
-        { label: "Contact", href: "/contact", ariaLabel: "Contact us" },
+        { label: "About",   href: "/about" },
+        { label: "Contact", href: "/contact" },
       ],
     },
   ];
