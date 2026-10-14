@@ -3,6 +3,7 @@ import { ThemeHeroSection } from "../components/ThemeHero";
 import Reveal from "../components/Reveal";
 import ContactForm from "../components/forms/ContactForm";
 import { SITE, whatsappHref } from "../lib/site";
+import { WhatsAppLink } from "../components/cta";
 
 const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
 const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
@@ -58,7 +59,7 @@ export default function ContactPage() {
                     <div style={{ width: 36, height: 36, borderRadius: 8, border: "1px solid var(--border)", display: "grid", placeItems: "center", flexShrink: 0, background: "var(--panel)" }}>{item.icon}</div>
                     <div>
                       <div style={{ fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "var(--text-dim)", marginBottom: 4 }}>{item.label}</div>
-                      {item.href ? <a href={item.href} {...(item.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})} style={{ fontFamily: BODY, fontSize: "0.92rem", color: "var(--text)" }}>{item.value}</a> : <span style={{ fontFamily: BODY, fontSize: "0.92rem", color: "var(--text)" }}>{item.value}</span>}
+                      {item.label === "WhatsApp" ? <WhatsAppLink location="contact" style={{ fontFamily: BODY, fontSize: "0.92rem", color: "var(--text)" }}>{item.value}</WhatsAppLink> : item.href ? <a href={item.href} {...(item.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})} style={{ fontFamily: BODY, fontSize: "0.92rem", color: "var(--text)" }}>{item.value}</a> : <span style={{ fontFamily: BODY, fontSize: "0.92rem", color: "var(--text)" }}>{item.value}</span>}
                     </div>
                   </div>
                 ))}

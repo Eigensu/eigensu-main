@@ -3,6 +3,9 @@ import { Bricolage_Grotesque, Instrument_Sans, Space_Mono } from "next/font/goog
 import "./globals.css";
 import PageShell from "./components/PageShell";
 import { SITE } from "./lib/site";
+import Analytics from "./components/analytics/Analytics";
+import { GTM_ID } from "./lib/analytics";
+import { CONSENT_DEFAULTS_SCRIPT } from "./lib/consent";
 
 const bricolageLogo = Bricolage_Grotesque({
   variable: "--font-logo",
@@ -69,9 +72,12 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.dataset.theme=t;}catch(e){}})();`,
           }}
         />
+        {/* Google consent mode defaults (all denied) must be set before Tag Manager loads. */}
+        {GTM_ID && <script dangerouslySetInnerHTML={{ __html: CONSENT_DEFAULTS_SCRIPT }} />}
       </head>
       <body className="min-h-full">
         <PageShell>{children}</PageShell>
+        <Analytics />
       </body>
     </html>
   );

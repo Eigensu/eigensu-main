@@ -4,6 +4,7 @@ import Link from "next/link";
 import { startTransition, useActionState, useEffect, useRef, type CSSProperties, type FormEvent } from "react";
 import { submitEnquiry } from "../../actions/enquiry";
 import { HONEYPOT_FIELD, INITIAL_ENQUIRY_STATE, STARTED_AT_FIELD, type EnquiryKind } from "../../lib/enquiry";
+import { track } from "../../lib/analytics";
 
 /**
  * Submits a form to the enquiry server action. Uses onSubmit rather than the
@@ -14,6 +15,10 @@ export function useEnquiryForm(kind: EnquiryKind) {
     (prev: Parameters<typeof submitEnquiry>[1], formData: FormData) => submitEnquiry(kind, prev, formData),
     INITIAL_ENQUIRY_STATE,
   );
+  // Count a lead only once the server confirms delivery, never on click.
+  useEffect(() => {
+    if (state.status === "success" && state.delivered) track("generate_lead", { form_name: kind });
+  }, [state, kind]);
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
