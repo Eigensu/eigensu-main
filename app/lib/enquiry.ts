@@ -7,6 +7,8 @@ export type EnquiryKind = "drawer" | "contact" | "onboard";
 
 export type EnquiryState = {
   status: "idle" | "success" | "error";
+  /** True only when the enquiry actually reached a destination (not for honeypot hits). */
+  delivered?: boolean;
   /** Shown above the submit button when status is "error". */
   message?: string;
   fieldErrors?: Record<string, string>;

@@ -59,6 +59,6 @@ export async function submitEnquiry(kind: EnquiryKind, _prev: EnquiryState, form
 
   // Success means at least one destination recorded the enquiry; a failure of the other is logged.
   const [emailed, sheet] = await Promise.all([sendEnquiryEmail(enquiry), postEnquiryToSheet(enquiry)]);
-  if (emailed || sheet === true) return { status: "success" };
+  if (emailed || sheet === true) return { status: "success", delivered: true };
   return { status: "error", message: FAILURE_MESSAGE };
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { PRODUCT, SITE } from "../lib/site";
+import CookieSettingsButton from "./analytics/CookieSettingsButton";
 
 const SERVICES_LINKS = [
   { label: "Operations Automation", href: "/services" },
@@ -124,6 +125,7 @@ export default function Footer() {
               <span>&copy; {new Date().getFullYear()} {SITE.legalName}. All rights reserved.</span>
               <span className="meta-sep">&middot;</span>
               <Link href="/privacy">Privacy policy</Link>
+              <CookieSettingsButton className="footer-meta-btn" />
             </div>
           </div>
         </div>
@@ -264,6 +266,8 @@ export default function Footer() {
         }
         .footer-bottom-meta a{ color:var(--peri); font-weight:700; text-decoration:none; }
         .footer-bottom-meta a:hover{ color:#fff; }
+        .footer-bottom-meta .footer-meta-btn{ color:var(--peri); font-weight:700; }
+        .footer-bottom-meta .footer-meta-btn:hover{ color:#fff; }
         .footer-bottom-meta .meta-sep{ color:rgba(251,243,228,.35); }
 
         @media(max-width:900px){

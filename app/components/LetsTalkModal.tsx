@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ConsentCheckbox, FormError, FormGuard, useEnquiryForm } from "./forms/FormGuard";
 import { ENQUIRY_FIELDS, validateField } from "../lib/enquiry";
 import { SITE, whatsappHref } from "../lib/site";
+import { WhatsAppLink } from "./cta";
 
 /* ── tokens ── */
 const drawerBg   = "#FBF3E4";
@@ -415,7 +416,7 @@ function DrawerForm({ onClose }: { onClose: () => void }) {
                 {whatsappHref() && (
                   <>
                     <br />
-                    <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" style={{ color: heading }}>Message us on WhatsApp</a>
+                    <WhatsAppLink location="drawer" style={{ color: heading }}>Message us on WhatsApp</WhatsAppLink>
                   </>
                 )}
               </p>

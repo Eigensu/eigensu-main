@@ -52,8 +52,25 @@ const SECTIONS: { heading: string; body: React.ReactNode }[] = [
           <li>Resend, to send the enquiry to our inbox by email.</li>
           <li>Google, where enquiries are also recorded in a Google Sheet.</li>
           <li>Vercel, which hosts this website.</li>
+          <li>Google Tag Manager and Google Analytics, only if you accept analytics cookies.</li>
         </ul>
         <p>These providers may store data outside India.</p>
+      </>
+    ),
+  },
+  {
+    heading: "Cookies and analytics",
+    body: (
+      <>
+        <p>
+          With your permission, we use Google Tag Manager and Google Analytics to understand how visitors use this site, for
+          example which pages are viewed and which buttons are clicked. These tools set cookies only after you choose
+          &ldquo;Accept&rdquo; in the cookie banner. If you choose &ldquo;Reject&rdquo;, they are not loaded.
+        </p>
+        <p>
+          We never send your name, email address, phone number or message to these tools. You can change your choice at any
+          time with &ldquo;Cookie settings&rdquo; at the bottom of every page.
+        </p>
       </>
     ),
   },
