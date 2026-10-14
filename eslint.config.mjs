@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Legacy static HTML prototype, not part of the Next.js app.
+    "starter/**",
   ]),
 ]);
 

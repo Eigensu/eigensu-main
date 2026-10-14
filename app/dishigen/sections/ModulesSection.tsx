@@ -2,6 +2,7 @@
 
 import { Container, Eyebrow, useReveal } from "./shared";
 import { MODULES_STYLES } from "./modules/styles";
+import { PRODUCT } from "../../lib/site";
 import {
   GuestIntelligenceTile,
   SmartSegmentationTile,
@@ -28,7 +29,7 @@ export default function ModulesSection() {
     <section id="dsp-modules" className="dsp-modules">
       <style>{STYLES}</style>
       <Container>
-        <Eyebrow>THE DISHPATCH PLATFORM</Eyebrow>
+        <Eyebrow>THE {PRODUCT.name.toUpperCase()} PLATFORM</Eyebrow>
         <h2>One platform. Every part of the guest relationship.</h2>
         <p className="bd">
           Connect customer data, engagement, operations and business intelligence across every

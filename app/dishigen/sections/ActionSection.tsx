@@ -1,6 +1,7 @@
 "use client";
 
 import { Container, Eyebrow, useReveal } from "./shared";
+import { PRODUCT } from "../../lib/site";
 
 const STYLES = `
 .dsp-action{width:100%;padding:112px 0;position:relative;background:#F4E9D6;}
@@ -53,12 +54,12 @@ export default function ActionSection() {
         <Eyebrow dot>FROM DATA TO DECISION</Eyebrow>
         <h2>See what happens after the data starts working.</h2>
         <p className="bd">
-          DishPatch connects guest activity, campaigns, conversations and business performance
+          {PRODUCT.name} connects guest activity, campaigns, conversations and business performance
           into one measurable flow.
         </p>
 
         <div ref={ref} className="dpa-term">
-          <div className="dpa-term-title">DishPatch Intelligence</div>
+          <div className="dpa-term-title">{PRODUCT.name} Intelligence</div>
           <div className="dpa-term-grid">
             <div className="dpa-term-box">
               <div className="h">Guest Health</div>

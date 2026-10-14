@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Instrument_Sans, Space_Mono } from "next/font/google";
 import "./globals.css";
 import PageShell from "./components/PageShell";
-import ClientOnly from "./components/ClientOnly";
+import { SITE } from "./lib/site";
 
 const bricolageLogo = Bricolage_Grotesque({
   variable: "--font-logo",
@@ -28,9 +28,26 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
 });
 
+const verification: Metadata["verification"] = {};
+if (process.env.GOOGLE_SITE_VERIFICATION) verification.google = process.env.GOOGLE_SITE_VERIFICATION;
+if (process.env.BING_SITE_VERIFICATION) verification.other = { "msvalidate.01": process.env.BING_SITE_VERIFICATION };
+
 export const metadata: Metadata = {
-  title: "Eigensu — Systems for internal operations",
-  description: "Tailored solutions and products for internal management and operations optimisation.",
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: "Eigensu — Systems for internal operations",
+    template: `%s | ${SITE.name}`,
+  },
+  description: SITE.description,
+  applicationName: SITE.name,
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    locale: "en_IN",
+    url: "/",
+  },
+  twitter: { card: "summary_large_image" },
+  verification,
 };
 
 export default function RootLayout({
@@ -54,9 +71,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full">
-        <ClientOnly>
-          <PageShell>{children}</PageShell>
-        </ClientOnly>
+        <PageShell>{children}</PageShell>
       </body>
     </html>
   );

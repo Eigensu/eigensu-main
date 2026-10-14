@@ -6,7 +6,7 @@ import CampaignsSection from "./sections/CampaignsSection";
 import CampaignsChartSection from "./sections/CampaignsChartSection";
 import CtaSection from "./sections/CtaSection";
 
-export default function DispatchPage() {
+export default function DishigenPage() {
   return (
     <div className="min-h-screen" style={{ background: "var(--bg)" }}>
       <Hero />

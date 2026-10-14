@@ -1,6 +1,7 @@
 "use client";
 
 import { useModal } from "../../components/PageShell";
+import { PRODUCT } from "../../lib/site";
 
 const HERO_STYLES = `
 .dsp-hero{
@@ -98,7 +99,7 @@ export default function Hero() {
             Turn every guest, outlet and interaction into something <span>you can act on</span>.
           </h1>
           <p>
-            DishPatch brings your guest data, segmentation, campaigns, conversations,
+            {PRODUCT.name} brings your guest data, segmentation, campaigns, conversations,
             analytics and restaurant operations into one connected platform.
           </p>
           <div className="btn-row">

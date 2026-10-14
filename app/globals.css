@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 /* ──────────────────────────────────────────────────────────────────────────
-   COLOUR SYSTEM — DishPatch brand (wine / cream / ember), applied site-wide.
+   COLOUR SYSTEM — Dishigen brand (wine / cream / ember), applied site-wide.
    This used to be a dark/light-themeable teal-amber system with a toggle;
-   the whole site now runs on one locked palette (matches /dispatch), so
+   the whole site now runs on one locked palette (matches /dishigen), so
    html[data-theme="light"] no longer overrides anything — the toggle in
    Navigation still flips the attribute (harmless) but has no visual effect.
    ────────────────────────────────────────────────────────────────────────── */
@@ -51,7 +51,7 @@
   --nav-bg:        #FBF3E4;
   --nav-card:      rgba(59, 10, 34, 0.05);
 
-  /* Raw brand names used directly by /dispatch components, alongside the
+  /* Raw brand names used directly by /dishigen components, alongside the
      token names above (same values — kept distinct so component code can
      reach for whichever is semantically correct, e.g. var(--wine) for a
      surface vs. var(--text) for text color, even though they match). */

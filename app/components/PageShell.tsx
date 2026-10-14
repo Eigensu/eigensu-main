@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useState, useSyncExternalStore } from "react";
 import Footer from "./Footer";
 import Navigation from "./Navigation";
 import LetsTalkDrawer from "./LetsTalkModal";
@@ -33,25 +33,31 @@ export function useModal() {
   return context;
 }
 
+function readTheme(): Theme {
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+}
+
+function subscribeTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  return () => observer.disconnect();
+}
+
 export default function PageShell({ children }: { children: React.ReactNode }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Initialised from the data-theme the no-FOUC script (layout.tsx) already set,
-  // falling back to "dark". Reading it here keeps React in sync with the DOM.
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof document === "undefined") return "dark";
-    return document.documentElement.dataset.theme === "light" ? "light" : "dark";
-  });
-
-  // Reflect theme changes onto <html data-theme> (drives all CSS vars) and persist.
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
+  // The pre-paint script in layout.tsx sets <html data-theme> before hydration.
+  // Reading it through useSyncExternalStore keeps the server render ("dark")
+  // and the first client render identical, then updates without a mismatch.
+  const theme = useSyncExternalStore(subscribeTheme, readTheme, () => "dark" as Theme);
+  const setTheme = useCallback((t: Theme) => {
+    document.documentElement.dataset.theme = t;
     try {
-      localStorage.setItem("theme", theme);
+      localStorage.setItem("theme", t);
     } catch {
-      /* storage unavailable (private mode / SSR) — toggle still works in-session */
+      /* storage unavailable (private mode) — the change still applies in-session */
     }
-  }, [theme]);
+  }, []);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
@@ -60,10 +66,10 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <ModalContext.Provider value={{ openModal, closeModal, isModalOpen }}>
         <div className="font-body min-h-screen flex flex-col">
-          <Navigation theme={theme} onContact={openModal} setTheme={setTheme} />
+          <Navigation />
           <main className="flex-1">{children}</main>
           <Footer />
-          <LetsTalkDrawer open={isModalOpen} onClose={closeModal} theme={theme} />
+          <LetsTalkDrawer open={isModalOpen} onClose={closeModal} />
         </div>
       </ModalContext.Provider>
     </ThemeContext.Provider>

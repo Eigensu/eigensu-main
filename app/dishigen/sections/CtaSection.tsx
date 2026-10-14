@@ -2,6 +2,7 @@
 
 import { useModal } from "../../components/PageShell";
 import { Eyebrow, useReveal } from "./shared";
+import { PRODUCT } from "../../lib/site";
 
 const STYLES = `
 .dsp-cta{width:100%;padding:104px 0 56px;margin-top:-48px;position:relative;z-index:1;background:var(--ember);}
@@ -34,12 +35,12 @@ export default function CtaSection() {
           your spreadsheets can show.
         </h2>
         <p className="bd">
-          DishPatch brings your guests, campaigns and reservations into
+          {PRODUCT.name} brings your guests, campaigns and reservations into
           <br />
           one system — so you can finally act on what&rsquo;s happening.
         </p>
         <button type="button" className="btn" onClick={openModal}>
-          See DishPatch in Action →
+          See {PRODUCT.name} in Action →
         </button>
         <p className="mono">One platform. Your data. Your restaurant.</p>
       </div>

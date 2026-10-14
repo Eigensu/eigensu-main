@@ -4,8 +4,7 @@ import Link from "next/link";
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { GoArrowUpRight } from "react-icons/go";
-
-type Theme = "dark" | "light";
+import { PRODUCT } from "../lib/site";
 
 type CardNavLink = {
   label: string;
@@ -253,7 +252,8 @@ function CardNav({
       <nav
         ref={navRef}
         className={`card-nav ${isOpen ? "open" : ""} relative block overflow-hidden rounded-xl p-0 shadow-lg will-change-[height]`}
-        style={{ backgroundColor: baseColor }}
+        // Collapsed height before hydration; GSAP drives it from then on.
+        style={{ backgroundColor: baseColor, height: COLLAPSED_HEIGHT }}
       >
         <div className="card-nav-top absolute inset-x-0 top-0 z-[2] flex h-[60px] items-center justify-between p-2 pl-[1.1rem]">
           <button
@@ -396,7 +396,7 @@ function buildNavItems(): CardNavItem[] {
       textColor: text,
       links: [
         { label: "Projects", href: "/projects", ariaLabel: "View projects" },
-        { label: "Dispatch", href: "/dispatch", ariaLabel: "View dispatch" },
+        { label: PRODUCT.name, href: PRODUCT.path, ariaLabel: `View ${PRODUCT.name}` },
       ],
     },
     {
@@ -406,19 +406,12 @@ function buildNavItems(): CardNavItem[] {
       links: [
         { label: "About",   href: "/about",   ariaLabel: "About Eigensu" },
         { label: "Contact", href: "/contact", ariaLabel: "Contact us" },
-        { label: "Blog",    href: "/blog",    ariaLabel: "View blog" },
       ],
     },
   ];
 }
 
-export default function Navigation({
-  onContact: _onContact,
-}: {
-  theme?: Theme;
-  onContact?: () => void;
-  setTheme?: (t: Theme) => void;
-}) {
+export default function Navigation() {
   const baseColor       = "var(--nav-bg)";
   const menuColor       = "var(--text)";
   const buttonBgColor   = "var(--accent)";

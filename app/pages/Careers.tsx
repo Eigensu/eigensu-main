@@ -25,7 +25,6 @@ function DropdownField({
   label,
   placeholder,
   options,
-  isDark,
   labelColor,
   borderColor,
   surfaceColor,
@@ -131,7 +130,7 @@ function DropdownField({
 }
 
 // Step indicator
-function StepIndicator({ step, isDark, accent, muted }: { step: number; isDark: boolean; accent: string; muted: string }) {
+function StepIndicator({ step, accent, muted }: { step: number; isDark: boolean; accent: string; muted: string }) {
   const steps = ["Basic Info & Links", "Skills & Availability"];
   return (
     <div className="flex items-center gap-3 mb-8">

@@ -33,7 +33,7 @@ const INFO_ITEMS = [
 ];
 
 export default function ContactPage() {
-  const gridReveal = useReveal();
+  const { ref: gridRevealRef, on: gridRevealOn } = useReveal();
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", company: "", email: "", message: "" });
 
@@ -56,7 +56,7 @@ export default function ContactPage() {
       {/* ── Contact grid ── */}
       <section className="relative z-10 py-14 md:py-20 lg:py-24">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={gridReveal.ref} className="grid gap-10 md:gap-14 md:grid-cols-2 md:items-start" style={{ opacity: gridReveal.on ? 1 : 0, transition: "opacity .7s, transform .7s", transform: gridReveal.on ? "translateY(0)" : "translateY(20px)" }}>
+          <div ref={gridRevealRef} className="grid gap-10 md:gap-14 md:grid-cols-2 md:items-start" style={{ opacity: gridRevealOn ? 1 : 0, transition: "opacity .7s, transform .7s", transform: gridRevealOn ? "translateY(0)" : "translateY(20px)" }}>
             {/* Info panel */}
             <div>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(15,77,46,0.08)", border: "1px solid rgba(15,77,46,0.2)", borderRadius: 100, padding: "7px 14px", marginBottom: 32 }}>

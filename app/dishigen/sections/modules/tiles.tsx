@@ -1,5 +1,7 @@
 "use client";
 
+import { PRODUCT } from "../../../lib/site";
+
 function TileLabel({ mono, title }: { mono: string; title: string }) {
   return (
     <div className="bb-tile-label">
@@ -157,11 +159,11 @@ export function InboxTile() {
 
 export function MultiRestaurantTile() {
   const outlets = [
-    { name: "Fielia", area: "Mahalaxmi", active: true },
-    { name: "Gigi", area: "Bandra" },
-    { name: "Scarlett House", area: "Juhu" },
-    { name: "Soraia", area: "Mahalaxmi" },
-    { name: "Sweeney", area: "Khar" },
+    { name: "Spice Bistro", area: "Bandra", active: true },
+    { name: "Café Marigold", area: "Juhu" },
+    { name: "The Copper Pot", area: "Khar" },
+    { name: "Saffron Room", area: "Colaba" },
+    { name: "Olive & Ember", area: "Lower Parel" },
   ];
   return (
     <div className="bb-tile bb-t-wine bb-s3" style={{ minHeight: 150, height: 350 }}>
@@ -172,11 +174,11 @@ export function MultiRestaurantTile() {
               <circle cx="50" cy="50" r="46" fill="none" stroke="#FFC53D" strokeWidth="4" />
               <path d={LEAF_PATH} fill="#F0491F" />
             </svg>
-            <b>DishPatch</b>
+            <b>{PRODUCT.name}</b>
           </div>
           <div className="bb-outlet-sel">
             <OutletIcon />
-            <div><b>Fielia</b><u>Mahalaxmi</u></div>
+            <div><b>Spice Bistro</b><u>Bandra</u></div>
             <span className="bb-outlet-chev">▲</span>
           </div>
           <div className="bb-outlet-list">
@@ -224,8 +226,8 @@ export function AnalyticsChartTile() {
 
 export function AdminTile() {
   const admins = [
-    { name: "Suramya Sri", scope: "Fielia · Soraia", role: "Admin" },
-    { name: "Japtej", scope: "5 restaurants", role: "Admin" },
+    { name: "Priya S.", scope: "Spice Bistro · Saffron Room", role: "Admin" },
+    { name: "Rohan M.", scope: "5 restaurants", role: "Admin" },
     { name: "Eigensu", scope: "6 restaurants", role: "Super Admin" },
   ];
   return (
@@ -258,7 +260,7 @@ export function AdminTile() {
           </div>
           <div className="bb-org-foot">
             <button type="button" className="bb-org-add">+ Create admin</button>
-            <a href="#" className="bb-org-manage">Manage access →</a>
+            <span className="bb-org-manage">Manage access →</span>
           </div>
         </div>
       </div>
