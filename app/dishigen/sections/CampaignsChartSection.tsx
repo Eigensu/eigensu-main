@@ -63,7 +63,7 @@ export default function CampaignsChartSection() {
   const { ref, on } = useReveal(0.15);
 
   return (
-    <section id="dsp-campaigns-chart" className="dsp-campaigns-chart">
+    <section data-sample="true" id="dsp-campaigns-chart" className="dsp-campaigns-chart">
       <style>{STYLES}</style>
       <Container>
         <div ref={ref} className="dsp-f7-stack">
@@ -109,6 +109,7 @@ export default function CampaignsChartSection() {
             </div>
           </div>
         </div>
+        <p style={{ marginTop: 18, fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".06em", color: "rgba(251,243,228,.6)" }}>Sample data, for illustration.</p>
       </Container>
     </section>
   );

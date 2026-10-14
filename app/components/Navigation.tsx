@@ -397,6 +397,7 @@ function buildNavItems(): CardNavItem[] {
       links: [
         { label: "Projects", href: "/projects" },
         { label: PRODUCT.name, href: PRODUCT.path },
+        { label: "Pricing", href: "/pricing" },
       ],
     },
     {

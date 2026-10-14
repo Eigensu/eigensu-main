@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Instrument_Sans, Space_Mono } from "next/font/google";
 import "./globals.css";
 import PageShell from "./components/PageShell";
-import { SITE } from "./lib/site";
+import { SITE, absoluteUrl } from "./lib/site";
+import JsonLd from "./components/content/JsonLd";
 import Analytics from "./components/analytics/Analytics";
 import { GTM_ID } from "./lib/analytics";
 import { CONSENT_DEFAULTS_SCRIPT } from "./lib/consent";
@@ -76,6 +77,19 @@ export default function RootLayout({
         {GTM_ID && <script dangerouslySetInnerHTML={{ __html: CONSENT_DEFAULTS_SCRIPT }} />}
       </head>
       <body className="min-h-full">
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "@id": absoluteUrl("/#organization"),
+            name: SITE.name,
+            url: absoluteUrl("/"),
+            logo: absoluteUrl("/icon.svg"),
+            email: SITE.supportEmail,
+            sameAs: [SITE.linkedin],
+            address: { "@type": "PostalAddress", addressLocality: "Mumbai", addressRegion: "Maharashtra", addressCountry: "IN" },
+          }}
+        />
         <PageShell>{children}</PageShell>
         <Analytics />
       </body>

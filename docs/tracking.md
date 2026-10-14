@@ -21,8 +21,8 @@ Every event carries `page_path` (for example `/dishigen`). Only these parameters
 | `generate_lead` | An enquiry form is **delivered** (the server confirmed the email or Sheet accepted it), not on click | `form_name`: `drawer`, `contact` or `onboard` |
 | `demo_click` | "Book a demo" is clicked | `cta_location`: `hero`, `footer_cta`, … |
 | `whatsapp_click` | "Message us on WhatsApp" is clicked | `cta_location`: `hero`, `footer_cta`, `contact`, `drawer` |
-| `pricing_view` | The pricing section scrolls into view, once per page view (wired up with the pricing section in Phase 3) | `cta_location` (optional) |
-| `calculator_used` | The cost calculator returns a result (Phase 3) | `cta_location` (optional) |
+| `pricing_view` | The plans section of `/pricing` scrolls into view, once per page view | `cta_location`: `pricing` |
+| `calculator_used` | A visitor changes an input on `/whatsapp-cost-calculator` and gets a new result, once per page view | `cta_location`: `calculator` |
 | `sign_up` | Reserved for product sign-ups; not sent yet | none |
 
 ## Steps to do by hand

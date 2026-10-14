@@ -17,7 +17,7 @@ export default function TrackOnView({ event, location, children }: { event: "pri
         track(event, location ? { cta_location: location } : {});
         obs.disconnect();
       }
-    }, { threshold: 0.4 });
+    }, { threshold: 0.25 });
     obs.observe(el);
     return () => obs.disconnect();
   }, [event, location]);

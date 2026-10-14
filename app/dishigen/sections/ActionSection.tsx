@@ -48,7 +48,7 @@ export default function ActionSection() {
   const { ref, on } = useReveal(0.2);
 
   return (
-    <section id="dsp-action" className="dsp-action">
+    <section data-sample="true" id="dsp-action" className="dsp-action">
       <style>{STYLES}</style>
       <Container>
         <Eyebrow dot>FROM DATA TO DECISION</Eyebrow>
@@ -104,6 +104,7 @@ export default function ActionSection() {
           </div>
           <div className="dpa-term-arrow">↓</div>
         </div>
+        <p style={{ marginTop: 18, fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".06em", color: "var(--muted)" }}>Sample data, for illustration.</p>
       </Container>
     </section>
   );

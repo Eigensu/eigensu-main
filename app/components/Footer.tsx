@@ -11,7 +11,11 @@ const SERVICES_LINKS = [
 ];
 
 const PRODUCT_LINKS = [
-  { label: PRODUCT.name, href: PRODUCT.path },
+  { label: PRODUCT.name,      href: PRODUCT.path },
+  { label: "Pricing",         href: "/pricing" },
+  { label: "Cost calculator", href: "/whatsapp-cost-calculator" },
+  { label: "Templates",       href: "/templates" },
+  { label: "Guides",          href: "/guides" },
 ];
 
 const COMPANY_LINKS = [
