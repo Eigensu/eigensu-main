@@ -103,11 +103,11 @@ function CheckItem({ children }: { children: React.ReactNode }) {
 }
 
 export default function ServicesPage() {
-  const cardsReveal   = useReveal();
-  const d1Reveal      = useReveal();
-  const d2Reveal      = useReveal();
-  const processReveal = useReveal();
-  const ctaReveal     = useReveal();
+  const { ref: cardsRevealRef, on: cardsRevealOn } = useReveal();
+  const { ref: d1RevealRef, on: d1RevealOn } = useReveal();
+  const { ref: d2RevealRef, on: d2RevealOn } = useReveal();
+  const { ref: processRevealRef, on: processRevealOn } = useReveal();
+  const { ref: ctaRevealRef, on: ctaRevealOn } = useReveal();
 
   return (
     <div>
@@ -125,11 +125,11 @@ export default function ServicesPage() {
       {/* ── Service Cards ── */}
       <section className="relative z-10 py-14 md:py-20 lg:py-24">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={cardsReveal.ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div ref={cardsRevealRef} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((s, i) => {
               const isPeri = true;
               return (
-                <article key={s.idx} style={{ background: isPeri ? "var(--peri)" : "var(--basil)", border: isPeri ? "1px solid var(--peri)" : "1px solid var(--basil)", borderRadius: 14, padding: "24px 22px", position: "relative", display: "flex", flexDirection: "column", gap: 14, opacity: cardsReveal.on ? 1 : 0, transform: cardsReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
+                <article key={s.idx} style={{ background: isPeri ? "var(--peri)" : "var(--basil)", border: isPeri ? "1px solid var(--peri)" : "1px solid var(--basil)", borderRadius: 14, padding: "24px 22px", position: "relative", display: "flex", flexDirection: "column", gap: 14, opacity: cardsRevealOn ? 1 : 0, transform: cardsRevealOn ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
                   <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: isPeri ? "rgba(59,10,34,0.45)" : "rgba(255,233,173,0.45)" }}>{s.idx}</span>
                   <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: isPeri ? "1px solid var(--wine)" : "1px solid #FFE9AD", background: isPeri ? "var(--wine)" : "#FFE9AD" }}>{s.icon}</div>
                   <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", color: isPeri ? "var(--wine)" : "#FFE9AD", margin: 0 }}>{s.title}</h3>
@@ -145,7 +145,7 @@ export default function ServicesPage() {
       {/* ── Deep Dive 1 ── */}
       <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={d1Reveal.ref} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d1Reveal.on ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d1Reveal.on ? "translateY(0)" : "translateY(20px)" }}>
+          <div ref={d1RevealRef} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d1RevealOn ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d1RevealOn ? "translateY(0)" : "translateY(20px)" }}>
             <div>
               <Eyebrow>Deep dive // 01</Eyebrow>
               <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>Workflows you can read like a sentence.</h3>
@@ -164,7 +164,7 @@ export default function ServicesPage() {
       {/* ── Deep Dive 2 (code left, text right) ── */}
       <section className="relative z-10 py-14 md:py-20 lg:py-24">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={d2Reveal.ref} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d2Reveal.on ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d2Reveal.on ? "translateY(0)" : "translateY(20px)" }}>
+          <div ref={d2RevealRef} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d2RevealOn ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d2RevealOn ? "translateY(0)" : "translateY(20px)" }}>
             <CodeWindow filename="integration.config.yaml" lines={INTEGRATION_LINES} />
             <div>
               <Eyebrow>Deep dive // 02</Eyebrow>
@@ -187,9 +187,9 @@ export default function ServicesPage() {
             <Eyebrow>How we work</Eyebrow>
             <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>Four steps, no surprises.</h2>
           </div>
-          <div ref={processReveal.ref} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
+          <div ref={processRevealRef} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
             {PROCESS.map((p, i) => (
-              <article key={p.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "22px 20px", opacity: processReveal.on ? 1 : 0, transform: processReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
+              <article key={p.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "22px 20px", opacity: processRevealOn ? 1 : 0, transform: processRevealOn ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
                 <Eyebrow muted>{p.idx}</Eyebrow>
                 <h3 style={{ fontFamily: HEAD, fontSize: "1.15rem", fontWeight: 700, color: "var(--text)", margin: "12px 0 10px" }}>{p.title}</h3>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.65 }}>{p.body}</p>
@@ -202,7 +202,7 @@ export default function ServicesPage() {
       {/* ── CTA ── */}
       <section className="relative z-10 py-10 md:py-14">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={ctaReveal.ref} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaReveal.on ? 1 : 0, transform: ctaReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+          <div ref={ctaRevealRef} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaRevealOn ? 1 : 0, transform: ctaRevealOn ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
             <div style={{ position: "absolute", width: 380, height: 260, background: "var(--accent)", filter: "blur(100px)", opacity: 0.17, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1 }}>
               <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "22ch", margin: "0 auto 28px" }}>Have a process that&apos;s begging to be automated?</h2>

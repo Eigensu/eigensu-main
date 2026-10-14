@@ -436,7 +436,7 @@ export default function ProcessPage() {
               How we work
             </div>
             <h1 style={{ fontSize: "clamp(38px,4.2vw,72px)", letterSpacing: "0.02em", lineHeight: 1.06, marginBottom: 20, color: tp }}>
-              From <em style={{ fontStyle: "normal", color: ac }}>complexity</em>
+              From <em style={{ fontStyle: "normal", color: ac }}>complexity</em>{" "}
               <br />
               to clarity
             </h1>

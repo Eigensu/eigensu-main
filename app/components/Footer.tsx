@@ -1,7 +1,6 @@
-"use client";
-
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { PRODUCT, SITE } from "../lib/site";
 
 const SERVICES_LINKS = [
   { label: "Operations Automation", href: "/services" },
@@ -10,32 +9,25 @@ const SERVICES_LINKS = [
   { label: "Case Studies",          href: "/projects" },
 ];
 
-const RESOURCES_LINKS = [
-  { label: "Insights",  href: "/blog" },
-  { label: "Changelog", href: "#" },
-  { label: "Pricing",   href: "#" },
-  { label: "Security",  href: "#" },
+const PRODUCT_LINKS = [
+  { label: PRODUCT.name, href: PRODUCT.path },
 ];
 
 const COMPANY_LINKS = [
   { label: "About",    href: "/about" },
-  { label: "Projects", href: "/projects" },
+  { label: "Process",  href: "/process" },
   { label: "Careers",  href: "/careers" },
-  { label: "FAQ",      href: "#" },
+  { label: "FAQ",      href: "/#faq" },
 ];
 
 const HELP_LINKS = [
   { label: "Contact",        href: "/contact" },
-  { label: "Support",        href: "mailto:hello@eigensu.in" },
-  { label: "Status",         href: "#" },
-  { label: "Legal policies", href: "#" },
+  { label: "Support",        href: `mailto:${SITE.supportEmail}` },
+  { label: "Privacy policy", href: "/privacy" },
 ];
 
 const SOCIAL_LINKS = [
-  { label: "X / Twitter", href: "#", glyph: "𝕏" },
-  { label: "LinkedIn",    href: "#", glyph: "in" },
-  { label: "GitHub",      href: "#", glyph: "◐" },
-  { label: "YouTube",     href: "#", glyph: "▶" },
+  { label: "Eigensu on LinkedIn", href: SITE.linkedin, glyph: "in" },
 ];
 
 function FooterLink({ href, children }: { href: string; children: ReactNode }) {
@@ -80,13 +72,13 @@ function FooterLinkGroup({
 
 function FooterSun() {
   return (
-    <svg className="footer-sun" viewBox="0 0 440 220" width="440" height="220" aria-hidden="true">
-      <path d="M0,220 A220,220 0 0 1 440,220 Z" fill="var(--peri)" />
-      <path id="footerSunTextArc" d="M60,220 A160,160 0 0 1 380,220" fill="none" />
-      <a href="mailto:hello@eigensu.in">
+    <svg className="footer-sun" viewBox="0 0 440 220" width="440" height="220">
+      <path d="M0,220 A220,220 0 0 1 440,220 Z" fill="var(--peri)" aria-hidden="true" />
+      <path id="footerSunTextArc" d="M60,220 A160,160 0 0 1 380,220" fill="none" aria-hidden="true" />
+      <a href={`mailto:${SITE.supportEmail}`}>
         <text fontFamily="var(--font-mono), 'Space Mono', monospace" fontWeight={700} fontSize={16} letterSpacing={2} fill="var(--cream)">
           <textPath href="#footerSunTextArc" startOffset="50%" textAnchor="middle">
-            hello@eigensu.in
+            {SITE.supportEmail}
           </textPath>
         </text>
       </a>
@@ -109,7 +101,7 @@ export default function Footer() {
 
             <div className="footer-links-grid">
               <FooterLinkGroup title="Services"  color="peri"  links={SERVICES_LINKS} />
-              <FooterLinkGroup title="Resources" color="cream" links={RESOURCES_LINKS} />
+              <FooterLinkGroup title="Product"   color="cream" links={PRODUCT_LINKS} />
               <FooterLinkGroup title="Company"   color="peri"  links={COMPANY_LINKS} />
               <FooterLinkGroup title="Help"      color="cream" links={HELP_LINKS} />
             </div>
@@ -119,19 +111,19 @@ export default function Footer() {
             <div className="footer-bottom-left">
               <div className="footer-social">
                 {SOCIAL_LINKS.map((s, i) => (
-                  <a key={s.label} href={s.href} aria-label={s.label} style={{ color: i % 2 === 0 ? "var(--cream)" : "var(--peri)" }}>
-                    {s.glyph}
+                  <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" style={{ color: i % 2 === 0 ? "var(--cream)" : "var(--peri)" }}>
+                    <span aria-hidden="true">{s.glyph}</span>
+                    <span className="sr-only">{s.label}</span>
                   </a>
                 ))}
               </div>
-              <span className="footer-addr">2261 Market Street #5039, San Francisco, CA 94114</span>
+              {/* TODO(owner): add the registered legal entity name and address. */}
+              <span className="footer-addr">{SITE.legalName} · {SITE.location}</span>
             </div>
             <div className="footer-bottom-meta">
-              <span>&copy; {new Date().getFullYear()} Eigensu. All rights reserved.</span>
+              <span>&copy; {new Date().getFullYear()} {SITE.legalName}. All rights reserved.</span>
               <span className="meta-sep">&middot;</span>
-              <a href="#">Privacy policy</a>
-              <span className="meta-sep">&middot;</span>
-              <a href="#">Terms</a>
+              <Link href="/privacy">Privacy policy</Link>
             </div>
           </div>
         </div>

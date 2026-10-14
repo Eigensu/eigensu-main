@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { useTheme } from "./PageShell";
-import { getThemeTokens, type Theme } from "../lib/themeTokens";
+import { getThemeTokens } from "../lib/themeTokens";
 
 function Starfield({ visible }: { visible: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -56,7 +56,7 @@ function Starfield({ visible }: { visible: boolean }) {
   );
 }
 
-function GlowArcs({ theme: _theme }: { theme: Theme }) {
+function GlowArcs() {
   const bottomGlow = "radial-gradient(ellipse at center, var(--glow) 0%, transparent 70%)";
   const sideGlow   = "radial-gradient(ellipse at center, var(--glow) 0%, transparent 70%)";
   const arcColor   = "var(--accent)";
@@ -125,7 +125,7 @@ export function ThemeHeroSection({
     >
       <style>{HERO_ANIM_STYLES}</style>
       <Starfield visible={theme !== "light"} />
-      <GlowArcs theme={theme} />
+      <GlowArcs />
       <div
         className={`relative z-10 flex flex-1 flex-col pb-16 pt-[var(--hero-content-top)] md:pb-20 w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10 ${
           align === "center" ? "items-center text-center" : ""

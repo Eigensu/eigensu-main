@@ -1,9 +1,29 @@
-"use client";
-
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { useModal } from "./components/PageShell";
 import { ThemeHeroSection } from "./components/ThemeHero";
+import Reveal from "./components/Reveal";
+import { EnquiryButton } from "./components/cta";
+import OpsConsole from "./components/home/OpsConsole";
+import Faq from "./components/home/Faq";
+import { FEATURES, SITE } from "./lib/site";
+import { pageMetadata } from "./lib/metadata";
+import bingeLogo from "../public/clientlogos/binge.webp";
+import fieliaLogo from "../public/clientlogos/fielia.webp";
+import iciciLogo from "../public/clientlogos/icici.webp";
+import laFeteLogo from "../public/clientlogos/lafete.webp";
+import reserveGoLogo from "../public/clientlogos/reservego.webp";
+import sacredWalksLogo from "../public/clientlogos/sacredwalks.webp";
+import scarlettHouseLogo from "../public/clientlogos/scarletthouse.webp";
+import soraiaLogo from "../public/clientlogos/soraia.webp";
+import sweeneyLogo from "../public/clientlogos/sweeney.webp";
+import walleLogo from "../public/clientlogos/walle.webp";
+
+export const metadata = pageMetadata({
+  title: "Eigensu — Systems for internal operations",
+  description: `${SITE.description} Operations automation, internal tools and systems integration, from Mumbai.`,
+  path: "/",
+  absoluteTitle: true,
+});
 
 const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
 const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
@@ -21,88 +41,40 @@ function Eyebrow({ children, color = "var(--accent)" }: { children: React.ReactN
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 
-function BtnPrimary({ href, onClick, children, invert = false }: { href?: string; onClick?: () => void; children: React.ReactNode; invert?: boolean }) {
-  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: invert ? "var(--wine)" : "var(--accent)", color: invert ? "var(--cream)" : "var(--on-accent)", boxShadow: invert ? "0 8px 28px -8px rgba(0,0,0,0.45)" : "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none", whiteSpace: "nowrap" as const };
-  if (href) return <Link href={href} style={s}>{children}</Link>;
-  return <button type="button" onClick={onClick} style={s}>{children}</button>;
+function primaryStyle(invert: boolean) {
+  return { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: invert ? "var(--wine)" : "var(--accent)", color: invert ? "var(--cream)" : "var(--on-accent)", boxShadow: invert ? "0 8px 28px -8px rgba(0,0,0,0.45)" : "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none", whiteSpace: "nowrap" as const };
 }
 
-function BtnGhost({ href, onClick, children, invert = false }: { href?: string; onClick?: () => void; children: React.ReactNode; invert?: boolean }) {
-  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: invert ? "var(--cream)" : "var(--text)", border: invert ? "1px solid rgba(251,243,228,0.35)" : "1px solid var(--border-strong)", textDecoration: "none", whiteSpace: "nowrap" as const };
-  if (href) return <Link href={href} style={s}>{children}</Link>;
-  return <button type="button" onClick={onClick} style={s}>{children}</button>;
+function ghostStyle(invert: boolean) {
+  return { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: invert ? "var(--cream)" : "var(--text)", border: invert ? "1px solid rgba(251,243,228,0.35)" : "1px solid var(--border-strong)", background: "none", cursor: "pointer", textDecoration: "none", whiteSpace: "nowrap" as const };
 }
 
-/* ── useReveal ───────────────────────────────────────────────────────────── */
-
-function useReveal(threshold = 0.1) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setOn(true); obs.disconnect(); } }, { threshold });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, on };
+function BtnPrimary({ href, children, invert = false }: { href: string; children: React.ReactNode; invert?: boolean }) {
+  return <Link href={href} style={primaryStyle(invert)}>{children}</Link>;
 }
 
-/* ── Ops Console ─────────────────────────────────────────────────────────── */
-
-function OpsConsole() {
-  const [tick, setTick] = useState(true);
-  useEffect(() => { const id = setInterval(() => setTick(t => !t), 850); return () => clearInterval(id); }, []);
-  const BARS = [42, 61, 38, 78, 55, 90, 47, 68, 83, 59, 72, 95];
-  return (
-    <div style={{ background: "var(--cream)", border: "1px solid rgba(59,10,34,0.14)", borderRadius: 28, padding: 14, overflow: "hidden", boxShadow: "24px 30px 60px rgba(59,10,34,0.28)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 10px 15px" }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          {["#FF7661","var(--butter)","#65C58A"].map(c => <i key={c} style={{ width: 9, height: 9, borderRadius: "50%", display: "block", background: c }} />)}
-        </div>
-        <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(59,10,34,0.55)" }}>ops_console — live</span>
-      </div>
-      <div style={{ background: "#260616", borderRadius: 18, padding: 18 }}>
-        {[
-          { label: "invoice_sync",     tag: "active",  tc: "#72D69A", tb: "rgba(101,197,138,0.13)" },
-          { label: "inventory_recon",  tag: "running", tc: "#FF8064", tb: "rgba(240,73,31,0.15)" },
-          { label: "approval_routing", tag: "queued",  tc: "var(--butter)", tb: "rgba(255,197,61,0.14)" },
-        ].map(row => (
-          <div key={row.label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "15px 14px", border: "1px solid rgba(251,243,228,0.1)", borderRadius: 10, marginBottom: 9, background: "rgba(251,243,228,0.045)" }}>
-            <span style={{ fontFamily: MONO, fontSize: "0.75rem", color: "rgba(251,243,228,0.72)" }}>{row.label}</span>
-            <span style={{ fontFamily: MONO, fontSize: "0.62rem", letterSpacing: "0.05em", padding: "5px 8px", borderRadius: 999, textTransform: "uppercase", color: row.tc, background: row.tb }}>{row.tag}</span>
-          </div>
-        ))}
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 95, padding: "15px 12px", border: "1px solid rgba(251,243,228,0.1)", borderRadius: 10, marginTop: 14 }}>
-          {BARS.map((h, i) => <div key={i} style={{ flex: 1, background: i % 4 === 2 ? "var(--peri)" : "var(--ember)", opacity: 0.9, borderRadius: "3px 3px 0 0", height: `${h}%` }} />)}
-        </div>
-        <div style={{ marginTop: 10, background: "#12030a", borderRadius: 9, padding: "12px 13px", fontFamily: MONO, fontSize: "0.68rem", color: "rgba(251,243,228,0.62)" }}>
-          <b style={{ color: "#72D69A" }}>eigensu ▸</b>
-          {" deploy --pipeline ops.core"}
-          <span style={{ display: "inline-block", width: 6, height: 12, background: "var(--ember)", marginLeft: 4, verticalAlign: "-2px", opacity: tick ? 0.9 : 0, transition: "opacity .1s" }} />
-        </div>
-      </div>
-    </div>
-  );
+function BtnGhost({ href, children, invert = false }: { href: string; children: React.ReactNode; invert?: boolean }) {
+  return <Link href={href} style={ghostStyle(invert)}>{children}</Link>;
 }
 
 /* ── Clients ─────────────────────────────────────────────────────────────── */
 
 const LOGO_FILTER = "brightness(0) saturate(100%) invert(96%) sepia(9%) saturate(638%) hue-rotate(315deg) brightness(103%) contrast(96%)";
 
+// TODO(owner): confirm every client has agreed to their logo appearing here.
 const CLIENTS_ROW_1 = [
-  { src: "/clientlogos/binge.png", alt: "Binge Consulting", h: "clamp(2.4rem,6vw,3.4rem)" },
-  { src: "/clientlogos/soraia.png", alt: "Soraia", h: "clamp(3.4rem,8vw,4.9rem)" },
-  { src: "/clientlogos/scarletthouse.png", alt: "Scarlett House", h: "clamp(3.9rem,9vw,5.5rem)" },
-  { src: "/clientlogos/Sweeney.png", alt: "Sweeney", h: "clamp(3.4rem,8vw,4.9rem)" },
-  { src: "/clientlogos/icici.svg", alt: "ICICI Bank", h: "clamp(2.6rem,6.5vw,3.6rem)" },
+  { src: bingeLogo, alt: "Binge Consulting logo", h: "clamp(2.4rem,6vw,3.4rem)" },
+  { src: soraiaLogo, alt: "Soraia logo", h: "clamp(3.4rem,8vw,4.9rem)" },
+  { src: scarlettHouseLogo, alt: "Scarlett House logo", h: "clamp(3.9rem,9vw,5.5rem)" },
+  { src: sweeneyLogo, alt: "Sweeney logo", h: "clamp(3.4rem,8vw,4.9rem)" },
+  { src: iciciLogo, alt: "ICICI Bank logo", h: "clamp(2.6rem,6.5vw,3.6rem)" },
 ];
 const CLIENTS_ROW_2 = [
-  { src: "/clientlogos/sacredwalks.png", alt: "The Sacred Walks", h: "clamp(3.4rem,8vw,4.9rem)" },
-  { src: "/clientlogos/lafete.png", alt: "La fête", h: "clamp(2.4rem,6vw,3.4rem)" },
-  { src: "/clientlogos/walle.png", alt: "Wall-E Arena", h: "clamp(3.4rem,8vw,4.9rem)" },
-  { src: "/clientlogos/fielia.png", alt: "Fielia", h: "clamp(3.4rem,8vw,4.9rem)" },
-  { src: "/clientlogos/reservego.png", alt: "ReserveGo", h: "clamp(2.2rem,5.5vw,3rem)" },
+  { src: sacredWalksLogo, alt: "The Sacred Walks logo", h: "clamp(3.4rem,8vw,4.9rem)" },
+  { src: laFeteLogo, alt: "La fête logo", h: "clamp(2.4rem,6vw,3.4rem)" },
+  { src: walleLogo, alt: "Wall-E Arena logo", h: "clamp(3.4rem,8vw,4.9rem)" },
+  { src: fieliaLogo, alt: "Fielia logo", h: "clamp(3.4rem,8vw,4.9rem)" },
+  { src: reserveGoLogo, alt: "ReserveGo logo", h: "clamp(2.2rem,5.5vw,3rem)" },
 ];
 
 function LogoLoopRow({ logos, direction, duration, siya = false }: { logos: typeof CLIENTS_ROW_1; direction: "left" | "right"; duration: number; siya?: boolean }) {
@@ -118,11 +90,9 @@ function LogoLoopRow({ logos, direction, duration, siya = false }: { logos: type
           animation: `${direction === "left" ? "logoLoopLeft" : "logoLoopRight"} ${duration}s linear infinite`,
         }}
       >
-        {/* eslint-disable @next/next/no-img-element */}
         {items.map((l, i) => (
-          <img key={`${l.alt}-${i}`} src={l.src} alt={i < logos.length ? l.alt : ""} aria-hidden={i >= logos.length} style={{ height: l.h, width: "auto", flexShrink: 0, filter: LOGO_FILTER }} />
+          <Image key={`${l.alt}-${i}`} src={l.src} alt={i < logos.length ? l.alt : ""} aria-hidden={i >= logos.length} sizes="360px" style={{ height: l.h, width: "auto", flexShrink: 0, filter: LOGO_FILTER }} />
         ))}
-        {/* eslint-enable @next/next/no-img-element */}
         {siya && (
           <span style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.3rem,4vw,1.9rem)", lineHeight: 1.05, letterSpacing: "-0.02em", color: "var(--cream)", textAlign: "center", whiteSpace: "nowrap", flexShrink: 0 }}>SIYA MANUFACTURING</span>
         )}
@@ -151,9 +121,8 @@ const SERVICES = [
 ];
 
 function ServiceCard({ s }: { s: typeof SERVICES[0] }) {
-  const { ref, on } = useReveal();
   return (
-    <article ref={ref} style={{ background: "#fff", border: "2px solid var(--wine)", borderRadius: 18, padding: "26px 24px 30px", position: "relative", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .6s, transform .6s" }}>
+    <Reveal as="article" duration={0.6} style={{ background: "#fff", border: "2px solid var(--wine)", borderRadius: 18, padding: "26px 24px 30px", position: "relative" }}>
       <span style={{ position: "absolute", top: 22, right: 24, fontFamily: MONO, fontSize: "0.7rem", color: "rgba(59,10,34,0.35)" }}>{s.idx}</span>
       <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid var(--wine)", background: "var(--wine)", marginBottom: 18 }}>
         {s.icon}
@@ -161,7 +130,7 @@ function ServiceCard({ s }: { s: typeof SERVICES[0] }) {
       <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginBottom: 10, color: "var(--wine)" }}>{s.title}</h3>
       <p style={{ color: "rgba(59,10,34,0.78)", fontSize: "0.9rem", lineHeight: 1.65 }}>{s.body}</p>
       <Link href="/services" style={{ fontFamily: MONO, fontSize: "0.74rem", letterSpacing: "0.5px", color: "var(--accent)", marginTop: 16, display: "inline-flex", gap: 6, alignItems: "center" }}>Explore →</Link>
-    </article>
+    </Reveal>
   );
 }
 
@@ -169,20 +138,17 @@ function ServiceCard({ s }: { s: typeof SERVICES[0] }) {
 
 const STATS = [
   { num: "12", unit: "+",  lbl: "Projects delivered" },
-  { num: "100", unit: "%", lbl: "Client retention" },
-  { num: "3",   unit: "×", lbl: "Avg. process speed-up" },
   { num: "04",  unit: "yr",lbl: "Track record" },
 ];
 
 function StatsStrip() {
-  const { ref, on } = useReveal();
   return (
-    <div ref={ref} style={{ border: "2px solid var(--wine)", borderRadius: 16, background: "#fff", overflow: "hidden", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
-      <div className="g-stats">
+    <Reveal style={{ border: "2px solid var(--wine)", borderRadius: 16, background: "#fff", overflow: "hidden" }}>
+      <div className="g-stats-2">
         {STATS.map((s, i) => (
           <div
             key={s.lbl}
-            className={`${i % 2 === 0 ? "border-r-2" : ""} ${i < 2 ? "border-b-2" : ""} lg:border-b-0 ${i < STATS.length - 1 ? "lg:border-r-2" : "lg:border-r-0"}`}
+            className={i < STATS.length - 1 ? "border-r-2" : ""}
             style={{ padding: "26px 22px", borderColor: "var(--wine)" }}
           >
             <div style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.6rem,3.6vw,2.5rem)", letterSpacing: "-0.03em", color: "var(--text)" }}>
@@ -192,7 +158,7 @@ function StatsStrip() {
           </div>
         ))}
       </div>
-    </div>
+    </Reveal>
   );
 }
 
@@ -206,12 +172,12 @@ const SLIDES = [
   { tag: "Healthcare",   title: "Intake digitisation",      body: "Paper intake replaced with a validated workflow feeding straight into the records system.", client: "MERIDIAN",  outcome: "−92% errors" },
 ];
 
+// Placeholder case studies, hidden until real ones exist (see FEATURES.caseStudies).
 function OutcomesGrid() {
-  const { ref, on } = useReveal(0.08);
   const [hero, ...rest] = SLIDES;
 
   return (
-    <div ref={ref} style={{ opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+    <Reveal threshold={0.08}>
       <div
         className="grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-9"
         style={{ paddingBottom: 32, borderBottom: "1px solid rgba(251,243,228,0.18)", marginBottom: 20 }}
@@ -236,12 +202,13 @@ function OutcomesGrid() {
           </div>
         ))}
       </div>
-    </div>
+    </Reveal>
   );
 }
 
 /* ── Insights ────────────────────────────────────────────────────────────── */
 
+// Placeholder posts, hidden until real ones exist (see FEATURES.blog).
 const INSIGHTS = [
   { tag: "Operations",  time: "6 min", title: "Why spreadsheets fail at scale", body: "The hidden cost of manual reconciliation and the tipping point where automation pays for itself." },
   { tag: "Product",     time: "4 min", title: "Designing tools operators actually want", body: "Consumer-grade UX principles applied to internal dashboards, and why it matters for adoption." },
@@ -250,73 +217,25 @@ const INSIGHTS = [
 
 /* ── CTA block ───────────────────────────────────────────────────────────── */
 
-function CtaBlock({ heading, sub, primary, primaryHref, ghost, ghostFn }: { heading: string; sub: string; primary: string; primaryHref: string; ghost: string; ghostFn?: () => void }) {
-  const { ref, on } = useReveal();
+function CtaBlock({ heading, sub, primary, primaryHref, ghost }: { heading: string; sub: string; primary: string; primaryHref: string; ghost: string }) {
   return (
-    <div ref={ref} style={{ position: "relative", textAlign: "center", background: "var(--ember)", overflow: "hidden", borderRadius: "48px 48px 0 0", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+    <Reveal style={{ position: "relative", textAlign: "center", background: "var(--ember)", overflow: "hidden", borderRadius: "48px 48px 0 0" }}>
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10" style={{ padding: "clamp(56px,9vw,96px) 0" }}>
         <Eyebrow color="var(--butter)">Get started</Eyebrow>
         <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--cream)", maxWidth: "22ch", margin: "0 auto 16px" }}>{heading}</h2>
         <p style={{ color: "rgba(251,243,228,0.82)", fontSize: "clamp(0.9rem,1.3vw,1rem)", maxWidth: "50ch", margin: "0 auto 28px", lineHeight: 1.7 }}>{sub}</p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
           <BtnPrimary href={primaryHref} invert>{primary}</BtnPrimary>
-          <BtnGhost onClick={ghostFn} href={ghostFn ? undefined : "/contact"} invert>{ghost}</BtnGhost>
+          <EnquiryButton style={ghostStyle(true)}>{ghost}</EnquiryButton>
         </div>
       </div>
-    </div>
-  );
-}
-
-/* ── FAQ ─────────────────────────────────────────────────────────────────── */
-
-const FAQ_ITEMS = [
-  { q: "What does an engagement actually look like?", a: "We start with a scoping call to map your workflow, then send a fixed-scope proposal within a week. Once approved, we build in short, visible sprints — you see working software early and often, not a black box that appears at the end." },
-  { q: "How long does a typical project take?", a: "Most internal tools and automations ship in 3–8 weeks depending on scope. We'll give you a concrete timeline during scoping — not a range that quietly slips." },
-  { q: "Do you work with our existing stack?", a: "Yes. Systems integration is one of our core disciplines — we connect to whatever ERPs, databases, SaaS tools or internal APIs you already run, rather than asking you to replace them." },
-  { q: "What happens after launch?", a: "Every build includes a handover period plus ongoing support options. We stay reachable for fixes, tweaks and scaling questions — we're not a vendor that disappears after go-live." },
-  { q: "How is pricing structured?", a: "Fixed-scope pricing agreed upfront after the scoping call, so there are no surprise invoices. For ongoing integration work we also offer retainer arrangements." },
-];
-
-function Faq() {
-  const [open, setOpen] = useState(0);
-  const { ref, on } = useReveal();
-  return (
-    <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ background: "var(--basil)" }}>
-      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-        <div style={{ maxWidth: 560, marginBottom: 34 }}>
-          <Eyebrow color="var(--butter)">Questions</Eyebrow>
-          <h2 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(2rem,4.2vw,4rem)", letterSpacing: "-0.04em", lineHeight: 0.98, color: "var(--cream)" }}>Frequently asked.</h2>
-        </div>
-        <div ref={ref} style={{ opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
-          {FAQ_ITEMS.map((item, i) => {
-            const isOpen = open === i;
-            return (
-              <div key={item.q} style={{ borderTop: i === 0 ? "1px solid rgba(251,243,228,0.18)" : "none", borderBottom: "1px solid rgba(251,243,228,0.18)" }}>
-                <button
-                  type="button"
-                  onClick={() => setOpen(isOpen ? -1 : i)}
-                  style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, background: "none", border: 0, textAlign: "left", padding: "22px 2px", cursor: "pointer", color: "var(--cream)" }}
-                >
-                  <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", lineHeight: 1.3, letterSpacing: "-0.02em", margin: 0 }}>{item.q}</h3>
-                  <span style={{ flexShrink: 0, width: 28, height: 28, borderRadius: "50%", border: "1px solid rgba(251,243,228,0.32)", display: "grid", placeItems: "center", background: isOpen ? "var(--butter)" : "transparent", color: isOpen ? "var(--wine)" : "var(--cream)", fontSize: "1.1rem", lineHeight: 1, transition: "all .25s ease" }}>{isOpen ? "−" : "+"}</span>
-                </button>
-                <div style={{ maxHeight: isOpen ? 220 : 0, overflow: "hidden", transition: "max-height .35s ease" }}>
-                  <p style={{ margin: 0, padding: "0 2px 24px", maxWidth: "62ch", color: "rgba(251,243,228,0.7)", fontSize: "0.94rem", lineHeight: 1.7 }}>{item.a}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+    </Reveal>
   );
 }
 
 /* ── Page ────────────────────────────────────────────────────────────────── */
 
 export default function HomePage() {
-  const { openModal } = useModal();
-
   return (
     <div>
       {/* ── Hero ── */}
@@ -337,7 +256,7 @@ export default function HomePage() {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{ width: 15, height: 15 }}><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </BtnPrimary>
               <BtnGhost href="/projects" invert>See our work</BtnGhost>
-              <BtnGhost onClick={openModal} invert>Book a call</BtnGhost>
+              <EnquiryButton style={ghostStyle(true)}>Book a call</EnquiryButton>
             </div>
           </div>
           {/* Right */}
@@ -380,6 +299,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Carousel / Outcomes ── */}
+      {FEATURES.caseStudies && (
       <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ background: "var(--wine)", borderRadius: 48 }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ maxWidth: 560, marginBottom: 48 }}>
@@ -389,8 +309,10 @@ export default function HomePage() {
           <OutcomesGrid />
         </div>
       </section>
+      )}
 
       {/* ── Insights ── */}
+      {FEATURES.blog && (
       <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ overflow: "hidden" }}>
         <div style={{ position: "absolute", width: 240, height: 240, left: "8%", bottom: -50, background: "var(--peri)", borderRadius: "50%", opacity: 0.24, zIndex: 0, pointerEvents: "none" }} />
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10" style={{ position: "relative", zIndex: 1 }}>
@@ -413,6 +335,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── CTA ── */}
       <CtaBlock
@@ -421,7 +344,6 @@ export default function HomePage() {
         primary="Onboard a project"
         primaryHref="/onboard"
         ghost="Book a call"
-        ghostFn={openModal}
       />
 
       {/* ── FAQ ── */}
@@ -430,10 +352,7 @@ export default function HomePage() {
       <style>{`
         @keyframes logoLoopLeft  { to { transform: translateX(-50%); } }
         @keyframes logoLoopRight { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-        @media (min-width: 1024px) {
-          .g-stats > div:nth-child(odd) { border-right: 1px solid var(--border) !important; }
-          .g-stats > div:nth-child(-n+2) { border-bottom: none !important; }
-        }
+        .g-stats-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
       `}</style>
     </div>
   );

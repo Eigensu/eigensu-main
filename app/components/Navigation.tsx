@@ -4,13 +4,11 @@ import Link from "next/link";
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { GoArrowUpRight } from "react-icons/go";
-
-type Theme = "dark" | "light";
+import { PRODUCT } from "../lib/site";
 
 type CardNavLink = {
   label: string;
   href: string;
-  ariaLabel: string;
 };
 
 export type CardNavItem = {
@@ -253,7 +251,8 @@ function CardNav({
       <nav
         ref={navRef}
         className={`card-nav ${isOpen ? "open" : ""} relative block overflow-hidden rounded-xl p-0 shadow-lg will-change-[height]`}
-        style={{ backgroundColor: baseColor }}
+        // Collapsed height before hydration; GSAP drives it from then on.
+        style={{ backgroundColor: baseColor, height: COLLAPSED_HEIGHT }}
       >
         <div className="card-nav-top absolute inset-x-0 top-0 z-[2] flex h-[60px] items-center justify-between p-2 pl-[1.1rem]">
           <button
@@ -315,6 +314,8 @@ function CardNav({
         <div
           className="card-nav-content absolute top-[60px] right-0 bottom-0 left-0 z-[1] flex flex-col items-stretch justify-start gap-2 p-2 md:flex-row md:items-end md:gap-3"
           aria-hidden={!isOpen}
+          // Keeps the hidden menu links out of the tab order while collapsed.
+          inert={!isOpen}
         >
           {items.slice(0, 3).map((item, idx) => (
             <div
@@ -336,7 +337,6 @@ function CardNav({
                     href={lnk.href}
                     className="nav-card-link inline-flex cursor-pointer items-center gap-1.5 text-[15px] no-underline transition-opacity duration-300 hover:opacity-75 md:text-base"
                     style={{ fontFamily: "var(--font-body), 'Instrument Sans', sans-serif" }}
-                    aria-label={lnk.ariaLabel}
                     onClick={(event) => {
                       onLinkClick?.(lnk, event);
                       if (isOpenRef.current) closeMenu();
@@ -386,8 +386,8 @@ function buildNavItems(): CardNavItem[] {
       bgColor: cardA,
       textColor: text,
       links: [
-        { label: "Home",     href: "/",         ariaLabel: "Go to home" },
-        { label: "Services", href: "/services", ariaLabel: "View services" },
+        { label: "Home",     href: "/" },
+        { label: "Services", href: "/services" },
       ],
     },
     {
@@ -395,8 +395,8 @@ function buildNavItems(): CardNavItem[] {
       bgColor: cardB,
       textColor: text,
       links: [
-        { label: "Projects", href: "/projects", ariaLabel: "View projects" },
-        { label: "Dispatch", href: "/dispatch", ariaLabel: "View dispatch" },
+        { label: "Projects", href: "/projects" },
+        { label: PRODUCT.name, href: PRODUCT.path },
       ],
     },
     {
@@ -404,21 +404,14 @@ function buildNavItems(): CardNavItem[] {
       bgColor: cardC,
       textColor: text,
       links: [
-        { label: "About",   href: "/about",   ariaLabel: "About Eigensu" },
-        { label: "Contact", href: "/contact", ariaLabel: "Contact us" },
-        { label: "Blog",    href: "/blog",    ariaLabel: "View blog" },
+        { label: "About",   href: "/about" },
+        { label: "Contact", href: "/contact" },
       ],
     },
   ];
 }
 
-export default function Navigation({
-  onContact: _onContact,
-}: {
-  theme?: Theme;
-  onContact?: () => void;
-  setTheme?: (t: Theme) => void;
-}) {
+export default function Navigation() {
   const baseColor       = "var(--nav-bg)";
   const menuColor       = "var(--text)";
   const buttonBgColor   = "var(--accent)";

@@ -51,10 +51,10 @@ const STATS = [
 ];
 
 export default function AboutPage() {
-  const statsReveal   = useReveal(0.08);
-  const valuesReveal  = useReveal(0.07);
-  const timelineReveal = useReveal(0.07);
-  const ctaReveal     = useReveal(0.08);
+  const { ref: statsRevealRef, on: statsRevealOn } = useReveal(0.08);
+  const { ref: valuesRevealRef, on: valuesRevealOn } = useReveal(0.07);
+  const { ref: timelineRevealRef, on: timelineRevealOn } = useReveal(0.07);
+  const { ref: ctaRevealRef, on: ctaRevealOn } = useReveal(0.08);
 
   return (
     <div>
@@ -72,7 +72,7 @@ export default function AboutPage() {
       {/* ── Stats + "Operators first" ── */}
       <section className="relative z-10 py-14 md:py-20 lg:py-24">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={statsReveal.ref} className="grid gap-8 md:gap-12 md:grid-cols-2 md:items-center" style={{ opacity: statsReveal.on ? 1 : 0, transform: statsReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+          <div ref={statsRevealRef} className="grid gap-8 md:gap-12 md:grid-cols-2 md:items-center" style={{ opacity: statsRevealOn ? 1 : 0, transform: statsRevealOn ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
             {/* Stats grid */}
             <div style={{ border: "1px solid var(--border)", borderRadius: 14, background: "linear-gradient(180deg,var(--bg-elev-2),var(--bg-elev))", overflow: "hidden" }}>
               <div className="grid grid-cols-2">
@@ -105,9 +105,9 @@ export default function AboutPage() {
             <Eyebrow>Principles</Eyebrow>
             <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>How we think.</h2>
           </div>
-          <div ref={valuesReveal.ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div ref={valuesRevealRef} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {VALUES.map((v, i) => (
-              <article key={v.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "24px 22px", position: "relative", opacity: valuesReveal.on ? 1 : 0, transform: valuesReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
+              <article key={v.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "24px 22px", position: "relative", opacity: valuesRevealOn ? 1 : 0, transform: valuesRevealOn ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
                 <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: "var(--text-dim)" }}>{v.idx}</span>
                 <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid var(--border-strong)", background: "var(--panel)", marginBottom: 18 }}>{v.icon}</div>
                 <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>{v.title}</h3>
@@ -125,9 +125,9 @@ export default function AboutPage() {
             <Eyebrow>Trajectory</Eyebrow>
             <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>A short history.</h2>
           </div>
-          <div ref={timelineReveal.ref} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
+          <div ref={timelineRevealRef} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
             {TIMELINE.map((t, i) => (
-              <article key={t.year} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "22px 20px", opacity: timelineReveal.on ? 1 : 0, transform: timelineReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
+              <article key={t.year} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "22px 20px", opacity: timelineRevealOn ? 1 : 0, transform: timelineRevealOn ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
                 <Eyebrow muted>{t.year}</Eyebrow>
                 <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginTop: 12, marginBottom: 10, color: "var(--text)" }}>{t.title}</h3>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.65 }}>{t.body}</p>
@@ -140,7 +140,7 @@ export default function AboutPage() {
       {/* ── CTA ── */}
       <section className="relative z-10 py-10 md:py-14">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={ctaReveal.ref} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaReveal.on ? 1 : 0, transform: ctaReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
+          <div ref={ctaRevealRef} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaRevealOn ? 1 : 0, transform: ctaRevealOn ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
             <div style={{ position: "absolute", width: 400, height: 280, background: "var(--accent)", filter: "blur(100px)", opacity: 0.18, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1 }}>
               <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "20ch", margin: "0 auto 28px" }}>Want to know if we&apos;re the right fit?</h2>
