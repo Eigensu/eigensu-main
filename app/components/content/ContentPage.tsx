@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { ThemeHeroSection } from "../ThemeHero";
 import Breadcrumbs, { type Crumb } from "./Breadcrumbs";
@@ -37,7 +38,7 @@ export default function ContentPage({
         <h1 className="content-h1 hero-anim-3">{title}</h1>
         <p className="content-intro hero-anim-4">{intro}</p>
         <p className="content-updated hero-anim-4">
-          {author && <>By {author} · </>}
+          {author && <>By <Link href="/about">{author}</Link> · </>}
           {published && published !== updated && <>Published <time dateTime={published}>{formatDate(published)}</time> · </>}
           Last updated <time dateTime={updated}>{formatDate(updated)}</time>
         </p>

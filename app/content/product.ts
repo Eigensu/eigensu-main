@@ -1,3 +1,5 @@
+import { DISHIGEN_MESSAGE_MARKUP, WHATSAPP_INDIA, formatDate } from "./facts";
+
 /**
  * Dishigen's real features, taken from the product page. Industry pages, guides
  * and comparisons describe the product only in these terms; add a feature here
@@ -26,23 +28,47 @@ export const HOW_IT_WORKS = [
 ] as const;
 
 /**
- * Questions for the product page Q&A. Answers come only from the owner or from
- * content/facts.ts; `answer: null` means TODO(owner) and the question is not shown.
+ * Questions for the product page Q&A, answered first and in plain text.
+ * An answer may come only from the owner's brief ("owner") or from
+ * content/facts.ts ("facts"). `answer: null` means TODO(owner): the question
+ * is not shown until it has a confirmed answer. Checked by tests/content.test.ts.
  */
-export const PRODUCT_QUESTIONS: { q: string; answer: string | null; usesFacts?: boolean }[] = [
-  { q: "Is this the official WhatsApp Business Platform?", answer: null },
-  { q: "Can I keep my number and my WhatsApp Business app?", answer: null },
-  { q: "What does Meta charge per message, and do you add a markup?", answer: null, usesFacts: true },
-  { q: "Can my number get banned, and how do you prevent it?", answer: null },
-  { q: "How long does setup take, and do you help?", answer: null },
-  { q: "Can I cancel any time?", answer: null },
-  { q: "Where is my customers' data stored?", answer: null },
+export type ProductQuestion = { q: string; answer: string | null; source: "owner" | "facts" | null };
+
+const R = WHATSAPP_INDIA;
+
+export const PRODUCT_QUESTIONS: ProductQuestion[] = [
+  // TODO(owner): confirm Dishigen uses Meta's WhatsApp Business Platform (Cloud API) directly or through a partner.
+  { q: "Is this the official WhatsApp Business Platform?", answer: null, source: null },
+  // TODO(owner): number migration and coexistence with the WhatsApp Business app.
+  { q: "Can I keep my number and my WhatsApp Business app?", answer: null, source: null },
+  {
+    q: "What does Meta charge per message, and do you add a markup?",
+    // The Meta half comes from the facts file; shown only once the markup answer is confirmed.
+    answer:
+      DISHIGEN_MESSAGE_MARKUP === null
+        ? null
+        : `Meta charges ${R.marketing.display} for marketing messages and ${R.utility.display} for utility, authentication and service messages to Indian numbers, with the first ${R.freeServicePerNumberPerMonth.display} free (rates as of ${formatDate(R.effectiveFrom)}, excluding GST). ${DISHIGEN_MESSAGE_MARKUP}`,
+    source: DISHIGEN_MESSAGE_MARKUP === null ? null : "facts",
+  },
+  // TODO(owner): quality rating, opt-in practice and what Dishigen does to protect numbers.
+  { q: "Can my number get banned, and how do you prevent it?", answer: null, source: null },
+  // TODO(owner): typical setup time and onboarding help.
+  { q: "How long does setup take, and do you help?", answer: null, source: null },
+  // TODO(owner): contract length and cancellation terms.
+  { q: "Can I cancel any time?", answer: null, source: null },
+  // TODO(owner): hosting region and data storage location.
+  { q: "Where is my customers' data stored?", answer: null, source: null },
   {
     q: "Which industries is it for?",
     answer:
       "Dishigen is built for businesses that depend on repeat visits: restaurants, salons and spas, gyms, clinics and local retail.",
+    source: "owner",
   },
 ];
+
+/** People behind Dishigen, for the product page and guide bylines. TODO(owner): names and roles. */
+export const TEAM: { name: string; role: string }[] = [];
 
 /** TODO(owner): screenshots of the mobile app; store links only once the app is live. */
 export const MOBILE_APP: { live: boolean; appStoreUrl?: string; playStoreUrl?: string; screenshots: { src: string; alt: string }[] } = {

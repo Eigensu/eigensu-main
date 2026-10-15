@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
+import { PRODUCT } from "../lib/site";
 
 const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
 const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
@@ -134,6 +135,16 @@ export default function AboutPage() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Our product ── */}
+      <section id="dishigen" className="relative z-10 py-14 md:py-20" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <Eyebrow>Our product</Eyebrow>
+          <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3vw,2.4rem)", letterSpacing: "-0.02em", color: "var(--text)", margin: "0 0 14px" }}>{PRODUCT.name}</h2>
+          <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.3vw,1.05rem)", lineHeight: 1.7, maxWidth: "60ch", marginBottom: 20 }}>{PRODUCT.description}</p>
+          <Link href={PRODUCT.path} style={{ fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", color: "var(--accent)" }}>See {PRODUCT.name} →</Link>
         </div>
       </section>
 

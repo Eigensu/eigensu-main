@@ -40,7 +40,7 @@ export default async function ComparePage({ params }: PageProps<"/compare/[compe
       crumbs={[{ name: PRODUCT.name, path: PRODUCT.path }, { name: `${c.name} alternative`, path: `/compare/${c.slug}` }]}
       eyebrow={`Compare // ${c.name}`}
       title={`${c.name} alternative: how ${PRODUCT.name} compares`}
-      intro={`If you are looking for a ${c.name} alternative, this page puts the two side by side. ${PRODUCT.name} is a WhatsApp and email marketing platform for businesses built on repeat visits. Every ${c.name} figure below links to a public source with the date it was checked, so you can verify it before deciding.`}
+      intro={`If you are looking for a ${c.name} alternative, this page puts the two side by side. ${PRODUCT.description} Every ${c.name} figure below links to a public source with the date it was checked, so you can verify it before deciding.`}
       updated={UPDATED}
       wide
     >

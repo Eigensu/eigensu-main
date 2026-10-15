@@ -80,6 +80,38 @@ for (const link of links) {
   if (res.status >= 400) fail(link, `internal link returns ${res.status}`);
 }
 
+// One name, one description: identical in metadata, JSON-LD and visible text.
+import { readFileSync } from "node:fs";
+const siteTs = readFileSync(new URL("../app/lib/site.ts", import.meta.url), "utf8");
+const productBlock = siteTs.slice(siteTs.indexOf("export const PRODUCT"));
+const NAME = productBlock.match(/name: "([^"]+)"/)[1];
+const DESCRIPTION = productBlock.match(/description:\s*"([^"]+)"/)[1];
+{
+  const html = await (await fetch(BASE + "/dishigen")).text();
+  const head = html.slice(0, html.indexOf("</head>"));
+  const meta = decode(head.match(/<meta name="description" content="([^"]*)"/)?.[1] || "");
+  const og = decode(head.match(/<meta property="og:description" content="([^"]*)"/)?.[1] || "");
+  if (meta !== DESCRIPTION) fail("/dishigen", `meta description differs: ${meta}`);
+  if (og !== DESCRIPTION) fail("/dishigen", `og:description differs: ${og}`);
+  const app = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1])).find((d) => d["@type"] === "SoftwareApplication");
+  if (!app || app.name !== NAME || app.description !== DESCRIPTION) fail("/dishigen", "SoftwareApplication JSON-LD name/description differ");
+  const text = decode(html.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<!-- -->/g, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " "));
+  if (!text.includes(DESCRIPTION)) fail("/dishigen", "description not in visible text");
+  for (const path of ["/about", "/pricing", "/for/restaurants"]) {
+    const t = decode((await (await fetch(BASE + path)).text()).replace(/<script[\s\S]*?<\/script>/g, "").replace(/<!-- -->/g, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " "));
+    if (!t.includes(DESCRIPTION)) fail(path, "product description not in visible text");
+  }
+  const llms = await (await fetch(BASE + "/llms.txt")).text();
+  if (!llms.includes(DESCRIPTION)) fail("/llms.txt", "description missing");
+}
+
+// Old product names must not appear on any page (redirects live in next.config.ts only).
+for (const url of urls) {
+  const path = url.replace(SITE, "") || "/";
+  const html = await (await fetch(BASE + path)).text();
+  if (/dishpatch|\bdispatch\b/i.test(html.replace(/<script[\s\S]*?<\/script>/g, ""))) fail(path, "old product name found");
+}
+
 console.log(`Checked ${urls.length} sitemap pages, ${REVIEW_PATHS.length} review pages, ${jsonLdBlocks} JSON-LD blocks, ${links.size} internal links.`);
 if (failures.length) { console.log(failures.map((f) => `FAIL ${f}`).join("\n")); process.exit(1); }
 console.log("All SEO checks passed.");

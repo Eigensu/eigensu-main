@@ -5,7 +5,7 @@ import ActionSection from "./sections/ActionSection";
 import CampaignsSection from "./sections/CampaignsSection";
 import CampaignsChartSection from "./sections/CampaignsChartSection";
 import CtaSection from "./sections/CtaSection";
-import { HowItWorks, ProductQuestions, WhoItsFor } from "./sections/GuideSections";
+import { AboutProduct, HowItWorks, ProductQuestions, WhoItsFor } from "./sections/GuideSections";
 import JsonLd from "../components/content/JsonLd";
 import { PRODUCT, absoluteUrl } from "../lib/site";
 import { pageMetadata } from "../lib/metadata";
@@ -42,6 +42,7 @@ export default function DishigenPage() {
       <CampaignsSection />
       <CampaignsChartSection />
       <ProductQuestions />
+      <AboutProduct />
       {/* TODO(owner): mobile app section once screenshots exist (content/product.ts → MOBILE_APP). */}
       <CtaSection />
     </div>
