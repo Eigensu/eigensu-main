@@ -6,91 +6,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useModal } from "./components/PageShell";
 import { ThemeHeroSection } from "./components/ThemeHero";
+import { Counter, Reveal, ScrollProgress, ScrollWords, cx, useMagnetic } from "./components/motion";
 import s from "./home.module.css";
-
-const cx = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(" ");
-
-/* ── Hooks ───────────────────────────────────────────────────────────────── */
-
-function useReveal<T extends HTMLElement>(threshold = 0.12) {
-  const ref = useRef<T>(null);
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setOn(true); obs.disconnect(); } }, { threshold });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, on };
-}
-
-function Reveal({ children, delay = 0, className, as: Tag = "div" }: { children: React.ReactNode; delay?: number; className?: string; as?: "div" | "article" | "section" }) {
-  const { ref, on } = useReveal<HTMLDivElement>();
-  return (
-    <Tag ref={ref as never} className={cx(s.reveal, on && s.on, className)} style={{ ["--d" as string]: `${delay}s` }}>
-      {children}
-    </Tag>
-  );
-}
-
-/** Pulls its element toward the pointer; no-op on touch / reduced motion. */
-function useMagnetic<T extends HTMLElement>(strength = 0.28) {
-  const ref = useRef<T>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || !window.matchMedia("(hover: hover) and (prefers-reduced-motion: no-preference)").matches) return;
-    const move = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect();
-      gsap.to(el, { x: (e.clientX - (r.left + r.width / 2)) * strength, y: (e.clientY - (r.top + r.height / 2)) * strength, duration: 0.4, ease: "power3.out" });
-    };
-    const leave = () => gsap.to(el, { x: 0, y: 0, duration: 0.8, ease: "elastic.out(1,0.4)" });
-    el.addEventListener("pointermove", move);
-    el.addEventListener("pointerleave", leave);
-    return () => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); };
-  }, [strength]);
-  return ref;
-}
-
-function Counter({ to, pad = 0 }: { to: number; pad?: number }) {
-  const { ref, on } = useReveal<HTMLSpanElement>(0.4);
-  const [v, setV] = useState(0);
-  useEffect(() => {
-    if (!on) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dur = reduced ? 0 : 1600;
-    const t0 = performance.now();
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = dur ? Math.min(1, (t - t0) / dur) : 1;
-      setV(Math.round(to * (1 - Math.pow(1 - p, 4))));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [on, to]);
-  return <span ref={ref}>{String(v).padStart(pad, "0")}</span>;
-}
-
-/* ── Scroll progress ─────────────────────────────────────────────────────── */
-
-function ScrollProgress() {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      if (ref.current) ref.current.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
-    };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); cancelAnimationFrame(raf); };
-  }, []);
-  return <div ref={ref} className={s.progress} aria-hidden />;
-}
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 
@@ -173,7 +90,7 @@ function OpsConsole() {
 
 function Hero({ onBook }: { onBook: () => void }) {
   return (
-    <ThemeHeroSection fullScreen contentClassName="pb-12" background="var(--wine)" className="rounded-b-[48px] z-[2]">
+    <ThemeHeroSection fullScreen contentClassName="pb-12" background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!">
       <div className={s.heroGrid}>
         <div>
           <div className={cx(s.metaRow, s.fade)} style={{ animationDelay: ".05s" }}>
@@ -264,35 +181,11 @@ const STATEMENT: { w: string; em?: boolean }[] = [
 ];
 
 function Statement() {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const [lit, setLit] = useState(0);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const r = el.getBoundingClientRect();
-      const p = reduced ? 1 : Math.min(1, Math.max(0, (window.innerHeight * 0.85 - r.top) / (r.height + window.innerHeight * 0.35)));
-      setLit(Math.round(p * STATEMENT.length));
-    };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
-  }, []);
   return (
     <section className={cx(s.sec, s.statement)}>
       <div className={s.wrap}>
         <div className={s.eyebrow}>The premise</div>
-        <p ref={ref} className={s.statementText}>
-          {STATEMENT.map((t, i) => (
-            <span key={i}>
-              <span className={cx(s.w, i < lit && s.lit, t.em && s.em)}>{t.w}</span>{" "}
-            </span>
-          ))}
-        </p>
+        <ScrollWords parts={STATEMENT} />
       </div>
     </section>
   );

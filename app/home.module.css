@@ -24,7 +24,7 @@
   font-family: var(--font-head), sans-serif; font-weight: 800; color: var(--cream);
   font-size: clamp(3rem, 10vw, 9.4rem); line-height: 0.88; letter-spacing: -0.055em; margin: 0;
 }
-.line { display: block; white-space: nowrap; overflow: hidden; padding-bottom: 0.16em; margin-bottom: -0.16em; }
+.line { display: block; overflow: hidden; padding-bottom: 0.16em; margin-bottom: -0.16em; }
 .line > span { display: block; transform: translateY(112%); animation: lineUp 1.1s cubic-bezier(.16,1,.3,1) forwards; }
 .line:nth-child(1) > span { animation-delay: .15s; }
 .line:nth-child(2) > span { animation-delay: .27s; }
@@ -198,3 +198,43 @@
   .reveal { opacity: 1; transform: none; transition: none; }
   .logoTrack { animation: none !important; }
 }
+
+/* ── Mobile / touch optimisation ── */
+
+@media (max-width: 899px) {
+  .scrollHint { display: none; }
+  .heroRow { gap: 2rem; }
+  .metaRow { font-size: .62rem; letter-spacing: .1em; }
+  .clients { padding: 64px 0 56px; }
+  .clientsLabel { font-size: .62rem; margin-bottom: 24px; padding-inline: 1.25rem; }
+  .logoTrack { gap: 40px; }
+  .statement { padding: 96px 0 64px; border-radius: 32px 32px 0 0; margin-top: -32px; }
+  .reel { border-radius: 32px; }
+  .reelPin { min-height: 0; padding: 64px 0 48px; }
+  .card { min-height: 0; gap: 28px; border-radius: 26px; }
+  .cta { border-radius: 32px 32px 0 0; margin-top: -32px; }
+  .svc { padding: 24px 0; }
+  .stats { padding-bottom: 72px; }
+  .btn { padding: 14px 22px; }
+  .faq { padding: 64px 0; }
+}
+
+@media (max-width: 480px) {
+  .ctaRow { gap: 24px; }
+  .orb { width: 120px; height: 120px; font-size: .64rem; }
+  .console { border-radius: 22px; }
+}
+
+/* Hover effects only where hover exists — avoids sticky "stuck" states after a tap */
+@media (hover: none) {
+  .btn::before { display: none; }
+  .card:hover { background: rgba(251,243,228,.04); border-color: rgba(251,243,228,.16); transform: none; }
+  .svc:hover::before { transform: scaleY(0); }
+  .svc:hover { color: var(--wine); }
+  .svc:hover > *:not(.svcArrow) { transform: none; }
+  .post:hover { padding-left: 0; }
+  .post:hover .postTitle { color: inherit; }
+}
+
+/* Keep display lines unbroken where there's room; let them wrap on phones rather than clip */
+@media (min-width: 640px) { .line { white-space: nowrap; } }
