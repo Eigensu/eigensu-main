@@ -42,46 +42,55 @@ function RotatingWord() {
   );
 }
 
-function OpsConsole() {
-  const ref = useRef<HTMLDivElement>(null);
+const JOBS = [
+  { label: "invoice_sync", tag: "active", tc: "#72D69A", tb: "rgba(101,197,138,0.13)" },
+  { label: "inventory_recon", tag: "running", tc: "#FF8064", tb: "rgba(240,73,31,0.15)" },
+  { label: "approval_routing", tag: "queued", tc: "var(--butter)", tb: "rgba(255,197,61,0.14)" },
+];
+const BARS = [42, 61, 38, 78, 55, 90, 47, 68, 83, 59, 72, 95];
+
+const Prompt = ({ children }: { children: React.ReactNode }) => (
+  <div className={s.prompt}><b>eigensu ▸</b> {children}</div>
+);
+
+/** One large terminal: intro copy + the three CTAs on the left, live ops feed on the right. */
+function HeroTerminal({ onBook }: { onBook: () => void }) {
   const [tick, setTick] = useState(true);
   useEffect(() => { const id = setInterval(() => setTick(t => !t), 850); return () => clearInterval(id); }, []);
-  const BARS = [42, 61, 38, 78, 55, 90, 47, 68, 83, 59, 72, 95];
-
-  const onMove = (e: React.PointerEvent) => {
-    const el = ref.current;
-    if (!el || e.pointerType !== "mouse") return;
-    const r = el.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    el.style.transform = `perspective(1000px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg)`;
-  };
-  const onLeave = () => { if (ref.current) ref.current.style.transform = ""; };
-
   return (
-    <div ref={ref} className={s.console} onPointerMove={onMove} onPointerLeave={onLeave} style={{ background: "var(--cream)", borderRadius: 28, padding: 14, boxShadow: "24px 30px 60px rgba(0,0,0,0.35)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 10px 15px" }}>
-        {["#FF7661", "var(--butter)", "#65C58A"].map(c => <i key={c} style={{ width: 9, height: 9, borderRadius: "50%", display: "block", background: c }} />)}
-        <span style={{ marginLeft: "auto", fontFamily: "var(--font-mono), monospace", fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(59,10,34,0.55)" }}>ops_console — live</span>
+    <div className={s.term}>
+      <div className={s.termBar}>
+        <span className={s.termDots}>{["#FF7661", "var(--butter)", "#65C58A"].map(c => <i key={c} style={{ background: c }} />)}</span>
+        <span className={s.termTitle}>ops_console — live</span>
       </div>
-      <div style={{ background: "#260616", borderRadius: 18, padding: 18 }}>
-        {[
-          { label: "invoice_sync", tag: "active", tc: "#72D69A", tb: "rgba(101,197,138,0.13)" },
-          { label: "inventory_recon", tag: "running", tc: "#FF8064", tb: "rgba(240,73,31,0.15)" },
-          { label: "approval_routing", tag: "queued", tc: "var(--butter)", tb: "rgba(255,197,61,0.14)" },
-        ].map(row => (
-          <div key={row.label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "15px 14px", border: "1px solid rgba(251,243,228,0.1)", borderRadius: 10, marginBottom: 9, background: "rgba(251,243,228,0.045)" }}>
-            <span style={{ fontFamily: "var(--font-mono), monospace", fontSize: "0.75rem", color: "rgba(251,243,228,0.72)" }}>{row.label}</span>
-            <span style={{ fontFamily: "var(--font-mono), monospace", fontSize: "0.62rem", letterSpacing: "0.05em", padding: "5px 8px", borderRadius: 999, textTransform: "uppercase", color: row.tc, background: row.tb }}>{row.tag}</span>
+      <div className={s.termBody}>
+        <div className={s.termMain}>
+          <Prompt>cat about.txt</Prompt>
+          <p className={s.termLede}>
+            Eigensu builds tailored software that streamlines internal management and optimises operations — so your teams stop fighting tools and start compounding output.
+          </p>
+          <Prompt>run --next</Prompt>
+          <div className={s.termActions}>
+            <Btn href="/onboard">Start a project <Arrow /></Btn>
+            <Btn href="/projects" variant="line">See our work</Btn>
+            <Btn onClick={onBook} variant="line">Book a call</Btn>
           </div>
-        ))}
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 95, padding: "15px 12px", border: "1px solid rgba(251,243,228,0.1)", borderRadius: 10, marginTop: 14 }}>
-          {BARS.map((h, i) => <div key={i} style={{ flex: 1, background: i % 4 === 2 ? "var(--peri)" : "var(--ember)", opacity: 0.9, borderRadius: "3px 3px 0 0", height: `${h}%` }} />)}
+          <div className={s.prompt}>
+            <b>eigensu ▸</b>
+            <span className={s.cursor} style={{ opacity: tick ? 0.9 : 0 }} />
+          </div>
         </div>
-        <div style={{ marginTop: 10, background: "#12030a", borderRadius: 9, padding: "12px 13px", fontFamily: "var(--font-mono), monospace", fontSize: "0.68rem", color: "rgba(251,243,228,0.62)" }}>
-          <b style={{ color: "#72D69A" }}>eigensu ▸</b>
-          {" deploy --pipeline ops.core"}
-          <span style={{ display: "inline-block", width: 6, height: 12, background: "var(--ember)", marginLeft: 4, verticalAlign: "-2px", opacity: tick ? 0.9 : 0 }} />
+        <div className={s.termSide} aria-hidden>
+          <div className={s.termLabel}>$ deploy --pipeline ops.core</div>
+          {JOBS.map(row => (
+            <div key={row.label} className={s.job}>
+              <span>{row.label}</span>
+              <span className={s.jobTag} style={{ color: row.tc, background: row.tb }}>{row.tag}</span>
+            </div>
+          ))}
+          <div className={s.bars}>
+            {BARS.map((h, i) => <div key={i} style={{ background: i % 4 === 2 ? "var(--peri)" : "var(--ember)", height: `${h}%` }} />)}
+          </div>
         </div>
       </div>
     </div>
@@ -90,7 +99,7 @@ function OpsConsole() {
 
 function Hero({ onBook }: { onBook: () => void }) {
   return (
-    <ThemeHeroSection plain fullScreen contentClassName="pb-12" background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!">
+    <ThemeHeroSection plain fullScreen contentClassName="pb-10 pt-[calc(var(--page-offset-top)+0.75rem)]! md:pt-[calc(var(--page-offset-top)+2.5rem)]! md:pb-12" background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!">
       <div className={s.heroGrid}>
         <div>
           <div className={cx(s.metaRow, s.fade)} style={{ animationDelay: ".05s" }}>
@@ -98,27 +107,14 @@ function Hero({ onBook }: { onBook: () => void }) {
             <span>Est. <b>2022</b></span>
             <span>Internal ops studio</span>
           </div>
-          <h1 className={s.mega}>
+          <h1 className={cx(s.mega, s.megaHome)}>
             <span className={s.line}><span>Internal</span></span>
             <span className={s.line}><span>systems that</span></span>
             <span className={s.line}><span><RotatingWord /></span></span>
           </h1>
         </div>
-        <div className={s.heroRow}>
-          <div className={s.fade} style={{ animationDelay: ".8s" }}>
-            <p className={s.lede}>
-              Eigensu builds tailored software that streamlines internal management and optimises operations — so your teams stop fighting tools and start compounding output.
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 28 }}>
-              <Btn href="/onboard">Start a project <Arrow /></Btn>
-              <Btn href="/projects" variant="line">See our work</Btn>
-              <Btn onClick={onBook} variant="line">Book a call</Btn>
-            </div>
-            <span className={s.scrollHint}><i />Scroll</span>
-          </div>
-          <div className={s.fade} style={{ animationDelay: "1s" }}>
-            <OpsConsole />
-          </div>
+        <div className={s.fade} style={{ animationDelay: ".9s" }}>
+          <HeroTerminal onBook={onBook} />
         </div>
       </div>
     </ThemeHeroSection>
@@ -373,7 +369,11 @@ function Cta({ onBook }: { onBook: () => void }) {
           <Link ref={orb} href="/onboard" className={s.orb}>Onboard<br />a project</Link>
           <div>
             <p className={s.ctaSub}>We&rsquo;ll map it, scope it, and show you what automating it looks like — usually within a week.</p>
-            <div style={{ marginTop: 22 }}><Btn onClick={onBook} variant="dark">Book a call <Arrow /></Btn></div>
+            <div className={s.ctaDesk} style={{ marginTop: 22 }}><Btn onClick={onBook} variant="dark">Book a call <Arrow /></Btn></div>
+          </div>
+          <div className={s.ctaMobile}>
+            <Btn href="/onboard" variant="dark">Onboard a project <Arrow /></Btn>
+            <Btn onClick={onBook} variant="line">Book a call</Btn>
           </div>
         </div>
       </div>

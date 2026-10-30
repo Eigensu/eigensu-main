@@ -89,7 +89,7 @@ export default function AboutPage() {
       <ScrollProgress />
 
       {/* ── Hero ── */}
-      <ThemeHeroSection plain background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!" contentClassName="justify-end max-md:pb-14">
+      <ThemeHeroSection plain background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!" contentClassName="justify-end pb-10 pt-[calc(var(--page-offset-top)+0.75rem)]! md:pt-[calc(var(--page-offset-top)+2.5rem)]! md:pb-16">
         <div className={cx(s.metaRow, s.fade)} style={{ animationDelay: ".05s" }}>
           <span>Est. <b>2021</b></span>
           <span>Mumbai, IN</span>

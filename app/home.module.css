@@ -8,8 +8,6 @@
 
 /* ── Hero ── */
 .heroGrid { display: grid; gap: clamp(2rem, 4vw, 3.5rem); position: relative; z-index: 1; width: 100%; }
-.heroRow { display: grid; gap: 2.5rem; }
-@media (min-width: 1000px) { .heroRow { grid-template-columns: 1fr 0.8fr; align-items: end; gap: 4rem; } }
 
 .metaRow {
   display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; margin-bottom: clamp(1.25rem, 3vw, 2.25rem);
@@ -45,13 +43,6 @@
 
 .lede { color: rgba(251,243,228,.78); font-size: clamp(1rem, 1.35vw, 1.18rem); line-height: 1.65; max-width: 46ch; }
 
-.scrollHint {
-  display: inline-flex; align-items: center; gap: 12px; margin-top: clamp(2rem, 5vw, 3.5rem);
-  font-family: var(--font-mono), monospace; font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(251,243,228,.5);
-}
-.scrollHint i { display: block; width: 1px; height: 38px; background: linear-gradient(var(--butter), transparent); animation: drip 2s ease-in-out infinite; transform-origin: top; }
-@keyframes drip { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
-
 /* ── Buttons ── */
 .btn {
   position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 999px; overflow: hidden;
@@ -72,8 +63,6 @@
 .btnDark::before { background: var(--cream); }
 .btnDark:hover, .btnDark:focus-visible { color: var(--wine); }
 
-/* ── Console ── */
-.console { transform-style: preserve-3d; transition: transform .25s ease-out; will-change: transform; }
 
 /* ── Clients ── */
 .clients { position: relative; z-index: 1; margin-top: -48px; padding: 96px 0 88px; background: var(--ember); overflow: hidden; }
@@ -202,9 +191,7 @@
 /* ── Mobile / touch optimisation ── */
 
 @media (max-width: 899px) {
-  .scrollHint { display: none; }
-  .heroRow { gap: 2rem; }
-  .metaRow { font-size: .62rem; letter-spacing: .1em; }
+    .metaRow { font-size: .62rem; letter-spacing: .1em; }
   .clients { padding: 64px 0 56px; }
   .clientsLabel { font-size: .62rem; margin-bottom: 24px; padding-inline: 1.25rem; }
   .logoTrack { gap: 40px; }
@@ -222,7 +209,6 @@
 @media (max-width: 480px) {
   .ctaRow { gap: 24px; }
   .orb { width: 120px; height: 120px; font-size: .64rem; }
-  .console { border-radius: 22px; }
 }
 
 /* Hover effects only where hover exists — avoids sticky "stuck" states after a tap */
@@ -238,3 +224,58 @@
 
 /* Keep display lines unbroken where there's room; let them wrap on phones rather than clip */
 @media (min-width: 640px) { .line { white-space: nowrap; } }
+
+/* ── Hero terminal ── */
+.term { background: var(--cream); border-radius: clamp(22px, 2.6vw, 32px); padding: clamp(8px, 1.1vw, 14px); box-shadow: 0 30px 70px rgba(0, 0, 0, .38); width: 100%; }
+.termBar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: clamp(8px, 1vw, 12px) clamp(8px, 1.2vw, 14px) clamp(10px, 1.2vw, 14px); }
+.termDots { display: flex; gap: 8px; }
+.termDots i { display: block; width: 10px; height: 10px; border-radius: 50%; }
+.termTitle { font-family: var(--font-mono), monospace; font-size: .7rem; letter-spacing: .08em; color: rgba(59, 10, 34, .55); }
+.termBody { display: grid; gap: 0; background: #260616; border-radius: clamp(14px, 1.8vw, 22px); overflow: hidden; }
+@media (min-width: 1000px) { .termBody { grid-template-columns: 1.15fr .85fr; min-height: clamp(380px, 38vw, 480px); } }
+.termMain { display: flex; flex-direction: column; gap: 14px; padding: clamp(18px, 2.8vw, 40px); min-width: 0; }
+.prompt { font-family: var(--font-mono), monospace; font-size: clamp(.72rem, 1vw, .88rem); color: rgba(251, 243, 228, .62); display: flex; align-items: center; gap: .5em; flex-wrap: wrap; }
+.prompt b { color: #72D69A; font-weight: 700; }
+.termLede { color: rgba(251, 243, 228, .86); font-size: clamp(.95rem, 1.45vw, 1.28rem); line-height: 1.6; max-width: 46ch; margin: 0 0 clamp(6px, 1.4vw, 18px); }
+.termActions { display: flex; flex-wrap: wrap; gap: 12px; margin: 2px 0 clamp(6px, 1.4vw, 18px); }
+.cursor { display: inline-block; width: 8px; height: 15px; background: var(--ember); transition: opacity .1s; }
+.termSide { display: flex; flex-direction: column; gap: 9px; padding: clamp(14px, 2.4vw, 32px); border-top: 1px solid rgba(251, 243, 228, .1); background: rgba(0, 0, 0, .16); min-width: 0; }
+@media (min-width: 1000px) { .termSide { border-top: 0; border-left: 1px solid rgba(251, 243, 228, .1); justify-content: center; } }
+.termLabel { font-family: var(--font-mono), monospace; font-size: clamp(.62rem, .9vw, .76rem); color: rgba(251, 243, 228, .5); margin-bottom: 4px; }
+.job { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: clamp(11px, 1.4vw, 17px) 14px; border: 1px solid rgba(251, 243, 228, .1); border-radius: 10px; background: rgba(251, 243, 228, .045); font-family: var(--font-mono), monospace; font-size: clamp(.68rem, .95vw, .82rem); color: rgba(251, 243, 228, .75); }
+.jobTag { font-size: .6rem; letter-spacing: .05em; padding: 5px 9px; border-radius: 999px; text-transform: uppercase; }
+.bars { display: flex; align-items: flex-end; gap: 5px; height: clamp(70px, 9vw, 130px); padding: 14px 12px 0; border: 1px solid rgba(251, 243, 228, .1); border-radius: 10px; margin-top: 4px; overflow: hidden; }
+.bars div { flex: 1; opacity: .92; border-radius: 3px 3px 0 0; }
+
+@media (max-width: 640px) {
+  .termActions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .termActions > * { justify-content: center; padding-inline: 12px; }
+  .termActions > *:first-child { grid-column: 1 / -1; }
+  .bars { display: none; }
+  .termTitle { font-size: .62rem; }
+  .job { padding: 10px 12px; }
+}
+
+/* ── Mobile redesign (phones) ── */
+.ctaMobile { display: none; }
+@media (max-width: 640px) {
+  .metaRow span:nth-child(3) { display: none; }
+  .metaRow { margin-bottom: 1rem; }
+  .mega { font-size: clamp(2.7rem, 13.5vw, 4rem); line-height: .9; }
+  .heroGrid { gap: 1.5rem; }
+  .cta { padding: 64px 0 56px; }
+  .ctaBig { font-size: clamp(2.6rem, 14vw, 4rem); }
+  .orb { display: none; }
+  .ctaRow { margin-top: 28px; gap: 20px; }
+  .ctaSub { font-size: .98rem; }
+  .ctaMobile { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+  .ctaMobile > * { justify-content: center; }
+  .ctaDesk { display: none; }
+  .faq, .stats { padding-top: 56px; }
+}
+
+/* Home headline: keep each line (incl. the rotating word) on one row on phones so the layout doesn't jump */
+@media (max-width: 640px) {
+  .megaHome { font-size: 11.6vw; }
+  .megaHome .line { white-space: nowrap; }
+}
