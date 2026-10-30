@@ -89,9 +89,9 @@ export default function AboutPage() {
       <ScrollProgress />
 
       {/* ── Hero ── */}
-      <ThemeHeroSection background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!" contentClassName="justify-end max-md:pb-14">
+      <ThemeHeroSection plain background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!" contentClassName="justify-end max-md:pb-14">
         <div className={cx(s.metaRow, s.fade)} style={{ animationDelay: ".05s" }}>
-          <span><i className={s.dot} />Est. <b>2021</b></span>
+          <span>Est. <b>2021</b></span>
           <span>Mumbai, IN</span>
           <span>Engineering studio</span>
         </div>

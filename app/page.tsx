@@ -90,11 +90,11 @@ function OpsConsole() {
 
 function Hero({ onBook }: { onBook: () => void }) {
   return (
-    <ThemeHeroSection fullScreen contentClassName="pb-12" background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!">
+    <ThemeHeroSection plain fullScreen contentClassName="pb-12" background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!">
       <div className={s.heroGrid}>
         <div>
           <div className={cx(s.metaRow, s.fade)} style={{ animationDelay: ".05s" }}>
-            <span><i className={s.dot} />Systems online</span>
+            <span>Systems online</span>
             <span>Est. <b>2022</b></span>
             <span>Internal ops studio</span>
           </div>
