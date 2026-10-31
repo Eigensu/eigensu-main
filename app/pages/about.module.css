@@ -1,0 +1,46 @@
+/* About-only styles; shared primitives live in ../home.module.css */
+
+.heroMega { font-size: clamp(2.6rem, 8.6vw, 8rem); }
+
+/* ── Principles ── */
+.principles { margin-top: clamp(36px, 6vw, 72px); border-top: 1px solid rgba(251, 243, 228, .22); }
+.principle {
+  display: grid; gap: 10px 28px; padding: clamp(26px, 3.4vw, 44px) 0; border-bottom: 1px solid rgba(251, 243, 228, .22);
+  grid-template-columns: auto 1fr; align-items: baseline;
+}
+@media (min-width: 900px) { .principle { grid-template-columns: 70px 1.1fr 1fr; } }
+.pIdx { font-family: var(--font-mono), monospace; font-size: .75rem; color: var(--butter); }
+.pTitle { font-family: var(--font-head), sans-serif; font-weight: 800; font-size: clamp(1.6rem, 3.6vw, 3.2rem); letter-spacing: -.045em; line-height: 1; }
+.pBody { grid-column: 1 / -1; color: rgba(251, 243, 228, .72); line-height: 1.65; max-width: 44ch; }
+@media (min-width: 900px) { .pBody { grid-column: auto; } }
+
+/* ── Timeline ── */
+.timeline { position: relative; padding-left: clamp(28px, 6vw, 0px); }
+.rail { position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
+.rail i { display: block; width: 100%; height: 100%; background: var(--ember); transform-origin: 50% 0; transform: scaleY(0); }
+.step { position: relative; display: grid; gap: 6px 40px; padding: 0 0 clamp(36px, 6vw, 72px) 0; }
+.step:last-child { padding-bottom: 0; }
+@media (min-width: 900px) { .timeline { padding-left: 56px; } .step { grid-template-columns: 300px 1fr; align-items: start; } }
+.node { position: absolute; left: calc(-1 * clamp(28px, 6vw, 56px) + 0px); top: .55em; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--ember); transform: translateX(-3px); }
+@media (min-width: 900px) { .node { left: -56px; top: 1.1rem; } }
+.year { font-family: var(--font-head), sans-serif; font-weight: 800; font-size: clamp(2.8rem, 9vw, 7rem); letter-spacing: -.06em; line-height: .9; color: var(--wine); }
+.stepTitle { font-family: var(--font-head), sans-serif; font-weight: 700; font-size: clamp(1.3rem, 2.4vw, 2rem); letter-spacing: -.035em; color: var(--wine); margin-bottom: 8px; }
+.stepBody { color: var(--text-muted); line-height: 1.65; max-width: 44ch; }
+@media (min-width: 900px) { .stepTitle { margin-top: 1.1rem; } }
+
+/* Section shells (were inline styles) */
+.principlesSec { background: var(--wine); color: var(--cream); border-radius: 48px; padding: clamp(70px, 9vw, 130px) 0; z-index: 3; }
+.timelineSec { background: var(--bg); margin-top: -48px; padding: clamp(110px, 14vw, 190px) 0 clamp(70px, 9vw, 130px); }
+
+@media (max-width: 640px) {
+  .heroMega { font-size: clamp(2.5rem, 12vw, 3.2rem); }
+  .principlesSec { border-radius: 32px; padding: 56px 0; }
+  .principles { margin-top: 28px; }
+  .principle { gap: 6px 14px; padding: 22px 0; }
+  .pTitle { font-size: 1.5rem; }
+  .pBody { font-size: .98rem; }
+  .timelineSec { margin-top: -32px; padding: 92px 0 64px; }
+  .step { padding-bottom: 36px; gap: 2px; }
+  .year { font-size: 2.6rem; }
+  .stepTitle { font-size: 1.25rem; margin: 6px 0; }
+}
