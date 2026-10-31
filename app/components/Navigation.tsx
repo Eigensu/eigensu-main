@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { GoArrowUpRight } from "react-icons/go";
+import Logo from "./Logo";
 
 type Theme = "dark" | "light";
 
@@ -357,19 +358,8 @@ function CardNav({
 
 function EigensuLogo() {
   return (
-    <Link
-      href="/"
-      className="flex items-center gap-2 no-underline"
-      style={{
-        color: "var(--text)",
-        fontFamily: "var(--font-logo), 'Bricolage Grotesque', sans-serif",
-        fontWeight: 800,
-        fontSize: "1.1rem",
-        letterSpacing: "1.5px",
-        textTransform: "uppercase",
-      }}
-    >
-      EIGENSU
+    <Link href="/" aria-label="Eigensu home" className="flex items-center no-underline" style={{ color: "#1C1917" }}>
+      <Logo height={26} />
     </Link>
   );
 }
