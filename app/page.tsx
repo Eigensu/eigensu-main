@@ -197,7 +197,7 @@ const SERVICES = [
 
 function Services() {
   return (
-    <section className={cx(s.sec)} style={{ background: "var(--bg)", paddingBottom: "clamp(60px,8vw,110px)" }}>
+    <section className={cx(s.sec, s.services)}>
       <div className={s.wrap}>
         <Reveal>
           <div className={s.eyebrow}>What we do</div>
@@ -225,7 +225,7 @@ function Services() {
 const STATS = [
   { n: 12, unit: "+", lbl: "Projects delivered", pad: 0 },
   { n: 100, unit: "%", lbl: "Client retention", pad: 0 },
-  { n: 3, unit: "×", lbl: "Avg. process speed-up", pad: 0 },
+  { n: 3, unit: "×", lbl: "Faster processes", pad: 0 },
   { n: 4, unit: "yr", lbl: "Track record", pad: 2 },
 ];
 
@@ -264,6 +264,16 @@ function Reel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLElement>(null);
   const [pinned, setPinned] = useState(false);
+  const [active, setActive] = useState(0);
+
+  const onTrackScroll = () => {
+    const track = trackRef.current;
+    if (!track || pinned) return;
+    const card = track.firstElementChild as HTMLElement | null;
+    if (!card) return;
+    const step = card.offsetWidth + parseFloat(getComputedStyle(track).columnGap || "0");
+    setActive(Math.min(SLIDES.length - 1, Math.round(track.scrollLeft / step)));
+  };
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -296,10 +306,10 @@ function Reel() {
               <div className={s.eyebrow} style={{ color: "var(--butter)" }}>Proof</div>
               <h2 className={s.h2} style={{ color: "var(--cream)" }}>Selected<br />outcomes.</h2>
             </Reveal>
-            <span className={s.reelCount}>05 PROJECTS — {pinned ? "KEEP SCROLLING →" : "SWIPE →"}</span>
+            <span className={s.reelCount}>05 projects{pinned ? " — keep scrolling →" : ""}</span>
           </div>
         </div>
-        <div ref={trackRef} className={s.track}>
+        <div ref={trackRef} className={s.track} onScroll={onTrackScroll}>
           {SLIDES.map((c, i) => (
             <article key={c.client} className={s.card}>
               <div className={s.cardTop}><span>{c.tag}</span><span>0{i + 1}/05</span></div>
@@ -316,6 +326,11 @@ function Reel() {
           ))}
         </div>
         <div className={s.reelBar}><i ref={barRef as never} /></div>
+        {!pinned && (
+          <div className={s.reelDots} aria-hidden>
+            {SLIDES.map((c, i) => <i key={c.client} className={cx(i === active && s.dotOn)} />)}
+          </div>
+        )}
       </div>
     </section>
   );
@@ -331,7 +346,7 @@ const INSIGHTS = [
 
 function Insights() {
   return (
-    <section className={s.sec} style={{ background: "var(--bg)", padding: "clamp(70px,9vw,130px) 0", marginTop: -48, paddingTop: "clamp(120px,14vw,190px)" }}>
+    <section className={cx(s.sec, s.insights)}>
       <div className={s.wrap}>
         <Reveal>
           <div className={s.eyebrow}>Writing</div>
@@ -344,7 +359,7 @@ function Insights() {
                 <span className={s.postTag}>{p.tag}</span>
                 <h3 className={s.postTitle}>{p.title}</h3>
                 <p className={s.postBody}>{p.body}</p>
-                <span style={{ color: "var(--ember)" }}><Arrow /></span>
+                <span className={s.postArrow}><Arrow /></span>
               </Link>
             </Reveal>
           ))}

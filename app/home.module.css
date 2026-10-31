@@ -188,41 +188,16 @@
   .logoTrack { animation: none !important; }
 }
 
-/* ── Mobile / touch optimisation ── */
+/* ── Section shells (were inline styles; classes so phones can override) ── */
+.services { background: var(--bg); padding-bottom: clamp(60px, 8vw, 110px); }
+.insights { background: var(--bg); margin-top: -48px; padding: clamp(120px, 14vw, 190px) 0 clamp(70px, 9vw, 130px); }
+.postArrow { color: var(--ember); }
+.reelDots { display: flex; justify-content: center; gap: 8px; }
+.reelDots i { width: 6px; height: 6px; border-radius: 999px; background: rgba(251,243,228,.28); transition: width .3s, background .3s; }
+.reelDots i.dotOn { width: 22px; background: var(--butter); }
+.ctaMobile { display: none; }
 
-@media (max-width: 899px) {
-    .metaRow { font-size: .62rem; letter-spacing: .1em; }
-  .clients { padding: 64px 0 56px; }
-  .clientsLabel { font-size: .62rem; margin-bottom: 24px; padding-inline: 1.25rem; }
-  .logoTrack { gap: 40px; }
-  .statement { padding: 96px 0 64px; border-radius: 32px 32px 0 0; margin-top: -32px; }
-  .reel { border-radius: 32px; }
-  .reelPin { min-height: 0; padding: 64px 0 48px; }
-  .card { min-height: 0; gap: 28px; border-radius: 26px; }
-  .cta { border-radius: 32px 32px 0 0; margin-top: -32px; }
-  .svc { padding: 24px 0; }
-  .stats { padding-bottom: 72px; }
-  .btn { padding: 14px 22px; }
-  .faq { padding: 64px 0; }
-}
-
-@media (max-width: 480px) {
-  .ctaRow { gap: 24px; }
-  .orb { width: 120px; height: 120px; font-size: .64rem; }
-}
-
-/* Hover effects only where hover exists — avoids sticky "stuck" states after a tap */
-@media (hover: none) {
-  .btn::before { display: none; }
-  .card:hover { background: rgba(251,243,228,.04); border-color: rgba(251,243,228,.16); transform: none; }
-  .svc:hover::before { transform: scaleY(0); }
-  .svc:hover { color: var(--wine); }
-  .svc:hover > *:not(.svcArrow) { transform: none; }
-  .post:hover { padding-left: 0; }
-  .post:hover .postTitle { color: inherit; }
-}
-
-/* Keep display lines unbroken where there's room; let them wrap on phones rather than clip */
+/* Keep display lines unbroken where there's room */
 @media (min-width: 640px) { .line { white-space: nowrap; } }
 
 /* ── Hero terminal ── */
@@ -230,52 +205,138 @@
 .termBar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: clamp(8px, 1vw, 12px) clamp(8px, 1.2vw, 14px) clamp(10px, 1.2vw, 14px); }
 .termDots { display: flex; gap: 8px; }
 .termDots i { display: block; width: 10px; height: 10px; border-radius: 50%; }
-.termTitle { font-family: var(--font-mono), monospace; font-size: .7rem; letter-spacing: .08em; color: rgba(59, 10, 34, .55); }
-.termBody { display: grid; gap: 0; background: #260616; border-radius: clamp(14px, 1.8vw, 22px); overflow: hidden; }
+.termTitle { font-family: var(--font-mono), monospace; font-size: .72rem; letter-spacing: .08em; color: rgba(59, 10, 34, .6); }
+.termBody { display: grid; background: #260616; border-radius: clamp(14px, 1.8vw, 22px); overflow: hidden; }
 @media (min-width: 1000px) { .termBody { grid-template-columns: 1.15fr .85fr; min-height: clamp(380px, 38vw, 480px); } }
 .termMain { display: flex; flex-direction: column; gap: 14px; padding: clamp(18px, 2.8vw, 40px); min-width: 0; }
-.prompt { font-family: var(--font-mono), monospace; font-size: clamp(.72rem, 1vw, .88rem); color: rgba(251, 243, 228, .62); display: flex; align-items: center; gap: .5em; flex-wrap: wrap; }
+.prompt { font-family: var(--font-mono), monospace; font-size: clamp(.75rem, 1vw, .88rem); color: rgba(251, 243, 228, .62); display: flex; align-items: center; gap: .5em; flex-wrap: wrap; }
 .prompt b { color: #72D69A; font-weight: 700; }
-.termLede { color: rgba(251, 243, 228, .86); font-size: clamp(.95rem, 1.45vw, 1.28rem); line-height: 1.6; max-width: 46ch; margin: 0 0 clamp(6px, 1.4vw, 18px); }
+.termLede { color: rgba(251, 243, 228, .88); font-size: clamp(1rem, 1.45vw, 1.28rem); line-height: 1.6; max-width: 46ch; margin: 0 0 clamp(6px, 1.4vw, 18px); }
 .termActions { display: flex; flex-wrap: wrap; gap: 12px; margin: 2px 0 clamp(6px, 1.4vw, 18px); }
 .cursor { display: inline-block; width: 8px; height: 15px; background: var(--ember); transition: opacity .1s; }
-.termSide { display: flex; flex-direction: column; gap: 9px; padding: clamp(14px, 2.4vw, 32px); border-top: 1px solid rgba(251, 243, 228, .1); background: rgba(0, 0, 0, .16); min-width: 0; }
+.termSide { display: flex; flex-direction: column; gap: 9px; padding: clamp(16px, 2.4vw, 32px); border-top: 1px solid rgba(251, 243, 228, .1); background: rgba(0, 0, 0, .16); min-width: 0; }
 @media (min-width: 1000px) { .termSide { border-top: 0; border-left: 1px solid rgba(251, 243, 228, .1); justify-content: center; } }
-.termLabel { font-family: var(--font-mono), monospace; font-size: clamp(.62rem, .9vw, .76rem); color: rgba(251, 243, 228, .5); margin-bottom: 4px; }
-.job { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: clamp(11px, 1.4vw, 17px) 14px; border: 1px solid rgba(251, 243, 228, .1); border-radius: 10px; background: rgba(251, 243, 228, .045); font-family: var(--font-mono), monospace; font-size: clamp(.68rem, .95vw, .82rem); color: rgba(251, 243, 228, .75); }
-.jobTag { font-size: .6rem; letter-spacing: .05em; padding: 5px 9px; border-radius: 999px; text-transform: uppercase; }
+.termLabel { font-family: var(--font-mono), monospace; font-size: clamp(.72rem, .9vw, .78rem); color: rgba(251, 243, 228, .55); margin-bottom: 4px; }
+.job { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: clamp(11px, 1.4vw, 17px) 14px; border: 1px solid rgba(251, 243, 228, .1); border-radius: 10px; background: rgba(251, 243, 228, .045); font-family: var(--font-mono), monospace; font-size: clamp(.78rem, .95vw, .84rem); color: rgba(251, 243, 228, .78); }
+.jobTag { font-size: .72rem; letter-spacing: .05em; padding: 5px 9px; border-radius: 999px; text-transform: uppercase; }
 .bars { display: flex; align-items: flex-end; gap: 5px; height: clamp(70px, 9vw, 130px); padding: 14px 12px 0; border: 1px solid rgba(251, 243, 228, .1); border-radius: 10px; margin-top: 4px; overflow: hidden; }
 .bars div { flex: 1; opacity: .92; border-radius: 3px 3px 0 0; }
 
-@media (max-width: 640px) {
-  .termActions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .termActions > * { justify-content: center; padding-inline: 12px; }
-  .termActions > *:first-child { grid-column: 1 / -1; }
-  .bars { display: none; }
-  .termTitle { font-size: .62rem; }
-  .job { padding: 10px 12px; }
+/* ── Tablet & below ── */
+@media (max-width: 899px) {
+  .clients { padding: 72px 0 56px; }
+  .logoTrack { gap: 40px; }
+  .statement { padding: 96px 0 64px; border-radius: 32px 32px 0 0; margin-top: -32px; }
+  .reel { border-radius: 32px; }
+  .reelPin { min-height: 0; padding: 64px 0 40px; gap: 28px; }
+  .card { min-height: 0; gap: 28px; border-radius: 24px; }
+  .cta { border-radius: 32px 32px 0 0; margin-top: -32px; }
+  .insights { margin-top: -32px; padding: 104px 0 72px; }
+  .faq { padding: 64px 0; }
+}
+@media (min-width: 900px) { .reelDots { display: none; } }
+
+/* Hover effects only where hover exists — avoids sticky states after a tap */
+@media (hover: none) {
+  .btn::before { display: none; }
+  .card:hover { background: rgba(251,243,228,.04); border-color: rgba(251,243,228,.16); transform: none; }
+  .svc:hover::before { transform: scaleY(0); }
+  .svc:hover { color: var(--wine); }
+  .svc:hover > *:not(.svcArrow) { transform: none; }
+  .svc:hover .svcArrow { background: none; border-color: currentColor; transform: none; color: inherit; }
+  .post:hover { padding-left: 0; }
+  .post:hover .postTitle { color: inherit; }
 }
 
-/* ── Mobile redesign (phones) ── */
-.ctaMobile { display: none; }
+/* ── Phones: one consistent system — 20px gutters, 64px section rhythm, nothing under 11px ── */
 @media (max-width: 640px) {
+  .wrap { padding-inline: 20px; }
+  .eyebrow { font-size: .72rem; letter-spacing: .14em; margin-bottom: 14px; }
+  .eyebrow::before { display: none; }
+  .h2 { font-size: clamp(2.25rem, 10.5vw, 3rem); line-height: .95; letter-spacing: -.045em; }
+  .btn { padding: 15px 20px; font-size: .95rem; min-height: 50px; }
+
+  /* Hero */
+  .metaRow { font-size: .72rem; letter-spacing: .1em; gap: .4rem 1.25rem; margin-bottom: 14px; }
   .metaRow span:nth-child(3) { display: none; }
-  .metaRow { margin-bottom: 1rem; }
-  .mega { font-size: clamp(2.7rem, 13.5vw, 4rem); line-height: .9; }
-  .heroGrid { gap: 1.5rem; }
-  .cta { padding: 64px 0 56px; }
-  .ctaBig { font-size: clamp(2.6rem, 14vw, 4rem); }
-  .orb { display: none; }
-  .ctaRow { margin-top: 28px; gap: 20px; }
-  .ctaSub { font-size: .98rem; }
-  .ctaMobile { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-  .ctaMobile > * { justify-content: center; }
-  .ctaDesk { display: none; }
-  .faq, .stats { padding-top: 56px; }
-}
-
-/* Home headline: keep each line (incl. the rotating word) on one row on phones so the layout doesn't jump */
-@media (max-width: 640px) {
+  .mega { line-height: .9; }
   .megaHome { font-size: 11.6vw; }
   .megaHome .line { white-space: nowrap; }
+  .heroGrid { gap: 24px; }
+
+  /* Terminal: drop the decorative prompts and the outer frame so the copy and CTAs get the width */
+  .term { padding: 0; background: none; box-shadow: none; }
+  .termBar { background: var(--cream); border-radius: 18px 18px 0 0; padding: 12px 16px; }
+  .termBody { border-radius: 0 0 18px 18px; box-shadow: 0 20px 50px rgba(0, 0, 0, .35); }
+  .termMain { padding: 20px 18px; gap: 18px; }
+  .prompt { display: none; }
+  .termLede { margin: 0; font-size: 1.02rem; line-height: 1.55; }
+  .termActions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; }
+  .termActions > * { justify-content: center; padding-inline: 12px; }
+  .termActions > *:first-child { grid-column: 1 / -1; }
+  .termSide { padding: 16px 18px 18px; gap: 8px; }
+  .job { padding: 11px 12px; }
+  .bars { display: none; }
+
+  /* Clients */
+  .clients { padding: 64px 0 44px; margin-top: -32px; }
+  .clientsLabel { font-size: .72rem; letter-spacing: .12em; margin-bottom: 26px; padding-inline: 20px; }
+  .logoTrack { gap: 32px; }
+
+  /* Premise: render fully lit — ghosted grey text reads as broken on a phone */
+  .statement { padding: 84px 0 48px; }
+  .statementText { font-size: clamp(1.6rem, 7.4vw, 2rem); line-height: 1.12; letter-spacing: -.035em; }
+  .statementText .w { opacity: 1; }
+
+  /* Services: index above, title + arrow chip on one row, body below */
+  .services { padding-bottom: 8px; }
+  .svcList { margin-top: 28px; }
+  .svc { grid-template-columns: 1fr auto; grid-template-areas: "idx idx" "title arrow" "body body"; gap: 6px 16px; padding: 22px 0; }
+  .svcIdx { grid-area: idx; font-size: .75rem; }
+  .svcTitle { grid-area: title; font-size: 1.6rem; line-height: 1.05; }
+  .svcBody { grid-area: body; font-size: .98rem; margin-top: 4px; }
+  .svcArrow { grid-area: arrow; display: grid; width: 40px; height: 40px; }
+
+  /* Stats */
+  .stats { padding: 48px 0 64px; }
+  .stat { padding: 20px 12px 20px 0; }
+  .stat:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
+  .statNum { font-size: clamp(2.8rem, 13vw, 3.4rem); }
+  .statLbl { font-size: .72rem; letter-spacing: .08em; margin-top: 10px; }
+
+  /* Outcomes */
+  .reelPin { padding: 56px 0 32px; gap: 24px; }
+  .reelHead { gap: 10px; }
+  .reelCount { font-size: .75rem; letter-spacing: .1em; color: rgba(255, 197, 61, .85); }
+  .track { padding: 0 20px; scroll-padding-inline: 20px; gap: 12px; }
+  .card { flex-basis: 84vw; scroll-snap-align: start; padding: 22px; gap: 24px; }
+  .cardTop { font-size: .72rem; letter-spacing: .1em; }
+  .cardNum { font-size: 3.2rem; }
+  .cardTitle { font-size: 1.3rem; margin-top: 10px; }
+  .cardClient { font-size: .72rem; letter-spacing: .1em; }
+
+  /* Insights: whole row is the link, so the stray arrow line goes */
+  .insights { padding: 96px 0 64px; }
+  .posts { margin-top: 28px; }
+  .post { padding: 22px 0; gap: 8px; }
+  .postTag { font-size: .72rem; letter-spacing: .1em; }
+  .postTitle { font-size: 1.35rem; }
+  .postArrow { display: none; }
+
+  /* CTA */
+  .cta { padding: 64px 0 56px; }
+  .ctaBig { font-size: clamp(2.6rem, 14vw, 3.6rem); }
+  .orb, .ctaDesk { display: none; }
+  .ctaRow { margin-top: 24px; gap: 22px; }
+  .ctaSub { font-size: 1rem; }
+  .ctaMobile { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+  .ctaMobile > * { justify-content: center; }
+  .cta .btnLine { border-color: rgba(251, 243, 228, .75); }
+
+  /* FAQ */
+  .faq { padding: 56px 0; }
+  .faqBtn { padding: 20px 0; gap: 16px; }
+  .faqQ { font-size: 1.08rem; }
+  .faqIcon { width: 36px; height: 36px; }
+  .faqPanel p { padding: 0 0 22px; font-size: .98rem; }
 }

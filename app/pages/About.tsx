@@ -106,7 +106,7 @@ export default function AboutPage() {
       </ThemeHeroSection>
 
       {/* ── Premise ── */}
-      <section className={cx(s.sec, s.statement)} style={{ marginTop: -48 }}>
+      <section className={cx(s.sec, s.statement)}>
         <div className={s.wrap}>
           <div className={s.eyebrow}>Operators first, engineers second</div>
           <ScrollWords parts={PREMISE} />
@@ -129,7 +129,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Principles ── */}
-      <section className={s.sec} style={{ background: "var(--wine)", color: "var(--cream)", borderRadius: 48, padding: "clamp(70px,9vw,130px) 0", zIndex: 3 }}>
+      <section className={cx(s.sec, a.principlesSec)}>
         <div className={s.wrap}>
           <Reveal>
             <div className={s.eyebrow} style={{ color: "var(--butter)" }}>Principles</div>
@@ -150,7 +150,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Timeline ── */}
-      <section className={s.sec} style={{ background: "var(--bg)", marginTop: -48, padding: "clamp(110px,14vw,190px) 0 clamp(70px,9vw,130px)" }}>
+      <section className={cx(s.sec, a.timelineSec)}>
         <div className={s.wrap}>
           <Reveal>
             <div className={s.eyebrow}>Trajectory</div>
