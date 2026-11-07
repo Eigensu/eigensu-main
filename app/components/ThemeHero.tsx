@@ -105,6 +105,8 @@ type ThemeHeroSectionProps = {
   fullScreen?: boolean;
   align?: "center" | "start";
   background?: string;
+  /** Flat background only: no starfield or glow arcs. */
+  plain?: boolean;
 };
 
 export function ThemeHeroSection({
@@ -114,6 +116,7 @@ export function ThemeHeroSection({
   fullScreen = false,
   align = "start",
   background,
+  plain = false,
 }: ThemeHeroSectionProps) {
   const { theme } = useTheme();
   const { sectionBg } = getThemeTokens(theme);
@@ -124,8 +127,8 @@ export function ThemeHeroSection({
       style={{ background: background ?? sectionBg }}
     >
       <style>{HERO_ANIM_STYLES}</style>
-      <Starfield visible={theme !== "light"} />
-      <GlowArcs theme={theme} />
+      {!plain && <Starfield visible={theme !== "light"} />}
+      {!plain && <GlowArcs theme={theme} />}
       <div
         className={`relative z-10 flex flex-1 flex-col pb-16 pt-[var(--hero-content-top)] md:pb-20 w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10 ${
           align === "center" ? "items-center text-center" : ""

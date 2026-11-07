@@ -1,153 +1,177 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
+import { Counter, Reveal, ScrollProgress, ScrollWords, cx, useMagnetic } from "../components/motion";
+import s from "../home.module.css";
+import a from "./about.module.css";
 
-const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
-const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
-const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
+const Arrow = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={15} height={15} aria-hidden><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+);
 
-function Eyebrow({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
+function Btn({ href, children, variant = "solid" }: { href: string; children: React.ReactNode; variant?: "solid" | "line" | "dark" }) {
+  const ref = useMagnetic<HTMLAnchorElement>(0.22);
   return (
-    <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color: muted ? "var(--text-dim)" : "var(--accent)", marginBottom: 16 }}>
-      <span style={{ width: 7, height: 7, borderRadius: "50%", background: muted ? "var(--text-dim)" : "var(--accent)", boxShadow: muted ? "none" : "0 0 10px var(--accent)", flexShrink: 0 }} />
+    <Link ref={ref} href={href} className={cx(s.btn, variant === "solid" && s.btnSolid, variant === "line" && s.btnLine, variant === "dark" && s.btnDark)}>
       {children}
+    </Link>
+  );
+}
+
+const PREMISE: { w: string; em?: boolean }[] = [
+  ..."Most software fails operations because it's built by people who've never run one. We start from the workflow — the handoffs, the exceptions, the".split(" ").map(w => ({ w })),
+  { w: "4pm scramble", em: true },
+  ..."— and only then write code.".split(" ").map(w => ({ w })),
+];
+
+const STATS = [
+  { n: 12, unit: "+", lbl: "Projects delivered", pad: 0 },
+  { n: 100, unit: "%", lbl: "Client retention", pad: 0 },
+  { n: 3, unit: "", lbl: "Countries served", pad: 2 },
+  { n: 4, unit: "yr", lbl: "Track record", pad: 2 },
+];
+
+const VALUES = [
+  { idx: "01", title: "Outcomes, not output", body: "We measure success by hours saved and errors removed — not lines shipped or features listed." },
+  { idx: "02", title: "No hand-holding required", body: "What we build runs without us. Documented, monitored, and genuinely yours on handover." },
+  { idx: "03", title: "Boring on purpose", body: "The best operational software is invisible. We optimise for reliability over novelty, every time." },
+];
+
+const TIMELINE = [
+  { year: "2021", title: "Founded", body: "Started in Mumbai with one automation project and one stubborn spreadsheet." },
+  { year: "2022", title: "First product", body: "Shipped our first reusable internal-tooling framework." },
+  { year: "2023", title: "Cross-border", body: "Expanded to clients across three countries and four industries." },
+  { year: "2024", title: "Scaling", body: "Now running production systems handling millions of events monthly." },
+];
+
+/** Vertical rail that fills as the timeline scrolls through the viewport. */
+function Timeline() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const fillRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (window.innerHeight * 0.65 - r.top) / r.height));
+      if (fillRef.current) fillRef.current.style.transform = `scaleY(${p})`;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); cancelAnimationFrame(raf); };
+  }, []);
+  return (
+    <div ref={wrapRef} className={a.timeline}>
+      <div className={a.rail} aria-hidden><i ref={fillRef as never} /></div>
+      {TIMELINE.map((t, i) => (
+        <Reveal key={t.year} delay={i * 0.05} className={a.step}>
+          <span className={a.node} aria-hidden />
+          <div className={a.year}>{t.year}</div>
+          <div>
+            <h3 className={a.stepTitle}>{t.title}</h3>
+            <p className={a.stepBody}>{t.body}</p>
+          </div>
+        </Reveal>
+      ))}
     </div>
   );
 }
 
-function useReveal(threshold = 0.1) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setOn(true); obs.disconnect(); } }, { threshold });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, on };
-}
-
-const VALUES = [
-  { idx: "01", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>, title: "Outcomes, not output", body: "We measure success by hours saved and errors removed — not lines shipped or features listed." },
-  { idx: "02", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>, title: "No hand-holding required", body: "What we build runs without us. Documented, monitored, and genuinely yours on handover." },
-  { idx: "03", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><path d="M4 6h16M4 12h16M4 18h10"/></svg>, title: "Boring on purpose", body: "The best operational software is invisible. We optimise for reliability over novelty, every time." },
-];
-
-const TIMELINE = [
-  { year: "2021", title: "Founded",       body: "Started in Mumbai with one automation project and one stubborn spreadsheet." },
-  { year: "2022", title: "First product", body: "Shipped our first reusable internal-tooling framework." },
-  { year: "2023", title: "Cross-border",  body: "Expanded to clients across three countries and four industries." },
-  { year: "2024", title: "Scaling",       body: "Now running production systems handling millions of events monthly." },
-];
-
-const STATS = [
-  { num: "12+",   lbl: "Projects delivered" },
-  { num: "100%",  lbl: "Client retention" },
-  { num: "03",    lbl: "Countries served" },
-  { num: "04yr",  lbl: "Track record" },
-];
-
 export default function AboutPage() {
-  const statsReveal   = useReveal(0.08);
-  const valuesReveal  = useReveal(0.07);
-  const timelineReveal = useReveal(0.07);
-  const ctaReveal     = useReveal(0.08);
-
   return (
     <div>
+      <ScrollProgress />
+
       {/* ── Hero ── */}
-      <ThemeHeroSection>
-        <Eyebrow muted>EST. 2021 // MUMBAI, IN</Eyebrow>
-        <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", maxWidth: "16ch", margin: "0 0 20px" }}>
-          We build the systems <span style={{ color: "var(--accent)" }}>companies run on</span> but never show off.
+      <ThemeHeroSection plain background="var(--wine)" className="z-[2] max-md:min-h-0!" contentClassName="justify-end pb-10 pt-[calc(var(--page-offset-top)+0.75rem)]! md:pt-[calc(var(--page-offset-top)+2.5rem)]! md:pb-16">
+        <div className={cx(s.metaRow, s.fade)} style={{ animationDelay: ".05s" }}>
+          <span>Est. <b>2021</b></span>
+          <span>Mumbai, IN</span>
+          <span>Engineering studio</span>
+        </div>
+        <h1 className={cx(s.mega, a.heroMega)}>
+          <span className={s.line}><span>We build the</span></span>
+          <span className={s.line}><span>systems companies</span></span>
+          <span className={s.line}><span style={{ color: "var(--ember)" }}>run on, quietly.</span></span>
         </h1>
-        <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", lineHeight: 1.7 }}>
+        <p className={cx(s.lede, s.fade)} style={{ animationDelay: ".8s", marginTop: "clamp(1.5rem,3vw,2.25rem)" }}>
           Eigensu is a small, deliberate engineering studio. We take the messy internal operations that hold businesses together and turn them into software that holds itself together.
         </p>
       </ThemeHeroSection>
 
-      {/* ── Stats + "Operators first" ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24">
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={statsReveal.ref} className="grid gap-8 md:gap-12 md:grid-cols-2 md:items-center" style={{ opacity: statsReveal.on ? 1 : 0, transform: statsReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
-            {/* Stats grid */}
-            <div style={{ border: "1px solid var(--border)", borderRadius: 14, background: "linear-gradient(180deg,var(--bg-elev-2),var(--bg-elev))", overflow: "hidden" }}>
-              <div className="grid grid-cols-2">
-                {STATS.map((s, i) => (
-                  <div key={s.lbl} style={{ padding: "clamp(22px,4vw,36px) clamp(16px,3vw,28px)", borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none", borderBottom: i < 2 ? "1px solid var(--border)" : "none" }}>
-                    <div style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.03em", color: "var(--text)" }}>
-                      {s.num.replace(/[+%×yr]/g, "")}<span style={{ color: "var(--accent)" }}>{s.num.match(/[+%×yr]+/)?.[0] ?? ""}</span>
-                    </div>
-                    <div style={{ fontFamily: MONO, fontSize: "0.7rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--text-muted)", marginTop: 6 }}>{s.lbl}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Text */}
-            <div>
-              <Eyebrow>Who we are</Eyebrow>
-              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.5rem,2.5vw,2rem)", letterSpacing: "-0.02em", color: "var(--text)", marginBottom: 16 }}>Operators first, engineers second.</h2>
-              <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7 }}>
-                Most software fails operations because it&apos;s built by people who&apos;ve never run one. We start from the workflow — the handoffs, the exceptions, the 4pm scramble — and only then write code. The result is systems that fit the way work actually happens, not the way a tool wishes it did.
-              </p>
-            </div>
+      {/* ── Premise ── */}
+      <section className={cx(s.sec, s.statement)}>
+        <div className={s.wrap}>
+          <div className={s.eyebrow}>Operators first, engineers second</div>
+          <ScrollWords parts={PREMISE} />
+        </div>
+      </section>
+
+      {/* ── Stats ── */}
+      <section className={cx(s.sec, s.stats)}>
+        <div className={s.wrap}>
+          <Reveal><div className={s.eyebrow}>By the numbers</div></Reveal>
+          <div className={s.statGrid}>
+            {STATS.map((t, i) => (
+              <Reveal key={t.lbl} delay={i * 0.08} className={s.stat}>
+                <div className={s.statNum}><Counter to={t.n} pad={t.pad} />{t.unit && <sup>{t.unit}</sup>}</div>
+                <div className={s.statLbl}>{t.lbl}</div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Values / Principles ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div style={{ maxWidth: 560, marginBottom: 48 }}>
-            <Eyebrow>Principles</Eyebrow>
-            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>How we think.</h2>
-          </div>
-          <div ref={valuesReveal.ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {/* ── Principles ── */}
+      <section className={cx(s.sec, a.principlesSec)}>
+        <div className={s.wrap}>
+          <Reveal>
+            <div className={s.eyebrow} style={{ color: "var(--butter)" }}>Principles</div>
+            <h2 className={s.h2}>How we think.</h2>
+          </Reveal>
+          <div className={a.principles}>
             {VALUES.map((v, i) => (
-              <article key={v.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "24px 22px", position: "relative", opacity: valuesReveal.on ? 1 : 0, transform: valuesReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
-                <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: "var(--text-dim)" }}>{v.idx}</span>
-                <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid var(--border-strong)", background: "var(--panel)", marginBottom: 18 }}>{v.icon}</div>
-                <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>{v.title}</h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.65 }}>{v.body}</p>
-              </article>
+              <Reveal key={v.idx} delay={i * 0.08}>
+                <article className={a.principle}>
+                  <span className={a.pIdx}>{v.idx}</span>
+                  <h3 className={a.pTitle}>{v.title}</h3>
+                  <p className={a.pBody}>{v.body}</p>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── Timeline ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div style={{ maxWidth: 560, marginBottom: 48 }}>
-            <Eyebrow>Trajectory</Eyebrow>
-            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>A short history.</h2>
-          </div>
-          <div ref={timelineReveal.ref} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
-            {TIMELINE.map((t, i) => (
-              <article key={t.year} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "22px 20px", opacity: timelineReveal.on ? 1 : 0, transform: timelineReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
-                <Eyebrow muted>{t.year}</Eyebrow>
-                <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginTop: 12, marginBottom: 10, color: "var(--text)" }}>{t.title}</h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.65 }}>{t.body}</p>
-              </article>
-            ))}
-          </div>
+      <section className={cx(s.sec, a.timelineSec)}>
+        <div className={s.wrap}>
+          <Reveal>
+            <div className={s.eyebrow}>Trajectory</div>
+            <h2 className={s.h2} style={{ color: "var(--wine)", marginBottom: "clamp(36px,6vw,72px)" }}>A short history.</h2>
+          </Reveal>
+          <Timeline />
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section className="relative z-10 py-10 md:py-14">
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={ctaReveal.ref} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaReveal.on ? 1 : 0, transform: ctaReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
-            <div style={{ position: "absolute", width: 400, height: 280, background: "var(--accent)", filter: "blur(100px)", opacity: 0.18, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "20ch", margin: "0 auto 28px" }}>Want to know if we&apos;re the right fit?</h2>
-              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-                <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none" }}>Book a call</Link>
-                <Link href="/projects" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>See our work</Link>
-              </div>
+      <section className={s.cta}>
+        <div className={s.wrap}>
+          <Reveal>
+            <div className={s.eyebrow} style={{ color: "var(--butter)" }}>Next step</div>
+            <h2 className={s.ctaBig}>Are we the<br /><em>right fit?</em></h2>
+          </Reveal>
+          <div className={s.ctaRow}>
+            <p className={s.ctaSub}>A 30-minute call is usually enough to tell. We&rsquo;ll be honest if we&rsquo;re not the right team.</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+              <Btn href="/contact" variant="dark">Book a call <Arrow /></Btn>
+              <Btn href="/projects" variant="line">See our work</Btn>
             </div>
           </div>
         </div>

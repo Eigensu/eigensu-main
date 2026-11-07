@@ -124,6 +124,7 @@ export default function Footer() {
                   </a>
                 ))}
               </div>
+              <a href="mailto:hello@eigensu.in" className="footer-email">hello@eigensu.in</a>
               <span className="footer-addr">2261 Market Street #5039, San Francisco, CA 94114</span>
             </div>
             <div className="footer-bottom-meta">
@@ -280,6 +281,26 @@ export default function Footer() {
         }
         @media(max-width:750px){
           .footer-bottom{ flex-direction:column; align-items:flex-start; }
+        }
+        .footer-email{ display:none; }
+        /* Phones: one-line wordmark, left-aligned link columns, no decorative sun over the text */
+        @media(max-width:640px){
+          .footer-main{ padding-top:44px; }
+          .footer-wrap{ width:calc(100% - 40px); }
+          .footer-hero{ gap:28px; padding-bottom:32px; }
+          .footer-lockup{ margin:0; white-space:nowrap; }
+          .footer-lockup span{ display:inline; font-size:23.5cqw; line-height:.82; }
+          .footer-links-grid{ text-align:left; padding-top:4px; gap:28px 20px; }
+          .footer-link-group h4{ font-size:1.05rem; margin-bottom:12px; }
+          .footer-link-group ul{ justify-items:start; gap:4px; }
+          .footer-link-group a{ font-size:.95rem; padding:6px 0; }
+          .footer-sun{ display:none; }
+          .footer-bottom{ border-top:1px solid rgba(251,243,228,.14); padding:24px 0 32px; gap:14px; }
+          .footer-bottom-left{ flex-direction:column; align-items:flex-start; gap:14px; }
+          .footer-social a{ width:40px; height:40px; }
+          .footer-email{ display:inline-block; color:var(--peri); font-size:.95rem; text-decoration:none; }
+          .footer-addr{ font-size:.82rem; }
+          .footer-bottom-meta{ font-size:.82rem; gap:8px; }
         }
       `}</style>
     </footer>
