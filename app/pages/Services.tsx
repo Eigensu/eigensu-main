@@ -1,54 +1,114 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 import { ThemeHeroSection } from "../components/ThemeHero";
+import { Reveal, ScrollProgress, cx, useMagnetic } from "../components/motion";
+import s from "../home.module.css";
+import e from "./editorial.module.css";
 
-const MONO = "var(--font-mono), 'Space Mono', ui-monospace, monospace";
-const HEAD = "var(--font-head), 'Bricolage Grotesque', sans-serif";
-const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
+const Arrow = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={15} height={15} aria-hidden><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+);
 
-function Eyebrow({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
+function Btn({ href, children, variant = "solid" }: { href: string; children: React.ReactNode; variant?: "solid" | "line" | "dark" }) {
+  const ref = useMagnetic<HTMLAnchorElement>(0.22);
   return (
-    <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color: muted ? "var(--text-dim)" : "var(--accent)", marginBottom: 16 }}>
-      <span style={{ width: 7, height: 7, borderRadius: "50%", background: muted ? "var(--text-dim)" : "var(--accent)", boxShadow: muted ? "none" : "0 0 10px var(--accent)", flexShrink: 0 }} />
+    <Link ref={ref} href={href} className={cx(s.btn, variant === "solid" && s.btnSolid, variant === "line" && s.btnLine, variant === "dark" && s.btnDark)}>
       {children}
-    </div>
+    </Link>
   );
 }
 
-function useReveal(threshold = 0.08) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setOn(true); obs.disconnect(); } }, { threshold });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, on };
-}
-
-const SERVICES = [
-  { idx: "01", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" strokeLinecap="round"/></svg>, title: "Operations Automation", body: "Event-driven pipelines that handle the repetitive, rules-based work humans shouldn't be touching — sync, route, reconcile, notify." },
-  { idx: "02", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>, title: "Internal Tooling", body: "Dashboards, admin consoles and internal products designed around your actual workflow — not a generic SaaS template." },
-  { idx: "03", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6"/></svg>, title: "Systems Integration", body: "Make your existing stack behave like one system — clean data contracts between ERPs, CRMs, finance and ops tools." },
+const DISCIPLINES = [
+  { id: "automation",  idx: "01", title: "Operations Automation", body: "Event-driven pipelines that handle the repetitive, rules-based work humans shouldn't be touching — sync, route, reconcile, notify." },
+  { id: "tooling",     idx: "02", title: "Internal Tooling",      body: "Dashboards, admin consoles and internal products designed around your actual workflow — not a generic SaaS template." },
+  { id: "integration", idx: "03", title: "Systems Integration",   body: "Make your existing stack behave like one system — clean data contracts between ERPs, CRMs, finance and ops tools." },
 ];
 
-function CodeWindow({ filename, lines }: { filename: string; lines: { num: number; tokens: { type: string; text: string }[] }[] }) {
-  const colors: Record<string, string> = { cm: "var(--text-dim)", kw: "var(--accent-4)", fn: "var(--ok)", str: "var(--warn)", num: "var(--err)", pun: "var(--text-muted)", def: "var(--text)" };
+const PROCESS = [
+  { idx: "01", tag: "Discovery", title: "Map",      body: "We sit with your team and document the workflow as it actually runs today." },
+  { idx: "02", tag: "Planning",  title: "Scope",    body: "A fixed proposal: what we'll build, the timeline, and the measurable outcome." },
+  { idx: "03", tag: "Execution", title: "Build",    body: "Weekly working demos. You see progress, not status decks." },
+  { idx: "04", tag: "Delivery",  title: "Handover", body: "Documented, monitored and yours — with support if you want it." },
+];
+
+/* ── Code window ── */
+type Tok = [cls: "cm" | "kw" | "fn" | "str" | "num" | "pun" | "def", text: string];
+const TOK: Record<Tok[0], string | undefined> = { cm: e.tCm, kw: e.tKw, fn: e.tFn, str: e.tStr, num: e.tNum, pun: e.tPun, def: undefined };
+
+function CodeWindow({ file, lines }: { file: string; lines: Tok[][] }) {
   return (
-    <div style={{ background: "var(--bg-elev)", border: "1px solid var(--border-strong)", borderRadius: 14, overflow: "hidden", fontFamily: MONO, fontSize: "0.78rem" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "11px 16px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
-        {["var(--err)","var(--warn)","var(--ok)"].map(c => <span key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c, opacity: c === "var(--err)" ? 0.8 : 0.4 }} />)}
-        <span style={{ marginLeft: 8, fontSize: "0.7rem", color: "var(--text-dim)", letterSpacing: "1px" }}>{filename}</span>
+    <figure className={e.code}>
+      <figcaption className={e.codeBar}>
+        {["#FF7661", "var(--butter)", "#65C58A"].map(c => <i key={c} style={{ background: c }} aria-hidden />)}
+        <span className={e.codeFile}>{file}</span>
+      </figcaption>
+      <div className={e.codeBody}>
+        {lines.map((line, n) => (
+          <div key={n} className={e.codeLine}>
+            <span className={e.codeNum} aria-hidden>{n + 1}</span>
+            <span>{line.map(([t, text], i) => <span key={i} className={TOK[t]}>{text}</span>)}</span>
+          </div>
+        ))}
       </div>
-      <div style={{ padding: "14px 18px", lineHeight: 1.85, overflowX: "auto" }}>
-        {lines.map(line => (
-          <div key={line.num} style={{ display: "flex", gap: 14, whiteSpace: "nowrap" }}>
-            <span style={{ color: "var(--text-dim)", userSelect: "none", minWidth: 16, textAlign: "right", flexShrink: 0 }}>{line.num}</span>
-            <span>{line.tokens.map((tok, i) => <span key={i} style={{ color: colors[tok.type] ?? "var(--text)" }}>{tok.text}</span>)}</span>
+    </figure>
+  );
+}
+
+const WORKFLOW: Tok[][] = [
+  [["cm", "// reconcile vendor invoices nightly"]],
+  [["kw", "export const "], ["fn", "invoiceSync"], ["pun", " = "], ["fn", "workflow"], ["pun", "({"]],
+  [["def", "  trigger"], ["pun", ": "], ["fn", "schedule"], ["pun", "("], ["str", '"0 2 * * *"'], ["pun", "),"]],
+  [["def", "  retries"], ["pun", ": "], ["num", "3"], ["pun", ","]],
+  [["fn", "  run"], ["pun", ": "], ["kw", "async"], ["pun", " ({ step }) => {"]],
+  [["kw", "    const "], ["def", "rows "], ["pun", "= "], ["kw", "await "], ["def", "step"], ["pun", "."], ["fn", "fetch"], ["pun", "("], ["str", '"erp.invoices"'], ["pun", ");"]],
+  [["kw", "    const "], ["def", "matched "], ["pun", "= "], ["fn", "reconcile"], ["pun", "(rows, ledger);"]],
+  [["kw", "    await "], ["def", "step"], ["pun", "."], ["fn", "commit"], ["pun", "(matched);"]],
+  [["kw", "    return "], ["pun", "{ synced: matched.length };"]],
+  [["pun", "  },"]],
+  [["pun", "});"]],
+];
+
+const CONTRACT: Tok[][] = [
+  [["kw", "source"], ["pun", ": "], ["str", "crm.deals"]],
+  [["kw", "target"], ["pun", ": "], ["str", "warehouse.revenue"]],
+  [["kw", "mode"], ["pun", ": "], ["str", "stream"]],
+  [["kw", "contract"], ["pun", ":"]],
+  [["fn", "  deal_id"], ["pun", ": "], ["kw", "string"], ["pun", " !"]],
+  [["fn", "  amount"], ["pun", ": "], ["kw", "number"], ["pun", " !"]],
+  [["fn", "  closed_at"], ["pun", ": "], ["kw", "timestamp"]],
+  [["kw", "on_error"], ["pun", ": "], ["str", "dead_letter"]],
+  [["kw", "alerts"], ["pun", ":"]],
+  [["fn", "  channel"], ["pun", ": "], ["str", '"#ops-alerts"']],
+  [["fn", "  threshold"], ["pun", ": "], ["num", "0.99"]],
+];
+
+/* ── Internal tool mock ── */
+const QUEUE = [
+  { name: "Vendor payout · Batch 14", sub: "Finance · 32 lines", amt: "₹4,18,200", tag: "Approved", fg: "var(--basil)", bg: "rgba(15,77,46,.1)" },
+  { name: "Stock transfer · WH-2 → WH-5", sub: "Ops · 120 SKUs", amt: "1,240 units", tag: "Review", fg: "#9A6A00", bg: "rgba(255,197,61,.22)" },
+  { name: "Refund · Order 88213", sub: "Support · flagged", amt: "₹12,450", tag: "Escalated", fg: "var(--ember)", bg: "rgba(240,73,31,.1)" },
+  { name: "Onboarding · New outlet", sub: "HR · 6 tasks", amt: "4 / 6", tag: "In progress", fg: "var(--peri)", bg: "rgba(92,124,240,.12)" },
+];
+
+function ConsoleMock() {
+  return (
+    <div className={e.console} role="img" aria-label="Illustration of an internal approvals console with sample data">
+      <div className={e.consoleTop} aria-hidden>
+        <span><b>approvals</b> / today</span>
+        <span>sample data</span>
+      </div>
+      <div className={e.consoleBody} aria-hidden>
+        <div className={e.kpis}>
+          {[["18", "Pending"], ["2.4h", "Avg. cycle"], ["0", "Lost in email"]].map(([n, l]) => (
+            <div key={l} className={e.kpi}><div className={e.kpiNum}>{n}</div><div className={e.kpiLbl}>{l}</div></div>
+          ))}
+        </div>
+        {QUEUE.map(q => (
+          <div key={q.name} className={e.row}>
+            <span>{q.name}<span className={e.rowSub}>{q.sub}</span></span>
+            <span className={e.rowAmt}>{q.amt}</span>
+            <span className={e.pill} style={{ color: q.fg, background: q.bg }}>{q.tag}</span>
           </div>
         ))}
       </div>
@@ -56,160 +116,149 @@ function CodeWindow({ filename, lines }: { filename: string; lines: { num: numbe
   );
 }
 
-const INVOICE_LINES = [
-  { num: 1,  tokens: [{ type: "cm",  text: "// reconcile vendor invoices nightly" }] },
-  { num: 2,  tokens: [{ type: "kw",  text: "export const " }, { type: "fn", text: "invoiceSync" }, { type: "pun", text: " = " }, { type: "fn", text: "workflow" }, { type: "pun", text: "({" }] },
-  { num: 3,  tokens: [{ type: "def", text: "  trigger" }, { type: "pun", text: ": " }, { type: "fn", text: "schedule" }, { type: "pun", text: "(" }, { type: "str", text: '"0 2 * * *"' }, { type: "pun", text: ")," }] },
-  { num: 4,  tokens: [{ type: "def", text: "  retries" }, { type: "pun", text: ": " }, { type: "num", text: "3" }, { type: "pun", text: "," }] },
-  { num: 5,  tokens: [{ type: "fn",  text: "  run" }, { type: "pun", text: ": " }, { type: "kw", text: "async" }, { type: "pun", text: " ({ step }) => {" }] },
-  { num: 6,  tokens: [{ type: "kw",  text: "    const " }, { type: "def", text: "rows " }, { type: "pun", text: "= " }, { type: "kw", text: "await " }, { type: "def", text: "step" }, { type: "pun", text: "." }, { type: "fn", text: "fetch" }, { type: "pun", text: "(" }, { type: "str", text: '"erp.invoices"' }, { type: "pun", text: ");" }] },
-  { num: 7,  tokens: [{ type: "kw",  text: "    const " }, { type: "def", text: "matched " }, { type: "pun", text: "= " }, { type: "fn", text: "reconcile" }, { type: "pun", text: "(rows, ledger);" }] },
-  { num: 8,  tokens: [{ type: "kw",  text: "    await " }, { type: "def", text: "step" }, { type: "pun", text: "." }, { type: "fn", text: "commit" }, { type: "pun", text: "(matched);" }] },
-  { num: 9,  tokens: [{ type: "kw",  text: "    return " }, { type: "pun", text: "{ synced: matched.length };" }] },
-  { num: 10, tokens: [{ type: "pun", text: "  }," }] },
-  { num: 11, tokens: [{ type: "pun", text: "});" }] },
-];
-
-const INTEGRATION_LINES = [
-  { num: 1,  tokens: [{ type: "kw",  text: "source" }, { type: "pun", text: ": " }, { type: "str", text: "crm.deals" }] },
-  { num: 2,  tokens: [{ type: "kw",  text: "target" }, { type: "pun", text: ": " }, { type: "str", text: "warehouse.revenue" }] },
-  { num: 3,  tokens: [{ type: "kw",  text: "mode" }, { type: "pun", text: ": " }, { type: "str", text: "stream" }] },
-  { num: 4,  tokens: [{ type: "kw",  text: "contract" }, { type: "pun", text: ":" }] },
-  { num: 5,  tokens: [{ type: "fn",  text: "  deal_id" }, { type: "pun", text: ": " }, { type: "kw", text: "string" }, { type: "pun", text: " !" }] },
-  { num: 6,  tokens: [{ type: "fn",  text: "  amount" }, { type: "pun", text: ": " }, { type: "kw", text: "number" }, { type: "pun", text: " !" }] },
-  { num: 7,  tokens: [{ type: "fn",  text: "  closed_at" }, { type: "pun", text: ": " }, { type: "kw", text: "timestamp" }] },
-  { num: 8,  tokens: [{ type: "kw",  text: "on_error" }, { type: "pun", text: ": " }, { type: "str", text: "dead_letter" }] },
-  { num: 9,  tokens: [{ type: "kw",  text: "alerts" }, { type: "pun", text: ":" }] },
-  { num: 10, tokens: [{ type: "fn",  text: '  channel' }, { type: "pun", text: ": " }, { type: "str", text: '"#ops-alerts"' }] },
-  { num: 11, tokens: [{ type: "fn",  text: "  threshold" }, { type: "pun", text: ": " }, { type: "num", text: "0.99" }] },
-];
-
-const PROCESS = [
-  { idx: "01", title: "Map",      body: "We sit with your team and document the workflow as it actually runs today." },
-  { idx: "02", title: "Scope",    body: "A fixed proposal: what we'll build, the timeline, and the measurable outcome." },
-  { idx: "03", title: "Build",    body: "Weekly working demos. You see progress, not status decks." },
-  { idx: "04", title: "Handover", body: "Documented, monitored and yours — with support if you want it." },
-];
-
-function CheckItem({ children }: { children: React.ReactNode }) {
+function Discipline({ d, dark, heading, lede, checks, label, panel }: {
+  d: (typeof DISCIPLINES)[number]; dark?: boolean; heading: string; lede: string; checks: string[]; label: string; panel: React.ReactNode;
+}) {
   return (
-    <li style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--text-muted)", fontSize: "0.9rem" }}>
-      <span style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(15,77,46,0.12)", border: "1px solid rgba(15,77,46,0.3)", display: "grid", placeItems: "center", flexShrink: 0 }}>
-        <svg viewBox="0 0 12 12" width={10} height={10} fill="none"><path d="M2 6l3 3 5-5" stroke="var(--ok)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-      </span>
-      {children}
-    </li>
+    <div className={cx(e.disc, dark && e.onDark)}>
+      <Reveal className={e.discText}>
+        <div className={e.discIdx}>{d.idx} — {d.title}</div>
+        <h2 className={e.discTitle}>{heading}</h2>
+        <p className={e.discLede}>{lede}</p>
+        <ul className={e.checks}>{checks.map(c => <li key={c}>{c}</li>)}</ul>
+      </Reveal>
+      <Reveal delay={0.1}>
+        <p className={e.panelLabel}>{label}</p>
+        {panel}
+      </Reveal>
+    </div>
   );
 }
 
 export default function ServicesPage() {
-  const cardsReveal   = useReveal();
-  const d1Reveal      = useReveal();
-  const d2Reveal      = useReveal();
-  const processReveal = useReveal();
-  const ctaReveal     = useReveal();
-
+  const [auto, tool, integ] = DISCIPLINES;
   return (
     <div>
+      <ScrollProgress />
+
       {/* ── Hero ── */}
-      <ThemeHeroSection>
-        <Eyebrow muted>Services // capabilities</Eyebrow>
-        <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", maxWidth: "16ch", margin: "0 0 20px" }}>
-          Everything between <span style={{ color: "var(--accent)" }}>a problem</span> and a system that solves it.
+      <ThemeHeroSection plain background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!" contentClassName="justify-end pb-10 pt-[calc(var(--page-offset-top)+0.75rem)]! md:pt-[calc(var(--page-offset-top)+2.5rem)]! md:pb-16">
+        <div className={cx(s.metaRow, s.fade)} style={{ animationDelay: ".05s" }}>
+          <span>Services</span>
+          <span><b>03</b> disciplines</span>
+          <span>Fixed-scope engagements</span>
+        </div>
+        <h1 className={cx(s.mega, e.heroMega)}>
+          <span className={s.line}><span>Everything between</span></span>
+          <span className={s.line}><span>a problem and a</span></span>
+          <span className={s.line}><span style={{ color: "var(--ember)" }}>system that solves it.</span></span>
         </h1>
-        <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "52ch", lineHeight: 1.7 }}>
-          We don&apos;t sell seats or licences. We build the specific machinery your operation needs and hand it over running.
+        <p className={cx(s.lede, s.fade)} style={{ animationDelay: ".8s", marginTop: "clamp(1.5rem,3vw,2.25rem)" }}>
+          We don&rsquo;t sell seats or licences. We build the specific machinery your operation needs and hand it over running.
         </p>
+        <div className={cx(e.heroActions, s.fade)} style={{ animationDelay: "1s" }}>
+          <Btn href="/onboard">Scope a project <Arrow /></Btn>
+          <Btn href="/process" variant="line">How we work</Btn>
+        </div>
       </ThemeHeroSection>
 
-      {/* ── Service Cards ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24">
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={cardsReveal.ref} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map((s, i) => {
-              const isPeri = true;
-              return (
-                <article key={s.idx} style={{ background: isPeri ? "var(--peri)" : "var(--basil)", border: isPeri ? "1px solid var(--peri)" : "1px solid var(--basil)", borderRadius: 14, padding: "24px 22px", position: "relative", display: "flex", flexDirection: "column", gap: 14, opacity: cardsReveal.on ? 1 : 0, transform: cardsReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
-                  <span style={{ position: "absolute", top: 20, right: 22, fontFamily: MONO, fontSize: "0.7rem", color: isPeri ? "rgba(59,10,34,0.45)" : "rgba(255,233,173,0.45)" }}>{s.idx}</span>
-                  <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: isPeri ? "1px solid var(--wine)" : "1px solid #FFE9AD", background: isPeri ? "var(--wine)" : "#FFE9AD" }}>{s.icon}</div>
-                  <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.1rem", color: isPeri ? "var(--wine)" : "#FFE9AD", margin: 0 }}>{s.title}</h3>
-                  <p style={{ color: isPeri ? "rgba(59,10,34,0.78)" : "rgba(255,233,173,0.8)", fontSize: "0.9rem", lineHeight: 1.65, flex: 1, margin: 0 }}>{s.body}</p>
-                  <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "0.5px", color: isPeri ? "var(--wine)" : "#FFE9AD", textDecoration: "none", marginTop: "auto" }}>Scope this →</Link>
-                </article>
-              );
-            })}
+      {/* ── Index ── */}
+      <section className={cx(s.sec, e.first)}>
+        <div className={s.wrap}>
+          <Reveal>
+            <div className={s.eyebrow}>What we do</div>
+            <h2 className={s.h2} style={{ color: "var(--wine)", maxWidth: "14ch" }}>Three disciplines. One outcome.</h2>
+          </Reveal>
+          <div className={s.svcList}>
+            {DISCIPLINES.map((d, i) => (
+              <Reveal key={d.id} delay={i * 0.08}>
+                <a href={`#${d.id}`} className={s.svc}>
+                  <span className={s.svcIdx}>{d.idx}</span>
+                  <h3 className={s.svcTitle}>{d.title}</h3>
+                  <p className={s.svcBody}>{d.body}</p>
+                  <span className={s.svcArrow} style={{ rotate: "90deg" }}><Arrow /></span>
+                </a>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Deep Dive 1 ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={d1Reveal.ref} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d1Reveal.on ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d1Reveal.on ? "translateY(0)" : "translateY(20px)" }}>
-            <div>
-              <Eyebrow>Deep dive // 01</Eyebrow>
-              <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>Workflows you can read like a sentence.</h3>
-              <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7, marginBottom: 22 }}>
-                Every automation we ship is declarative and versioned. No black-box drag-and-drop — your team can see exactly what triggers, what runs, and what happens on failure.
-              </p>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-                {["Trigger on schedule, webhook or queue event","Built-in retries, alerting and audit trail","Deploys through CI — fully reproducible"].map(item => <CheckItem key={item}>{item}</CheckItem>)}
-              </ul>
-            </div>
-            <CodeWindow filename="invoice_sync.ops.ts" lines={INVOICE_LINES} />
-          </div>
+      {/* ── 01 Automation ── */}
+      <section id={auto.id} className={cx(s.sec, e.plain, e.anchor)} style={{ paddingTop: 0 }}>
+        <div className={s.wrap}>
+          <Discipline
+            d={auto}
+            heading="Workflows you can read like a sentence."
+            lede="Every automation we ship is declarative and versioned. No black-box drag-and-drop — your team can see exactly what triggers, what runs, and what happens on failure."
+            checks={["Trigger on schedule, webhook or queue event", "Built-in retries, alerting and audit trail", "Deploys through CI — fully reproducible"]}
+            label="Example · a nightly reconciliation job"
+            panel={<CodeWindow file="invoice_sync.ops.ts" lines={WORKFLOW} />}
+          />
         </div>
       </section>
 
-      {/* ── Deep Dive 2 (code left, text right) ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24">
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={d2Reveal.ref} className="grid gap-10 md:gap-16 md:grid-cols-2 md:items-center" style={{ opacity: d2Reveal.on ? 1 : 0, transition: "opacity .7s, transform .7s", transform: d2Reveal.on ? "translateY(0)" : "translateY(20px)" }}>
-            <CodeWindow filename="integration.config.yaml" lines={INTEGRATION_LINES} />
-            <div>
-              <Eyebrow>Deep dive // 02</Eyebrow>
-              <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.7rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--text)", marginBottom: 18 }}>Integrations that don&apos;t break at 2am.</h3>
-              <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", lineHeight: 1.7, marginBottom: 22 }}>
-                We define explicit contracts between your systems, so a field rename in one tool never silently corrupts another. Typed, validated, observable.
-              </p>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-                {["Schema-validated payloads on every hop","Dead-letter handling for bad records","Live health metrics per connection"].map(item => <CheckItem key={item}>{item}</CheckItem>)}
-              </ul>
-            </div>
-          </div>
+      {/* ── 02 Tooling ── */}
+      <section id={tool.id} className={cx(s.sec, e.wineBlock, e.anchor)}>
+        <div className={s.wrap}>
+          <Discipline
+            d={tool}
+            dark
+            heading="Tools your team opens without being asked."
+            lede="We design internal products the way you'd design for customers: around the job to be done, the exceptions, and the people who use them eight hours a day."
+            checks={["Role-based views for every team", "Approvals, queues and audit history built in", "Fast on the hardware your team actually has"]}
+            label="Example · an approvals console"
+            panel={<ConsoleMock />}
+          />
+        </div>
+      </section>
+
+      {/* ── 03 Integration ── */}
+      <section id={integ.id} className={cx(s.sec, e.afterBlock, e.anchor)}>
+        <div className={s.wrap}>
+          <Discipline
+            d={integ}
+            heading="Integrations that don't break at 2am."
+            lede="We define explicit contracts between your systems, so a field rename in one tool never silently corrupts another. Typed, validated, observable."
+            checks={["Schema-validated payloads on every hop", "Dead-letter handling for bad records", "Live health metrics per connection"]}
+            label="Example · a CRM → warehouse contract"
+            panel={<CodeWindow file="integration.config.yaml" lines={CONTRACT} />}
+          />
         </div>
       </section>
 
       {/* ── Process ── */}
-      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div style={{ maxWidth: 560, marginBottom: 48 }}>
-            <Eyebrow>How we work</Eyebrow>
-            <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.8rem,3.5vw,2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.12, color: "var(--text)" }}>Four steps, no surprises.</h2>
-          </div>
-          <div ref={processReveal.ref} className="grid gap-5 grid-cols-2 lg:grid-cols-4">
+      <section className={cx(s.sec, e.basilBlock)}>
+        <div className={s.wrap}>
+          <Reveal>
+            <div className={s.eyebrow} style={{ color: "var(--butter)" }}>How we work</div>
+            <h2 className={s.h2}>Four steps,<br />no surprises.</h2>
+          </Reveal>
+          <div className={e.steps}>
             {PROCESS.map((p, i) => (
-              <article key={p.idx} style={{ background: "var(--bg-elev)", border: "1px solid var(--border)", borderRadius: 14, padding: "22px 20px", opacity: processReveal.on ? 1 : 0, transform: processReveal.on ? "translateY(0)" : "translateY(20px)", transition: `opacity .6s ${i * 0.1}s, transform .6s ${i * 0.1}s` }}>
-                <Eyebrow muted>{p.idx}</Eyebrow>
-                <h3 style={{ fontFamily: HEAD, fontSize: "1.15rem", fontWeight: 700, color: "var(--text)", margin: "12px 0 10px" }}>{p.title}</h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.65 }}>{p.body}</p>
-              </article>
+              <Reveal key={p.idx} delay={i * 0.08} className={e.step}>
+                <div className={e.stepNum}>{p.idx}</div>
+                <div className={e.stepTag}>{p.tag}</div>
+                <h3 className={e.stepTitle}>{p.title}</h3>
+                <p className={e.stepBody}>{p.body}</p>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section className="relative z-10 py-10 md:py-14">
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div ref={ctaReveal.ref} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaReveal.on ? 1 : 0, transform: ctaReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
-            <div style={{ position: "absolute", width: 380, height: 260, background: "var(--accent)", filter: "blur(100px)", opacity: 0.17, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "22ch", margin: "0 auto 28px" }}>Have a process that&apos;s begging to be automated?</h2>
-              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-                <Link href="/onboard" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none" }}>Onboard a project</Link>
-                <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>Talk to us</Link>
-              </div>
+      <section className={s.cta}>
+        <div className={s.wrap}>
+          <Reveal>
+            <div className={s.eyebrow} style={{ color: "var(--butter)" }}>Next step</div>
+            <h2 className={s.ctaBig}>Got a process<br /><em>worth fixing?</em></h2>
+          </Reveal>
+          <div className={s.ctaRow}>
+            <p className={s.ctaSub}>Tell us how it runs today. We&rsquo;ll come back with a fixed scope, a timeline and the outcome we&rsquo;ll measure.</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+              <Btn href="/onboard" variant="dark">Onboard a project <Arrow /></Btn>
+              <Btn href="/contact" variant="line">Talk to us</Btn>
             </div>
           </div>
         </div>

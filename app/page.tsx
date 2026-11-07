@@ -339,9 +339,9 @@ function Reel() {
 /* ── Insights ────────────────────────────────────────────────────────────── */
 
 const INSIGHTS = [
-  { tag: "Operations · 6 min", title: "Why spreadsheets fail at scale", body: "The hidden cost of manual reconciliation and the tipping point where automation pays for itself." },
-  { tag: "Product · 4 min", title: "Designing tools operators actually want", body: "Consumer-grade UX principles applied to internal dashboards, and why it matters for adoption." },
-  { tag: "Engineering · 8 min", title: "Declarative workflows over drag-and-drop", body: "Why versioned, code-first automation beats black-box builders for anything mission-critical." },
+  { slug: "why-spreadsheets-fail-at-scale", tag: "Operations · 6 min", title: "Why spreadsheets fail at scale", body: "The hidden cost of manual reconciliation and the tipping point where automation pays for itself." },
+  { slug: "tools-operators-actually-want", tag: "Product · 4 min", title: "Designing tools operators actually want", body: "Consumer-grade UX principles applied to internal dashboards, and why it matters for adoption." },
+  { slug: "declarative-workflows", tag: "Engineering · 8 min", title: "Declarative workflows over drag-and-drop", body: "Why versioned, code-first automation beats black-box builders for anything mission-critical." },
 ];
 
 function Insights() {
@@ -355,7 +355,7 @@ function Insights() {
         <div className={s.posts}>
           {INSIGHTS.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
-              <Link href="/blog" className={s.post}>
+              <Link href={`/blog/${p.slug}`} className={s.post}>
                 <span className={s.postTag}>{p.tag}</span>
                 <h3 className={s.postTitle}>{p.title}</h3>
                 <p className={s.postBody}>{p.body}</p>
