@@ -39,8 +39,6 @@ export function getThemeTokens(theme?: Theme) {
     err:        "var(--err)",
 
     priGrad:    "linear-gradient(135deg, var(--accent), var(--accent-3))",
-    priShadow:  "0 0 28px var(--accent-line)",
-    glow:       "var(--glow)",
 
     badgeBg:    "var(--accent-soft)",
     badgeBorder:"var(--accent-line)",

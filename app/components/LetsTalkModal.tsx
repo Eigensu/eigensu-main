@@ -81,24 +81,24 @@ export default function LetsTalkDrawer({ open, onClose, theme = "dark" }: LetsTa
   /* ── tokens ── */
   void isDark;
   const drawerBg   = "#FBF3E4";
-  const heading    = "#3B0A22";
-  const subtext    = "rgba(59,10,34,.55)";
-  const divider    = "rgba(59,10,34,.14)";
-  const inputBdr   = "rgba(59,10,34,.16)";
-  const inputClr   = "#3B0A22";
-  const labelClr   = "rgba(59,10,34,.48)";
-  const reqClr     = "rgba(59,10,34,.32)";
+  const heading    = "#1C1917";
+  const subtext    = "rgba(28,25,23,.55)";
+  const divider    = "rgba(28,25,23,.14)";
+  const inputBdr   = "rgba(28,25,23,.16)";
+  const inputClr   = "#1C1917";
+  const labelClr   = "rgba(28,25,23,.48)";
+  const reqClr     = "rgba(28,25,23,.32)";
   const focusBdr   = "var(--accent)";
-  const cardBg     = "rgba(59,10,34,.04)";
-  const cardBdr    = "rgba(59,10,34,.10)";
+  const cardBg     = "rgba(28,25,23,.04)";
+  const cardBdr    = "rgba(28,25,23,.10)";
   const errClr     = "#F0491F";
   const linkAccent = "var(--accent)";
   const btnBg      = linkAccent;
   const btnTxt     = "var(--on-accent)";
   const btnHoverShadow = "var(--accent-line)";
   const btnIconBg  = "rgba(255,255,255,0.30)";
-  const overlayBg  = "rgba(59,10,34,.35)";
-  const closeBg    = "rgba(59,10,34,.08)";
+  const overlayBg  = "rgba(28,25,23,.35)";
+  const closeBg    = "rgba(28,25,23,.08)";
 
   if (!open && !visible) return null;
 

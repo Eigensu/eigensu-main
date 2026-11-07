@@ -10,14 +10,15 @@
   },
   "dependencies": {
     "@types/three": "^0.184.1",
-    "face-api.js": "^0.22.2",
+    "@vercel/blob": "^2.8.2",
+    "ai": "^7.0.164",
     "gsap": "^3.15.0",
     "lucide-react": "^1.25.0",
-    "next": "16.2.6",
-    "postprocessing": "^6.39.1",
+    "next": "16.4.5",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-icons": "^5.6.0",
+    "resend": "^6.37.0",
     "three": "^0.184.0"
   },
   "devDependencies": {
@@ -26,8 +27,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.4.5",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "zod": "^4.4.3"
   }
 }

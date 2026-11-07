@@ -36,12 +36,36 @@ const VALUES = [
   { idx: "03", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 20, height: 20, stroke: "var(--accent)" }}><path d="M4 6h16M4 12h16M4 18h10"/></svg>, title: "Boring on purpose", body: "The best operational software is invisible. We optimise for reliability over novelty, every time." },
 ];
 
+// Short history (Nov 2026 review asked for this to be brief). Confirm the
+// early dates before publishing; the 2026 entry reflects the product line.
 const TIMELINE = [
-  { year: "2021", title: "Founded",       body: "Started in Mumbai with one automation project and one stubborn spreadsheet." },
-  { year: "2022", title: "First product", body: "Shipped our first reusable internal-tooling framework." },
-  { year: "2023", title: "Cross-border",  body: "Expanded to clients across three countries and four industries." },
-  { year: "2024", title: "Scaling",       body: "Now running production systems handling millions of events monthly." },
+  { year: "2021", title: "Founded",          body: "Started in Mumbai with one automation project and one stubborn spreadsheet." },
+  { year: "2022", title: "First product",    body: "Shipped our first reusable internal-tooling framework." },
+  { year: "2023", title: "Cross-border",     body: "Expanded to clients across three countries and four industries." },
+  { year: "2026", title: "Our own products", body: "DishPatch, Inventory and Recruiter join the client work as products of our own." },
 ];
+
+/**
+ * The team. Each entry renders as a card in "The people" section; the section
+ * stays hidden until at least one person is listed. Photos go in
+ * public/team/<file> (square, ≥ 480px).
+ */
+type TeamMember = { name: string; role: string; bio: string; photo?: string };
+const TEAM: TeamMember[] = [];
+
+const FIT_YES = [
+  "Your team loses hours every week to spreadsheets, copy-paste and chasing updates.",
+  "You'd rather talk to the engineer building it than to an account manager.",
+  "You want weekly working demos and a system that's yours on handover.",
+  "You want your website, store and internal tools looked after by one team.",
+];
+
+const FIT_NO = [
+  "You need a large bench of contractors to staff your own project.",
+  "You want the cheapest possible template site and nothing after launch.",
+  "You need it live before you know which problem it's meant to solve.",
+];
+
 
 const STATS = [
   { num: "12+",   lbl: "Projects delivered" },
@@ -55,17 +79,19 @@ export default function AboutPage() {
   const valuesReveal  = useReveal(0.07);
   const timelineReveal = useReveal(0.07);
   const ctaReveal     = useReveal(0.08);
+  const { ref: teamRef, on: teamOn } = useReveal(0.08);
+  const { ref: fitRef, on: fitOn }   = useReveal(0.1);
 
   return (
     <div>
       {/* ── Hero ── */}
       <ThemeHeroSection>
-        <Eyebrow muted>EST. 2021 // MUMBAI, IN</Eyebrow>
+        <Eyebrow muted>About // Mumbai, India</Eyebrow>
         <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(2rem,5vw,3.8rem)", lineHeight: 1.06, letterSpacing: "-0.025em", color: "var(--text)", maxWidth: "16ch", margin: "0 0 20px" }}>
-          We build the systems <span style={{ color: "var(--accent)" }}>companies run on</span> but never show off.
+          A small studio building the <span style={{ color: "var(--peri)" }}>boring parts</span> that run a business.
         </h1>
         <p className="hero-anim-4" style={{ color: "var(--text-muted)", fontSize: "clamp(0.95rem,1.4vw,1.1rem)", maxWidth: "50ch", lineHeight: 1.7 }}>
-          Eigensu is a small, deliberate engineering studio. We take the messy internal operations that hold businesses together and turn them into software that holds itself together.
+          Eigensu is a team of engineers and designers in Mumbai. We build websites, custom software and our own products for businesses that would rather run their operation than fight their tools.
         </p>
       </ThemeHeroSection>
 
@@ -97,6 +123,35 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* ── Team ── */}
+      {TEAM.length > 0 && (
+        <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
+          <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+            <div style={{ maxWidth: 560, marginBottom: 44 }}>
+              <Eyebrow>The people</Eyebrow>
+              <h2 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.9rem,3.8vw,3rem)", letterSpacing: "-0.035em", lineHeight: 1.02, color: "var(--text)" }}>The team you&apos;ll actually talk to.</h2>
+            </div>
+            <div ref={teamRef} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {TEAM.map((m, i) => (
+                <article key={m.name} style={{ background: "var(--bg-elev)", border: "2px solid var(--wine)", borderRadius: 22, padding: 18, opacity: teamOn ? 1 : 0, transform: teamOn ? "translateY(0)" : "translateY(18px)", transition: `opacity .6s ${i * 0.08}s, transform .6s ${i * 0.08}s` }}>
+                  <div style={{ aspectRatio: "1 / 1", borderRadius: 14, overflow: "hidden", background: ["var(--peri)", "var(--butter)", "var(--basil)", "var(--ember)"][i % 4], display: "grid", placeItems: "center", marginBottom: 16 }}>
+                    {m.photo ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={m.photo} alt={m.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    ) : (
+                      <span style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "4rem", letterSpacing: "-0.05em", color: "var(--wine)" }}>{m.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}</span>
+                    )}
+                  </div>
+                  <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.2rem", color: "var(--text)" }}>{m.name}</h3>
+                  <div style={{ fontFamily: MONO, fontSize: "0.66rem", letterSpacing: "1px", textTransform: "uppercase", color: "var(--accent)", margin: "4px 0 10px" }}>{m.role}</div>
+                  <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.6 }}>{m.bio}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── Values / Principles ── */}
       <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ borderTop: "1px solid var(--border)" }}>
@@ -137,15 +192,45 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ── Right fit ── */}
+      <section className="relative z-10 py-14 md:py-20 lg:py-24" style={{ background: "var(--wine)", borderRadius: 48 }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div style={{ maxWidth: 620, marginBottom: 40 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase", color: "var(--butter)", marginBottom: 16 }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--butter)" }} />
+              Before you reach out
+            </div>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.9rem,3.8vw,3rem)", letterSpacing: "-0.035em", lineHeight: 1.02, color: "var(--cream)" }}>Are we the right fit?</h2>
+          </div>
+          <div ref={fitRef} className="grid gap-5 md:grid-cols-2">
+            {[
+              { title: "We're a good fit if…", items: FIT_YES, bg: "var(--cream)", fg: "var(--wine)", mark: "✓", markBg: "var(--basil)" },
+              { title: "We're probably not, if…", items: FIT_NO, bg: "rgba(251,243,228,0.07)", fg: "var(--cream)", mark: "✕", markBg: "var(--ember)" },
+            ].map((col, i) => (
+              <div key={col.title} style={{ background: col.bg, borderRadius: 26, padding: "28px 26px", border: i ? "1px solid rgba(251,243,228,0.16)" : "none", opacity: fitOn ? 1 : 0, transform: fitOn ? "translateY(0)" : "translateY(18px)", transition: `opacity .6s ${i * 0.12}s, transform .6s ${i * 0.12}s` }}>
+                <h3 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "1.5rem", letterSpacing: "-0.03em", color: col.fg, marginBottom: 18 }}>{col.title}</h3>
+                <ul style={{ display: "grid", gap: 14 }}>
+                  {col.items.map((t) => (
+                    <li key={t} style={{ display: "flex", gap: 12, alignItems: "flex-start", color: col.fg, fontSize: "0.95rem", lineHeight: 1.55 }}>
+                      <span style={{ flex: "0 0 22px", height: 22, borderRadius: 7, background: col.markBg, color: "#FBF3E4", display: "grid", placeItems: "center", fontSize: "0.72rem", fontWeight: 700, marginTop: 1 }}>{col.mark}</span>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
       <section className="relative z-10 py-10 md:py-14">
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div ref={ctaReveal.ref} style={{ position: "relative", textAlign: "center", border: "1px solid var(--border)", borderRadius: 20, padding: "clamp(48px,8vw,80px) clamp(24px,4vw,48px)", overflow: "hidden", background: "var(--bg-elev)", opacity: ctaReveal.on ? 1 : 0, transform: ctaReveal.on ? "translateY(0)" : "translateY(20px)", transition: "opacity .7s, transform .7s" }}>
-            <div style={{ position: "absolute", width: 400, height: 280, background: "var(--accent)", filter: "blur(100px)", opacity: 0.18, top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, pointerEvents: "none" }} />
             <div style={{ position: "relative", zIndex: 1 }}>
-              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "20ch", margin: "0 auto 28px" }}>Want to know if we&apos;re the right fit?</h2>
+              <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--text)", maxWidth: "20ch", margin: "0 auto 28px" }}>Sounds like us? Let&apos;s talk.</h2>
               <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-                <Link href="/contact" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none" }}>Book a call</Link>
+                <Link href="/contact#demo" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: "var(--accent)", color: "var(--on-accent)", boxShadow: "none", textDecoration: "none" }}>Book a demo</Link>
                 <Link href="/projects" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, color: "var(--text)", border: "1px solid var(--border-strong)", textDecoration: "none" }}>See our work</Link>
               </div>
             </div>

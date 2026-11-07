@@ -14,7 +14,7 @@ const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 function Eyebrow({ children, color = "var(--accent)" }: { children: React.ReactNode; color?: string }) {
   return (
     <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color, marginBottom: 18 }}>
-      <span style={{ width: 7, height: 7, borderRadius: "50%", background: color, boxShadow: `0 0 10px ${color}`, flexShrink: 0 }} />
+      <span style={{ width: 7, height: 7, borderRadius: "50%", background: color, flexShrink: 0 }} />
       {children}
     </div>
   );
@@ -23,7 +23,7 @@ function Eyebrow({ children, color = "var(--accent)" }: { children: React.ReactN
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 
 function BtnPrimary({ href, onClick, children, invert = false }: { href?: string; onClick?: () => void; children: React.ReactNode; invert?: boolean }) {
-  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: invert ? "var(--wine)" : "var(--accent)", color: invert ? "var(--cream)" : "var(--on-accent)", boxShadow: invert ? "0 8px 28px -8px rgba(0,0,0,0.45)" : "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none", whiteSpace: "nowrap" as const };
+  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: invert ? "var(--wine)" : "var(--accent)", color: invert ? "var(--cream)" : "var(--on-accent)", boxShadow: invert ? "0 8px 28px -8px rgba(0,0,0,0.45)" : "none", textDecoration: "none", whiteSpace: "nowrap" as const };
   if (href) return <Link href={href} style={s}>{children}</Link>;
   return <button type="button" onClick={onClick} style={s}>{children}</button>;
 }
@@ -85,7 +85,7 @@ function CapabilityStack() {
             background: c.bg,
             borderRadius: 16,
             padding: "16px 18px",
-            boxShadow: "0 18px 34px rgba(59,10,34,0.32)",
+            boxShadow: "0 18px 34px rgba(28,25,23,0.32)",
             animationDelay: `${i * 0.35}s`,
           }}
         >
@@ -103,14 +103,67 @@ function CapabilityStack() {
 
 /* ── What we build (chip cloud) ──────────────────────────────────────────── */
 
+const ICON = (d: React.ReactNode, stroke: string) => <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 15, height: 15, stroke }}>{d}</svg>;
+
 const WHAT_WE_BUILD: { label: string; bg: string; fg: string; icon: React.ReactNode }[] = [
-  { label: "Websites & Web Apps", bg: "var(--peri)", fg: "var(--wine)", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 15, height: 15, stroke: "var(--wine)" }}><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.5 3.8 5.7 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.7-3.8-9S9.5 5.5 12 3z" /></svg> },
-  { label: "Automation & Workflows", bg: "var(--ember)", fg: "var(--cream)", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 15, height: 15, stroke: "var(--cream)" }}><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" strokeLinecap="round" strokeLinejoin="round" /></svg> },
-  { label: "CRMs & Customer Systems", bg: "var(--basil)", fg: "var(--cream)", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 15, height: 15, stroke: "var(--cream)" }}><circle cx="12" cy="8" r="3.2" /><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" strokeLinecap="round" /></svg> },
-  { label: "Internal Dashboards", bg: "var(--wine)", fg: "var(--cream)", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 15, height: 15, stroke: "var(--cream)" }}><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg> },
-  { label: "Systems Integrations", bg: "var(--butter)", fg: "var(--wine)", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 15, height: 15, stroke: "var(--wine)" }}><circle cx="6" cy="6" r="3" /><circle cx="18" cy="18" r="3" /><path d="M6 9v6a3 3 0 0 0 3 3h6" /></svg> },
-  { label: "Custom Software", bg: "var(--peri)", fg: "var(--wine)", icon: <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.8} style={{ width: 15, height: 15, stroke: "var(--wine)" }}><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 6l-2 12" strokeLinecap="round" strokeLinejoin="round" /></svg> },
+  { label: "Websites & Web Apps",      bg: "var(--peri)",   fg: "var(--wine)",  icon: ICON(<><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.5 3.8 5.7 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.7-3.8-9S9.5 5.5 12 3z" /></>, "var(--wine)") },
+  { label: "Wix & Shopify Upkeep",     bg: "var(--butter)", fg: "var(--wine)",  icon: ICON(<><path d="M4 7h16l-1.5 11a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7z" /><path d="M9 7a3 3 0 0 1 6 0" /></>, "var(--wine)") },
+  { label: "Compliance Websites",      bg: "var(--wine)",   fg: "var(--cream)", icon: ICON(<><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z" /><path d="M9 12l2 2 4-4" strokeLinecap="round" /></>, "var(--cream)") },
+  { label: "Custom Software",          bg: "var(--ember)",  fg: "var(--cream)", icon: ICON(<path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 6l-2 12" strokeLinecap="round" strokeLinejoin="round" />, "var(--cream)") },
+  { label: "Automation & Workflows",   bg: "var(--basil)",  fg: "var(--cream)", icon: ICON(<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" strokeLinecap="round" strokeLinejoin="round" />, "var(--cream)") },
+  { label: "Brand & Logo Design",      bg: "var(--peri)",   fg: "var(--wine)",  icon: ICON(<><path d="M12 3l2.6 5.6L20 9.3l-4 4 1 5.7-5-2.8-5 2.8 1-5.7-4-4 5.4-.7z" strokeLinejoin="round" /></>, "var(--wine)") },
+  { label: "Internal Dashboards",      bg: "var(--wine)",   fg: "var(--cream)", icon: ICON(<><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></>, "var(--cream)") },
+  { label: "Systems Integrations",     bg: "var(--butter)", fg: "var(--wine)",  icon: ICON(<><circle cx="6" cy="6" r="3" /><circle cx="18" cy="18" r="3" /><path d="M6 9v6a3 3 0 0 0 3 3h6" /></>, "var(--wine)") },
 ];
+
+/* ── Service menu ─────────────────────────────────────────────────────────
+   The concrete services offered, grouped the way clients ask for them
+   (Nov 2026 services review). */
+
+const SERVICE_MENU: { title: string; blurb: string; bg: string; fg: string; sub: string; items: { name: string; desc: string }[]; link?: { label: string; href: string } }[] = [
+  {
+    title: "Build",
+    blurb: "New sites and software, from first page to production.",
+    bg: "var(--wine)", fg: "var(--cream)", sub: "rgba(251,243,228,0.72)",
+    items: [
+      { name: "Website creation",    desc: "Marketing sites, menus, booking and e-commerce, built fast and easy to edit." },
+      { name: "Compliance websites", desc: "Policy, disclosure and regulatory pages kept accurate and audit-ready." },
+      { name: "Software services",   desc: "Custom web apps, CRMs, portals and automations around your process." },
+    ],
+  },
+  {
+    title: "Care",
+    blurb: "Sites you already have, kept fast, current and working.",
+    bg: "var(--butter)", fg: "var(--wine)", sub: "rgba(28,25,23,0.74)",
+    items: [
+      { name: "Wix maintenance",      desc: "Updates, fixes, new pages and speed tune-ups on your Wix site." },
+      { name: "Shopify maintenance",  desc: "Products, apps, theme fixes and checkout issues handled for you." },
+      { name: "Website revamps",      desc: "A full redesign and rebuild when the old site has stopped working for you." },
+    ],
+  },
+  {
+    title: "Brand",
+    blurb: "How the business looks and sounds, everywhere it shows up.",
+    bg: "var(--peri)", fg: "var(--wine)", sub: "rgba(28,25,23,0.76)",
+    items: [
+      { name: "Brand building",     desc: "Colours, type and voice that hold together across web, print and social." },
+      { name: "Logo redesign",      desc: "A sharper mark and full logo kit, from favicons to signage." },
+      { name: "Content production", desc: "Page copy, product listings and content written and loaded for you." },
+    ],
+  },
+  {
+    title: "Product setups",
+    blurb: "Our own products, configured for your business.",
+    bg: "var(--basil)", fg: "var(--cream)", sub: "rgba(251,243,228,0.74)",
+    items: [
+      { name: "Inventory",  desc: "Stock, purchases and locations set up and imported from your sheets." },
+      { name: "Recruiter",  desc: "Your clients, openings and hiring stages set up for your team." },
+      { name: "DishPatch",  desc: "Guest data, campaigns and outlets connected for your restaurant." },
+    ],
+    link: { label: "See all products", href: "/products" },
+  },
+];
+
 
 /* ── Service cards (bento tiles) ─────────────────────────────────────────── */
 
@@ -264,10 +317,10 @@ function StepCell({ p, i, on }: { p: typeof PROCESS[0]; i: number; on: boolean }
         position: "relative",
         overflow: "hidden",
         background: "#fff",
-        border: "1px solid rgba(59,10,34,0.18)",
+        border: "1px solid rgba(28,25,23,0.18)",
         borderRadius: 10,
         padding: "20px 20px 22px",
-        boxShadow: "0 10px 24px rgba(59,10,34,0.14)",
+        boxShadow: "0 10px 24px rgba(28,25,23,0.14)",
         opacity: on ? 1 : 0,
         transform: on ? `rotate(${STEP_ROTATIONS[i]}) translateY(0)` : "rotate(0deg) translateY(12px)",
         transition: `opacity .5s ease ${i * 0.08}s, transform .5s ease ${i * 0.08}s`,
@@ -290,6 +343,7 @@ export default function ServicesPage() {
   const { openModal } = useModal();
 
   const buildReveal = useReveal();
+  const { ref: menuRef, on: menuOn } = useReveal(0.05);
   const cardsReveal = useReveal();
   const d1Reveal    = useReveal(0.2);
   const d2Reveal    = useReveal(0.2);
@@ -359,6 +413,51 @@ export default function ServicesPage() {
               </span>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Service menu ── */}
+      <section id="service-menu" className="relative z-10 pt-6 pb-14 md:pb-20" style={{ background: "var(--bg)", scrollMarginTop: 96 }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div style={{ maxWidth: 620, marginBottom: 34 }}>
+            <Eyebrow>Service menu</Eyebrow>
+            <h2 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.9rem,4vw,3.4rem)", letterSpacing: "-0.04em", lineHeight: 1.02, color: "var(--text)" }}>Pick a line, or bring us the whole list.</h2>
+          </div>
+          <div ref={menuRef} className="grid gap-5 md:grid-cols-2">
+            {SERVICE_MENU.map((g, i) => (
+              <article
+                key={g.title}
+                style={{
+                  background: g.bg, color: g.fg, borderRadius: 28, padding: "28px 26px 26px", display: "flex", flexDirection: "column",
+                  opacity: menuOn ? 1 : 0, transform: menuOn ? "translateY(0)" : "translateY(18px)",
+                  transition: `opacity .6s ${i * 0.08}s, transform .6s ${i * 0.08}s`,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 6 }}>
+                  <h3 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "1.7rem", letterSpacing: "-0.035em" }}>{g.title}</h3>
+                  <span style={{ fontFamily: MONO, fontSize: "0.66rem", letterSpacing: "1px", color: g.sub }}>0{i + 1}</span>
+                </div>
+                <p style={{ color: g.sub, fontSize: "0.9rem", marginBottom: 18 }}>{g.blurb}</p>
+                <ul style={{ display: "grid", gap: 0 }}>
+                  {g.items.map((it) => (
+                    <li key={it.name} style={{ padding: "13px 0", borderTop: `1px solid ${g.sub.replace(/0\.7\d\)/, "0.22)")}` }}>
+                      <div style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.02rem", letterSpacing: "-0.01em" }}>{it.name}</div>
+                      <div style={{ color: g.sub, fontSize: "0.86rem", lineHeight: 1.55, marginTop: 3 }}>{it.desc}</div>
+                    </li>
+                  ))}
+                </ul>
+                {g.link && (
+                  <Link href={g.link.href} style={{ marginTop: 14, alignSelf: "flex-start", fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "1px", textTransform: "uppercase", color: g.fg, textDecoration: "underline", textUnderlineOffset: 4 }}>
+                    {g.link.label} →
+                  </Link>
+                )}
+              </article>
+            ))}
+          </div>
+          <p style={{ marginTop: 22, fontSize: "0.92rem", color: "var(--text-muted)" }}>
+            Need something that isn&apos;t listed?{" "}
+            <Link href="/products#request" style={{ color: "var(--text)", fontWeight: 700, textDecoration: "underline", textUnderlineOffset: 3 }}>Type it or send a voice note →</Link>
+          </p>
         </div>
       </section>
 

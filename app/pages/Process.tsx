@@ -85,7 +85,7 @@ function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
     ctx.fillStyle = "#F4E9D6";
     ctx.fillRect(0, 0, S, S);
     // grid lines
-    ctx.strokeStyle = "rgba(59,10,34,0.08)";
+    ctx.strokeStyle = "rgba(28,25,23,0.08)";
     ctx.lineWidth = 0.8;
     for (let lat = -80; lat <= 80; lat += 20) {
       const y = ((lat + 90) / 180) * S;
@@ -105,7 +105,7 @@ function initGlobe(canvas: HTMLCanvasElement, dark: boolean) {
       [0.88, 0.32, 0.06, 0.1], [0.92, 0.45, 0.05, 0.08], [0.44, 0.72, 0.08, 0.06],
       [0.5, 0.76, 0.04, 0.04], [0.18, 0.14, 0.12, 0.08], [0.3, 0.1, 0.06, 0.06], [0.7, 0.12, 0.04, 0.05],
     ];
-    ctx.fillStyle = "#5A1435";
+    ctx.fillStyle = "#44403C";
     lands.forEach(([cx, cy, rx, ry]) => {
       ctx.beginPath(); ctx.ellipse(cx * S, cy * S, rx * S, ry * S, 0, 0, Math.PI * 2); ctx.fill();
     });
@@ -332,11 +332,10 @@ export default function ProcessPage() {
   const ts = t.body;
   const tm = t.muted;
   const br = t.border;
-  const brs = "rgba(59,10,34,0.16)";
-  const pill = "rgba(59,10,34,0.05)";
+  const brs = "rgba(28,25,23,0.16)";
+  const pill = "rgba(28,25,23,0.05)";
   const tagB = t.accentSoft;
   const tagT = ac;
-  const glow = "radial-gradient(circle, rgba(240,73,31,0.18) 0%, transparent 68%)";
 
   return (
     <div style={{ background: bg, color: tp, minHeight: "100vh", transition: "background .65s ease, color .3s", overflowX: "hidden" }}>
@@ -354,11 +353,6 @@ export default function ProcessPage() {
           width: GLOBE_SIZE, height: GLOBE_SIZE,
         }}
       >
-        {/* glow halo */}
-        <div style={{
-          position: "absolute", inset: "-12%", borderRadius: "50%",
-          background: glow, transition: "background .3s", pointerEvents: "none",
-        }} />
         {/* the one canvas */}
         <canvas
           ref={canvasRef}

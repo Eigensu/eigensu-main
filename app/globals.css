@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
 /* ──────────────────────────────────────────────────────────────────────────
-   COLOUR SYSTEM — DishPatch brand (wine / cream / ember), applied site-wide.
-   This used to be a dark/light-themeable teal-amber system with a toggle;
-   the whole site now runs on one locked palette (matches /dispatch), so
-   html[data-theme="light"] no longer overrides anything — the toggle in
-   Navigation still flips the attribute (harmless) but has no visual effect.
+   COLOUR SYSTEM — Eigensu brand kit: warm black #1C1917, cream #FBF3E4,
+   orange #F0491F, cobalt #5C7CF0. Butter and basil stay on as supporting
+   colours for the colour-block sections and the product keys.
+
+   Token names like --wine are kept for compatibility (dozens of components
+   reach for var(--wine) to mean "the dark brand surface"); on the main site
+   they now resolve to warm black. DishPatch keeps its own wine palette:
+   /dispatch wraps its page in .theme-dishpatch, which restores it below.
    ────────────────────────────────────────────────────────────────────────── */
 :root {
   color-scheme: light;
@@ -19,13 +22,13 @@
   --section-bg:    radial-gradient(ellipse at 50% 0%, #ffffff 0%, #FBF3E4 60%);
 
   /* Lines */
-  --border:        rgba(59, 10, 34, 0.16);
-  --border-strong: rgba(59, 10, 34, 0.28);
+  --border:        rgba(28, 25, 23, 0.16);
+  --border-strong: rgba(28, 25, 23, 0.28);
 
   /* Text */
-  --text:          #3B0A22;
-  --text-muted:    #5A1435;
-  --text-dim:      #8D707B;
+  --text:          #1C1917;
+  --text-muted:    #44403C;
+  --text-dim:      #78716C;
 
   /* Accent palette */
   --accent:        #F0491F;   /* ember */
@@ -43,28 +46,27 @@
   --err:           #F0491F;
 
   /* Decorative */
-  --grid-line:     rgba(59, 10, 34, 0.04);
-  --vignette:      rgba(59, 10, 34, 0.05);
-  --glow:          rgba(240, 73, 31, 0.16);
+  --grid-line:     rgba(28, 25, 23, 0.04);
+  --vignette:      rgba(28, 25, 23, 0.05);
 
   /* Nav surfaces */
   --nav-bg:        #FBF3E4;
-  --nav-card:      rgba(59, 10, 34, 0.05);
+  --nav-card:      rgba(28, 25, 23, 0.05);
 
   /* Raw brand names used directly by /dispatch components, alongside the
      token names above (same values — kept distinct so component code can
      reach for whichever is semantically correct, e.g. var(--wine) for a
      surface vs. var(--text) for text color, even though they match). */
-  --wine:          #3B0A22;
-  --wine-2:        #5A1435;
+  --wine:          #1C1917;   /* warm black (name kept, see header) */
+  --wine-2:        #44403C;
   --cream:         #FBF3E4;
   --ember:         #F0491F;
   --butter:        #FFC53D;
   --basil:         #0F4D2E;
   --peri:          #5C7CF0;
-  --ink:           #1A0710;
-  --muted:         #765C67;
-  --line:          rgba(59, 10, 34, 0.14);
+  --ink:           #0C0A09;
+  --muted:         #78716C;
+  --line:          rgba(28, 25, 23, 0.14);
 
   /* Nav layout */
   --nav-top:            1.5rem;
@@ -79,6 +81,20 @@
   --radius-sm: 9px;
 
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* DishPatch is its own product with its own brand: wine instead of warm black. */
+.theme-dishpatch {
+  --border:        rgba(59, 10, 34, 0.16);
+  --border-strong: rgba(59, 10, 34, 0.28);
+  --text:          #3B0A22;
+  --text-muted:    #5A1435;
+  --text-dim:      #8D707B;
+  --wine:          #3B0A22;
+  --wine-2:        #5A1435;
+  --ink:           #1A0710;
+  --muted:         #765C67;
+  --line:          rgba(59, 10, 34, 0.14);
 }
 
 @media (min-width: 768px) {

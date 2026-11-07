@@ -22,7 +22,7 @@ function Eyebrow({ children, color = "var(--accent)" }: { children: React.ReactN
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 
 function BtnPrimary({ href, onClick, children, invert = false }: { href?: string; onClick?: () => void; children: React.ReactNode; invert?: boolean }) {
-  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: invert ? "var(--wine)" : "var(--accent)", color: invert ? "var(--cream)" : "var(--on-accent)", boxShadow: invert ? "0 8px 28px -8px rgba(0,0,0,0.45)" : "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none", whiteSpace: "nowrap" as const };
+  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: invert ? "var(--wine)" : "var(--accent)", color: invert ? "var(--cream)" : "var(--on-accent)", boxShadow: invert ? "0 8px 28px -8px rgba(0,0,0,0.45)" : "none", textDecoration: "none", whiteSpace: "nowrap" as const };
   if (href) return <Link href={href} style={s}>{children}</Link>;
   return <button type="button" onClick={onClick} style={s}>{children}</button>;
 }
@@ -55,14 +55,14 @@ function OpsConsole() {
   useEffect(() => { const id = setInterval(() => setTick(t => !t), 850); return () => clearInterval(id); }, []);
   const BARS = [42, 61, 38, 78, 55, 90, 47, 68, 83, 59, 72, 95];
   return (
-    <div style={{ background: "var(--cream)", border: "1px solid rgba(59,10,34,0.14)", borderRadius: 28, padding: 14, overflow: "hidden", boxShadow: "24px 30px 60px rgba(59,10,34,0.28)" }}>
+    <div style={{ background: "var(--cream)", border: "1px solid rgba(28,25,23,0.14)", borderRadius: 28, padding: 14, overflow: "hidden", boxShadow: "24px 30px 60px rgba(28,25,23,0.28)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 10px 15px" }}>
         <div style={{ display: "flex", gap: 8 }}>
           {["#FF7661","var(--butter)","#65C58A"].map(c => <i key={c} style={{ width: 9, height: 9, borderRadius: "50%", display: "block", background: c }} />)}
         </div>
-        <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(59,10,34,0.55)" }}>ops_console — live</span>
+        <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(28,25,23,0.55)" }}>ops_console — live</span>
       </div>
-      <div style={{ background: "#260616", borderRadius: 18, padding: 18 }}>
+      <div style={{ background: "#1C1917", borderRadius: 18, padding: 18 }}>
         {[
           { label: "invoice_sync",     tag: "active",  tc: "#72D69A", tb: "rgba(101,197,138,0.13)" },
           { label: "inventory_recon",  tag: "running", tc: "#FF8064", tb: "rgba(240,73,31,0.15)" },
@@ -76,7 +76,7 @@ function OpsConsole() {
         <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 95, padding: "15px 12px", border: "1px solid rgba(251,243,228,0.1)", borderRadius: 10, marginTop: 14 }}>
           {BARS.map((h, i) => <div key={i} style={{ flex: 1, background: i % 4 === 2 ? "var(--peri)" : "var(--ember)", opacity: 0.9, borderRadius: "3px 3px 0 0", height: `${h}%` }} />)}
         </div>
-        <div style={{ marginTop: 10, background: "#12030a", borderRadius: 9, padding: "12px 13px", fontFamily: MONO, fontSize: "0.68rem", color: "rgba(251,243,228,0.62)" }}>
+        <div style={{ marginTop: 10, background: "#0C0A09", borderRadius: 9, padding: "12px 13px", fontFamily: MONO, fontSize: "0.68rem", color: "rgba(251,243,228,0.62)" }}>
           <b style={{ color: "#72D69A" }}>eigensu ▸</b>
           {" deploy --pipeline ops.core"}
           <span style={{ display: "inline-block", width: 6, height: 12, background: "var(--ember)", marginLeft: 4, verticalAlign: "-2px", opacity: tick ? 0.9 : 0, transition: "opacity .1s" }} />
@@ -154,12 +154,12 @@ function ServiceCard({ s }: { s: typeof SERVICES[0] }) {
   const { ref, on } = useReveal();
   return (
     <article ref={ref} style={{ background: "#fff", border: "2px solid var(--wine)", borderRadius: 18, padding: "26px 24px 30px", position: "relative", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .6s, transform .6s" }}>
-      <span style={{ position: "absolute", top: 22, right: 24, fontFamily: MONO, fontSize: "0.7rem", color: "rgba(59,10,34,0.35)" }}>{s.idx}</span>
+      <span style={{ position: "absolute", top: 22, right: 24, fontFamily: MONO, fontSize: "0.7rem", color: "rgba(28,25,23,0.35)" }}>{s.idx}</span>
       <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid var(--wine)", background: "var(--wine)", marginBottom: 18 }}>
         {s.icon}
       </div>
       <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginBottom: 10, color: "var(--wine)" }}>{s.title}</h3>
-      <p style={{ color: "rgba(59,10,34,0.78)", fontSize: "0.9rem", lineHeight: 1.65 }}>{s.body}</p>
+      <p style={{ color: "rgba(28,25,23,0.78)", fontSize: "0.9rem", lineHeight: 1.65 }}>{s.body}</p>
       <Link href="/services" style={{ fontFamily: MONO, fontSize: "0.74rem", letterSpacing: "0.5px", color: "var(--accent)", marginTop: 16, display: "inline-flex", gap: 6, alignItems: "center" }}>Explore →</Link>
     </article>
   );
@@ -243,9 +243,9 @@ function OutcomesGrid() {
 /* ── Insights ────────────────────────────────────────────────────────────── */
 
 const INSIGHTS = [
-  { tag: "Operations",  time: "6 min", title: "Why spreadsheets fail at scale", body: "The hidden cost of manual reconciliation and the tipping point where automation pays for itself." },
-  { tag: "Product",     time: "4 min", title: "Designing tools operators actually want", body: "Consumer-grade UX principles applied to internal dashboards, and why it matters for adoption." },
-  { tag: "Engineering", time: "8 min", title: "Declarative workflows over drag-and-drop", body: "Why versioned, code-first automation beats black-box builders for anything mission-critical." },
+  { tag: "Operations",  time: "6 min", slug: "why-spreadsheets-fail-at-scale", title: "Why spreadsheets fail at scale", body: "The hidden cost of manual reconciliation and the tipping point where automation pays for itself." },
+  { tag: "Product",     time: "4 min", slug: "tools-operators-actually-want",  title: "Designing tools operators actually want", body: "Consumer-grade UX principles applied to internal dashboards, and why it matters for adoption." },
+  { tag: "Engineering", time: "8 min", slug: "declarative-workflows",          title: "Declarative workflows over drag-and-drop", body: "Why versioned, code-first automation beats black-box builders for anything mission-critical." },
 ];
 
 /* ── CTA block ───────────────────────────────────────────────────────────── */
@@ -407,7 +407,7 @@ export default function HomePage() {
                 </div>
                 <h3 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "1.35rem", letterSpacing: "-0.02em", margin: "18px 0 10px", color: "var(--text)" }}>{post.title}</h3>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.65 }}>{post.body}</p>
-                <Link href="/blog" style={{ marginTop: "auto", paddingTop: 18, fontFamily: MONO, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--accent)", display: "inline-flex", alignItems: "center", gap: 6 }}>Read article →</Link>
+                <Link href={`/blog/${post.slug}`} style={{ marginTop: "auto", paddingTop: 18, fontFamily: MONO, fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--accent)", display: "inline-flex", alignItems: "center", gap: 6 }}>Read article →</Link>
               </article>
             ))}
           </div>

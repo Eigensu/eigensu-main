@@ -15,8 +15,8 @@ function fieldSurface(isDark: boolean) {
   void isDark;
   return {
     background: "rgba(255,255,255,0.78)",
-    borderColor: "rgba(59,10,34,0.10)",
-    color: "#3B0A22",
+    borderColor: "rgba(28,25,23,0.10)",
+    color: "#1C1917",
     colorScheme: "light",
   } as const;
 }
@@ -97,7 +97,7 @@ function DropdownField({
             <button
               type="button"
               className="w-full px-4 py-3 text-left text-sm"
-              style={{ color: mutedColor, background: "rgba(59,10,34,0.02)" }}
+              style={{ color: mutedColor, background: "rgba(28,25,23,0.02)" }}
               onClick={() => { setValue(""); setOpen(false); }}
             >
               {placeholder}
@@ -115,7 +115,7 @@ function DropdownField({
                     color: textColor,
                     background: selected ? "rgba(240,73,31,0.12)" : "transparent",
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(59,10,34,0.05)"; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(28,25,23,0.05)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = selected ? "rgba(240,73,31,0.12)" : "transparent"; }}
                   onClick={() => { setValue(option); setOpen(false); }}
                 >
@@ -143,7 +143,7 @@ function StepIndicator({ step, isDark, accent, muted }: { step: number; isDark: 
             <div
               className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-all"
               style={{
-                background: active || done ? accent : "rgba(59,10,34,0.08)",
+                background: active || done ? accent : "rgba(28,25,23,0.08)",
                 color: active || done ? "#fff" : muted,
               }}
             >
@@ -159,7 +159,7 @@ function StepIndicator({ step, isDark, accent, muted }: { step: number; isDark: 
               {label}
             </span>
             {i < steps.length - 1 && (
-              <div className="ml-2 h-px w-8 md:w-16" style={{ background: "rgba(59,10,34,0.10)" }} />
+              <div className="ml-2 h-px w-8 md:w-16" style={{ background: "rgba(28,25,23,0.10)" }} />
             )}
           </div>
         );
@@ -182,7 +182,7 @@ export default function CareersPage() {
   const accent = t.accent;
   const accentSoft = t.accentSoft;
   const panel = "rgba(255,255,255,0.74)";
-  const chipBg = "rgba(59,10,34,0.04)";
+  const chipBg = "rgba(28,25,23,0.04)";
   const sectionBg = "rgba(255,255,255,0.60)";
 
   // Shared dropdown props
@@ -209,7 +209,7 @@ export default function CareersPage() {
       {/* ── Hero ── */}
       <ThemeHeroSection contentClassName="mx-auto w-full max-w-7xl">
         <div
-          className="hero-anim-3 relative overflow-hidden rounded-[36px] border px-6 py-12 shadow-[0_20px_60px_rgba(59,10,34,0.08)] md:px-10 md:py-16 lg:px-12"
+          className="hero-anim-3 relative overflow-hidden rounded-[36px] border px-6 py-12 shadow-[0_20px_60px_rgba(28,25,23,0.08)] md:px-10 md:py-16 lg:px-12"
           style={{ background: sectionBg, borderColor: border }}
         >
           <div className="space-y-6 max-w-2xl">
@@ -252,7 +252,7 @@ export default function CareersPage() {
           style={{
             background: "rgba(255,255,255,0.78)",
             borderColor: border,
-            boxShadow: "0 18px 60px rgba(59,10,34,0.06)",
+            boxShadow: "0 18px 60px rgba(28,25,23,0.06)",
           }}
         >
           <div className="mx-auto grid w-full max-w-none gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
