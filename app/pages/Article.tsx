@@ -282,7 +282,7 @@ export default function ArticlePage({ post }: { post: Post }) {
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
           <div style={{ maxWidth: 520, marginBottom: 34 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase", color: "var(--accent)", marginBottom: 18 }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 10px var(--accent)" }} />
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--accent)" }} />
               Keep reading
             </div>
             <h2 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(1.7rem,3.4vw,2.8rem)", letterSpacing: "-0.04em", lineHeight: 1, color: "var(--text)" }}>More from the team.</h2>
@@ -297,7 +297,7 @@ export default function ArticlePage({ post }: { post: Post }) {
       <div style={{ position: "relative", textAlign: "center", background: "var(--ember)", overflow: "hidden", borderRadius: "48px 48px 0 0" }}>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10" style={{ padding: "clamp(56px,9vw,96px) 0" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase", color: "var(--butter)", marginBottom: 18 }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--butter)", boxShadow: "0 0 10px var(--butter)" }} />
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--butter)" }} />
             Get started
           </div>
           <h2 style={{ fontFamily: HEAD, fontWeight: 700, fontSize: "clamp(1.6rem,3vw,2.4rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--cream)", maxWidth: "24ch", margin: "0 auto 16px" }}>

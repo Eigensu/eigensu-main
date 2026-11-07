@@ -15,7 +15,7 @@ const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 function Eyebrow({ children, color = "var(--accent)" }: { children: React.ReactNode; color?: string }) {
   return (
     <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color, marginBottom: 18 }}>
-      <span style={{ width: 7, height: 7, borderRadius: "50%", background: color, boxShadow: `0 0 10px ${color}`, flexShrink: 0 }} />
+      <span style={{ width: 7, height: 7, borderRadius: "50%", background: color, flexShrink: 0 }} />
       {children}
     </div>
   );

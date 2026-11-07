@@ -15,7 +15,7 @@ const BODY = "var(--font-body), 'Instrument Sans', sans-serif";
 function Eyebrow({ children, color = "var(--accent)" }: { children: React.ReactNode; color?: string }) {
   return (
     <div style={{ display: "inline-flex", alignItems: "center", gap: 9, fontFamily: MONO, fontSize: "0.72rem", letterSpacing: "2px", textTransform: "uppercase" as const, color, marginBottom: 18 }}>
-      <span style={{ width: 7, height: 7, borderRadius: "50%", background: color, boxShadow: `0 0 10px ${color}`, flexShrink: 0 }} />
+      <span style={{ width: 7, height: 7, borderRadius: "50%", background: color, flexShrink: 0 }} />
       {children}
     </div>
   );
@@ -24,7 +24,7 @@ function Eyebrow({ children, color = "var(--accent)" }: { children: React.ReactN
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 
 function BtnPrimary({ href, onClick, children, invert = false }: { href?: string; onClick?: () => void; children: React.ReactNode; invert?: boolean }) {
-  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: invert ? "var(--wine)" : "var(--accent)", color: invert ? "var(--cream)" : "var(--on-accent)", boxShadow: invert ? "0 8px 28px -8px rgba(0,0,0,0.45)" : "0 0 0 1px var(--accent-line), 0 8px 28px -8px var(--accent)", textDecoration: "none", whiteSpace: "nowrap" as const };
+  const s = { display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 600, fontSize: "0.9rem", padding: "12px 20px", borderRadius: 100, background: invert ? "var(--wine)" : "var(--accent)", color: invert ? "var(--cream)" : "var(--on-accent)", boxShadow: invert ? "0 8px 28px -8px rgba(0,0,0,0.45)" : "none", textDecoration: "none", whiteSpace: "nowrap" as const };
   if (href) return <Link href={href} style={s}>{children}</Link>;
   return <button type="button" onClick={onClick} style={s}>{children}</button>;
 }

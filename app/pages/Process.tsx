@@ -336,7 +336,6 @@ export default function ProcessPage() {
   const pill = "rgba(28,25,23,0.05)";
   const tagB = t.accentSoft;
   const tagT = ac;
-  const glow = "radial-gradient(circle, rgba(240,73,31,0.18) 0%, transparent 68%)";
 
   return (
     <div style={{ background: bg, color: tp, minHeight: "100vh", transition: "background .65s ease, color .3s", overflowX: "hidden" }}>
@@ -354,11 +353,6 @@ export default function ProcessPage() {
           width: GLOBE_SIZE, height: GLOBE_SIZE,
         }}
       >
-        {/* glow halo */}
-        <div style={{
-          position: "absolute", inset: "-12%", borderRadius: "50%",
-          background: glow, transition: "background .3s", pointerEvents: "none",
-        }} />
         {/* the one canvas */}
         <canvas
           ref={canvasRef}
