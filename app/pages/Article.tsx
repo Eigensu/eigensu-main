@@ -98,7 +98,7 @@ export default function ArticlePage({ post }: { post: Post }) {
       <ScrollProgress />
 
       {/* ── Hero ── */}
-      <ThemeHeroSection plain background="var(--wine)" className="rounded-b-[48px] z-[2] max-md:min-h-0!" contentClassName="justify-end pb-10 pt-[calc(var(--page-offset-top)+0.75rem)]! md:pt-[calc(var(--page-offset-top)+2.5rem)]! md:pb-16">
+      <ThemeHeroSection plain background="var(--wine)" className="z-[2] max-md:min-h-0!" contentClassName="justify-end pb-10 pt-[calc(var(--page-offset-top)+0.75rem)]! md:pt-[calc(var(--page-offset-top)+2.5rem)]! md:pb-16">
         <Link href="/blog" className={cx(e.back, s.fade)} style={{ animationDelay: ".05s" }}>
           <span aria-hidden>←</span> All writing
         </Link>
