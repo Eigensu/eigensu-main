@@ -3,32 +3,22 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+// Per the Nov 2026 website review: the footer carries only services and
+// company pages. Resources/help links were dropped.
 const SERVICES_LINKS = [
-  { label: "Operations Automation", href: "/services" },
-  { label: "Internal Tooling",      href: "/services" },
-  { label: "Systems Integration",   href: "/services" },
-  { label: "Case Studies",          href: "/projects" },
-];
-
-const RESOURCES_LINKS = [
-  { label: "Insights",  href: "/blog" },
-  { label: "Changelog", href: "#" },
-  { label: "Pricing",   href: "#" },
-  { label: "Security",  href: "#" },
+  { label: "Website creation",        href: "/services#service-menu" },
+  { label: "Wix & Shopify upkeep",    href: "/services#service-menu" },
+  { label: "Custom software",         href: "/services" },
+  { label: "Brand & logo design",     href: "/services#service-menu" },
+  { label: "Custom work catalog",     href: "/projects" },
 ];
 
 const COMPANY_LINKS = [
+  { label: "Products", href: "/products" },
   { label: "About",    href: "/about" },
-  { label: "Projects", href: "/projects" },
   { label: "Careers",  href: "/careers" },
-  { label: "FAQ",      href: "#" },
-];
-
-const HELP_LINKS = [
-  { label: "Contact",        href: "/contact" },
-  { label: "Support",        href: "mailto:hello@eigensu.in" },
-  { label: "Status",         href: "#" },
-  { label: "Legal policies", href: "#" },
+  { label: "Contact",  href: "/contact" },
+  { label: "Status",   href: "/status" },
 ];
 
 const SOCIAL_LINKS = [
@@ -105,16 +95,15 @@ export default function Footer() {
       <div className="footer-main">
         <div className="footer-wrap">
           <div className="footer-hero">
-            <p className="footer-lockup">
-              <span>EIGEN</span>
-              <span className="fl-su">SU</span>
-            </p>
+            <div className="footer-lockup">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/eigensu-logo-dark.svg" alt="Eigensu" width={559} height={132} />
+              <p className="footer-tagline">Boring in production.</p>
+            </div>
 
             <div className="footer-links-grid">
-              <FooterLinkGroup title="Services"  color="peri"  links={SERVICES_LINKS} />
-              <FooterLinkGroup title="Resources" color="cream" links={RESOURCES_LINKS} />
-              <FooterLinkGroup title="Company"   color="peri"  links={COMPANY_LINKS} />
-              <FooterLinkGroup title="Help"      color="cream" links={HELP_LINKS} />
+              <FooterLinkGroup title="Services" color="peri"  links={SERVICES_LINKS} />
+              <FooterLinkGroup title="Company"  color="cream" links={COMPANY_LINKS} />
             </div>
           </div>
 
@@ -128,7 +117,7 @@ export default function Footer() {
                 ))}
               </div>
               <a href="mailto:hello@eigensu.in" className="footer-email-inline">hello@eigensu.in</a>
-              <span className="footer-addr">2261 Market Street #5039, San Francisco, CA 94114</span>
+              <span className="footer-addr">Mumbai, India</span>
             </div>
             <div className="footer-bottom-meta">
               <span>&copy; {new Date().getFullYear()} Eigensu. All rights reserved.</span>
@@ -173,25 +162,17 @@ export default function Footer() {
           padding-bottom:56px;
         }
 
-        .footer-lockup{
-          margin:0 0 0 -14px;
-          width:100%;
-          container-type:inline-size;
+        .footer-lockup{ padding-top:36px; }
+        .footer-lockup img{ width:min(100%, 620px); height:auto; display:block; }
+        .footer-tagline{
+          margin-top:22px;
+          font-family:var(--font-mono), 'Space Mono', monospace;
+          font-size:.78rem;
+          font-weight:700;
+          letter-spacing:.32em;
+          text-transform:uppercase;
+          color:rgba(251,243,228,.6);
         }
-        .footer-lockup span{
-          display:block;
-          width:100%;
-          margin:0;
-          padding:0;
-          font-family:var(--font-head), 'Bricolage Grotesque', sans-serif;
-          font-weight:800;
-          font-size:clamp(4.8rem, 40cqw, 20rem);
-          line-height:.78;
-          letter-spacing:-.045em;
-          color:var(--cream);
-          white-space:nowrap;
-        }
-        .footer-lockup .fl-su{ color:var(--peri); }
 
         .footer-links-grid{
           display:grid;
@@ -303,13 +284,15 @@ export default function Footer() {
         @media(max-width:900px){
           .footer-main{ padding-top:18px; }
           .footer-hero{ grid-template-columns:1fr; gap:22px; padding-bottom:28px; }
-          .footer-lockup span{ font-size:clamp(2.6rem, 27cqw, 5.6rem); }
+          .footer-lockup{ padding-top:20px; }
+          .footer-lockup img{ width:min(100%, 340px); }
           .footer-links-grid{ grid-template-columns:1fr 1fr; gap:8px 28px; padding-top:16px; }
           .footer-link-group{ border-bottom:1px solid rgba(251,243,228,.14); }
-          .footer-link-group summary{ font-size:1rem; margin:0; padding:14px 0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+          .footer-links-grid{ text-align:left; }
+          .footer-link-group summary{ font-size:1rem; margin:0; padding:14px 0; cursor:pointer; -webkit-tap-highlight-color:transparent; justify-content:space-between; }
           .footer-caret{ display:block; }
           .footer-link-group[open] .footer-caret{ transform:rotate(180deg); }
-          .footer-link-group ul{ gap:10px; padding:2px 0 16px; }
+          .footer-link-group ul{ gap:10px; padding:2px 0 16px; justify-items:start; }
           .footer-link-group a{ font-size:.78rem; }
           .footer-bottom{ padding:16px 0; }
           .footer-sun{ display:none; }

@@ -29,6 +29,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://eigensu.in"),
   title: "Eigensu — Systems for internal operations",
   description: "Tailored solutions and products for internal management and operations optimisation.",
 };

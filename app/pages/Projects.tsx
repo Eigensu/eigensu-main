@@ -68,15 +68,15 @@ function ProductionLedger() {
   useEffect(() => { const id = setInterval(() => setTick(t => !t), 850); return () => clearInterval(id); }, []);
 
   return (
-    <div style={{ background: "var(--cream)", border: "1px solid rgba(59,10,34,0.14)", borderRadius: 28, padding: 14, overflow: "hidden", boxShadow: "24px 30px 60px rgba(59,10,34,0.28)" }}>
+    <div style={{ background: "var(--cream)", border: "1px solid rgba(28,25,23,0.14)", borderRadius: 28, padding: 14, overflow: "hidden", boxShadow: "24px 30px 60px rgba(28,25,23,0.28)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 10px 15px" }}>
         <div style={{ display: "flex", gap: 8 }}>
           {["#FF7661", "var(--butter)", "#65C58A"].map(c => <i key={c} style={{ width: 9, height: 9, borderRadius: "50%", display: "block", background: c }} />)}
         </div>
-        <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(59,10,34,0.55)" }}>deployed_systems — 5 live</span>
+        <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(28,25,23,0.55)" }}>deployed_systems — 5 live</span>
       </div>
 
-      <div style={{ background: "#260616", borderRadius: 18, padding: 18 }}>
+      <div style={{ background: "#1C1917", borderRadius: 18, padding: 18 }}>
         <div className="pj-ledger-row" style={{ fontFamily: MONO, fontSize: "0.58rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(251,243,228,0.4)", paddingBottom: 10, borderBottom: "1px solid rgba(251,243,228,0.12)" }}>
           <span>System</span>
           <span>Running</span>
@@ -97,7 +97,7 @@ function ProductionLedger() {
           ))}
         </div>
 
-        <div style={{ marginTop: 12, background: "#12030a", borderRadius: 9, padding: "12px 13px", fontFamily: MONO, fontSize: "0.68rem", color: "rgba(251,243,228,0.62)" }}>
+        <div style={{ marginTop: 12, background: "#0C0A09", borderRadius: 9, padding: "12px 13px", fontFamily: MONO, fontSize: "0.68rem", color: "rgba(251,243,228,0.62)" }}>
           <b style={{ color: "#72D69A" }}>eigensu ▸</b>
           {" status --all → 99.9% uptime"}
           <span style={{ display: "inline-block", width: 6, height: 12, background: "var(--ember)", marginLeft: 4, verticalAlign: "-2px", opacity: tick ? 0.9 : 0, transition: "opacity .1s" }} />
@@ -142,6 +142,80 @@ function ClientsBand() {
           ))}
           {/* eslint-enable @next/next/no-img-element */}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Custom work catalog ─────────────────────────────────────────────────
+   Real custom products and services we've shipped (Nov 2026 review: a
+   catalog of past custom work, e.g. Pill Clarity and The Sacred Walks). */
+
+type CatalogEntry = { name: string; sector: string; kind: "Platform" | "Web app" | "Website"; body: string; url?: string; status?: string };
+
+const CATALOG: CatalogEntry[] = [
+  { name: "Pill Clarity",        sector: "Health",        kind: "Platform", body: "Medication ingredient screening built on public FDA drug-label data, with allergen flags, a web app and a mobile app.", status: "In build" },
+  { name: "The Sacred Walks",    sector: "Travel",        kind: "Website",  body: "A platform for luxury, curated spiritual journeys to Mangalore, Kashi and Kedarnath.", url: "https://thesacredwalks.in" },
+  { name: "Binge Consulting",    sector: "Recruitment",   kind: "Web app",  body: "A recruitment pipeline for a staffing consultancy, which grew into our Recruiter product." },
+  { name: "Wall-E Arena",        sector: "Sports",        kind: "Platform", body: "A fantasy cricket platform with real-time match updates and team building.", url: "https://wallearena.com" },
+  { name: "Soraia",              sector: "Restaurant",    kind: "Website",  body: "A modern Indian-European restaurant with an omakase bar.", url: "https://www.soraia.in" },
+  { name: "Fielia",              sector: "Hospitality",   kind: "Website",  body: "An invite-only bar and supper club in Mumbai.", url: "https://fielia.in" },
+  { name: "Scarlett House",      sector: "Restaurant",    kind: "Website",  body: "\u201cThe last table on the road \u2014 the one set for everyone.\u201d", url: "https://scarletthousebombay.com" },
+  { name: "Sweeney",             sector: "Restaurant",    kind: "Website",  body: "Website for Sweeney, Bombay.", url: "https://sweeneybombay.in" },
+  { name: "La F\u00eate",          sector: "Bakery",        kind: "Website",  body: "A premium bakery celebrating balance and guilt-free goodness.", url: "https://la-fete-frontend.vercel.app" },
+  { name: "The Blended Stories", sector: "Media",         kind: "Website",  body: "A city magazine covering lifestyle, fashion, culture and events.", url: "https://theblendedstories.in" },
+  { name: "Just Lovedit",        sector: "Fashion",       kind: "Website",  body: "One week, seven labels worth knowing: a curated fashion discovery site.", url: "https://justlovedit.com" },
+];
+
+const KIND_COLORS: Record<CatalogEntry["kind"], { bg: string; fg: string }> = {
+  Platform: { bg: "var(--peri)",   fg: "var(--wine)" },
+  "Web app": { bg: "var(--basil)", fg: "var(--cream)" },
+  Website:  { bg: "var(--butter)", fg: "var(--wine)" },
+};
+
+function CatalogGrid() {
+  const { ref, on } = useReveal(0.05);
+  const [filter, setFilter] = useState<"All" | CatalogEntry["kind"]>("All");
+  const rows = CATALOG.filter((c) => filter === "All" || c.kind === filter);
+  return (
+    <div ref={ref}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 22 }} role="tablist" aria-label="Filter custom work">
+        {(["All", "Platform", "Web app", "Website"] as const).map((k) => (
+          <button
+            key={k}
+            type="button"
+            role="tab"
+            aria-selected={filter === k}
+            onClick={() => setFilter(k)}
+            style={{ fontFamily: MONO, fontSize: "0.7rem", letterSpacing: "0.06em", textTransform: "uppercase", padding: "8px 14px", borderRadius: 100, border: "1.5px solid var(--wine)", background: filter === k ? "var(--wine)" : "transparent", color: filter === k ? "var(--cream)" : "var(--wine)" }}
+          >
+            {k}{k === "All" ? ` · ${CATALOG.length}` : ""}
+          </button>
+        ))}
+      </div>
+      <div className="pj-catalog">
+        {rows.map((c, i) => {
+          const tone = KIND_COLORS[c.kind];
+          const inner = (
+            <>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 16 }}>
+                <span style={{ fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "1px", textTransform: "uppercase", padding: "5px 10px", borderRadius: 100, background: tone.bg, color: tone.fg }}>{c.kind}</span>
+                <span style={{ fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "1px", textTransform: "uppercase", color: c.status ? "var(--accent)" : "var(--text-dim)" }}>{c.status ?? c.sector}</span>
+              </div>
+              <h3 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "1.35rem", letterSpacing: "-0.03em", color: "var(--text)", marginBottom: 8 }}>{c.name}</h3>
+              <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", lineHeight: 1.6, flex: 1 }}>{c.body}</p>
+              <div style={{ marginTop: 16, fontFamily: MONO, fontSize: "0.66rem", color: c.url ? "var(--text)" : "var(--text-dim)" }}>
+                {c.url ? <>{new URL(c.url).host.replace(/^www\./, "")} <span className="pj-cat-arrow">↗</span></> : c.status ? c.sector : "Private system"}
+              </div>
+            </>
+          );
+          const style: React.CSSProperties = { display: "flex", flexDirection: "column", background: "#fff", border: "2px solid var(--wine)", borderRadius: 20, padding: "20px 20px 18px", textDecoration: "none", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(14px)", transition: `opacity .5s ${Math.min(i, 8) * 0.05}s, transform .5s ${Math.min(i, 8) * 0.05}s, box-shadow .2s` };
+          return c.url ? (
+            <a key={c.name} href={c.url} target="_blank" rel="noopener noreferrer" className="pj-cat-card" style={style}>{inner}</a>
+          ) : (
+            <article key={c.name} className="pj-cat-card" style={style}>{inner}</article>
+          );
+        })}
       </div>
     </div>
   );
@@ -233,7 +307,7 @@ const TONE = {
     panelBg: "#fff",
     panelBorder: "2px solid var(--wine)",
     pillBg: "#F4E9D6",
-    pillBorder: "1px solid rgba(59,10,34,0.18)",
+    pillBorder: "1px solid rgba(28,25,23,0.18)",
     pillText: "var(--wine-2)",
   },
 } as const;
@@ -379,7 +453,7 @@ const ERPS = ["SAP", "Oracle", "Tally"];
 
 function SyncMatrix({ on }: { on: boolean }) {
   return (
-    <div style={{ background: "#fff", border: "2px solid var(--wine)", borderRadius: 20, padding: "22px 20px 20px", boxShadow: "0 16px 34px rgba(59,10,34,0.12)" }}>
+    <div style={{ background: "#fff", border: "2px solid var(--wine)", borderRadius: 20, padding: "22px 20px 20px", boxShadow: "0 16px 34px rgba(28,25,23,0.12)" }}>
       <div className="flex items-center justify-between" style={{ gap: 12, marginBottom: 18 }}>
         <span style={{ fontFamily: MONO, fontSize: "0.66rem", letterSpacing: "0.06em", color: "var(--wine)" }}>inventory_recon</span>
         <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--basil)" }}>
@@ -554,8 +628,8 @@ const ALSO = [
     metric: "9 tools → 1",
     bg: "var(--butter)",
     fg: "var(--wine)",
-    sub: "rgba(59,10,34,0.72)",
-    pill: "rgba(59,10,34,0.12)",
+    sub: "rgba(28,25,23,0.72)",
+    pill: "rgba(28,25,23,0.12)",
   },
   {
     tag: "Healthcare",
@@ -588,7 +662,7 @@ export default function ProjectsPage() {
         <div className="grid w-full gap-10 min-[900px]:grid-cols-[1.05fr_0.95fr] min-[900px]:items-center" style={{ position: "relative", zIndex: 1 }}>
           <div>
             <div className="hero-anim-2">
-              <Eyebrow color="var(--butter)">Projects // case studies</Eyebrow>
+              <Eyebrow color="var(--butter)">Custom work // catalog &amp; case studies</Eyebrow>
             </div>
             <h1 className="hero-anim-3" style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(2.4rem,5.6vw,4.6rem)", lineHeight: 0.95, letterSpacing: "-0.045em", color: "var(--cream)", maxWidth: "14ch", margin: "0 0 22px" }}>
               Systems quietly <span style={{ color: "var(--accent)" }}>doing the work</span> right now.
@@ -614,8 +688,29 @@ export default function ProjectsPage() {
       {/* ── Clients ── */}
       <ClientsBand />
 
+      {/* ── Custom work catalog ── */}
+      <section id="catalog" className="relative z-10 pt-[96px] pb-14 md:pt-[120px] md:pb-20" style={{ background: "var(--bg)", borderRadius: "48px 48px 0 0", marginTop: -48, scrollMarginTop: 80 }}>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="flex flex-wrap items-end justify-between gap-6" style={{ marginBottom: 34 }}>
+            <div style={{ maxWidth: 620 }}>
+              <Eyebrow>Custom work catalog</Eyebrow>
+              <h2 style={{ fontFamily: HEAD, fontWeight: 800, fontSize: "clamp(2rem,4.4vw,3.8rem)", letterSpacing: "-0.04em", lineHeight: 0.98, color: "var(--text)" }}>
+                Built to order, for real clients.
+              </h2>
+              <p style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem,1.3vw,1rem)", marginTop: 14, lineHeight: 1.7, maxWidth: "54ch" }}>
+                Platforms, web apps and websites we&apos;ve built as custom products and services. Live sites open in a new tab.
+              </p>
+            </div>
+            <Link href="/products#request" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: BODY, fontWeight: 700, fontSize: "0.88rem", padding: "12px 18px", borderRadius: 100, background: "var(--wine)", color: "var(--cream)" }}>
+              Request something custom →
+            </Link>
+          </div>
+          <CatalogGrid />
+        </div>
+      </section>
+
       {/* ── Index + stats ── */}
-      <section className="relative z-10 pt-[96px] pb-14 md:pt-[120px] md:pb-20 lg:pb-24" style={{ overflow: "hidden", background: "var(--bg)", borderRadius: "48px 48px 0 0", marginTop: -48 }}>
+      <section className="relative z-10 pt-10 pb-14 md:pt-14 md:pb-20 lg:pb-24" style={{ overflow: "hidden", background: "var(--bg)" }}>
         <div style={{ position: "absolute", width: 300, height: 300, right: -110, top: 40, background: "var(--butter)", borderRadius: "50%", opacity: 0.22, filter: "blur(1px)", zIndex: 0, pointerEvents: "none" }} />
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-10" style={{ position: "relative", zIndex: 1 }}>
           <div style={{ maxWidth: 620, marginBottom: 42 }}>
@@ -740,6 +835,11 @@ export default function ProjectsPage() {
         @keyframes pjMarquee { to { transform: translateX(-50%); } }
         .pj-marquee { animation: pjMarquee 40s linear infinite; }
 
+        /* custom work catalog */
+        .pj-catalog{ display:grid; gap:14px; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); }
+        .pj-cat-card:hover{ box-shadow:8px 8px 0 var(--wine); }
+        a.pj-cat-card:hover .pj-cat-arrow{ color:var(--accent); }
+
         /* hero ledger */
         .pj-ledger-row { display:grid; grid-template-columns: minmax(0,1.5fr) 0.6fr 0.9fr; gap:10px; align-items:center; }
 
@@ -753,7 +853,7 @@ export default function ProjectsPage() {
           text-decoration:none;
           transition: background .25s ease, padding-left .25s ease;
         }
-        .pj-index-row:hover{ background: rgba(59,10,34,0.04); padding-left:14px; }
+        .pj-index-row:hover{ background: rgba(28,25,23,0.04); padding-left:14px; }
         .pj-index-arrow{
           font-family: var(--font-mono); font-size:.85rem; color: var(--accent);
           opacity:0; transform: translateX(-6px);

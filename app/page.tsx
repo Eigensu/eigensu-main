@@ -55,14 +55,14 @@ function OpsConsole() {
   useEffect(() => { const id = setInterval(() => setTick(t => !t), 850); return () => clearInterval(id); }, []);
   const BARS = [42, 61, 38, 78, 55, 90, 47, 68, 83, 59, 72, 95];
   return (
-    <div style={{ background: "var(--cream)", border: "1px solid rgba(59,10,34,0.14)", borderRadius: 28, padding: 14, overflow: "hidden", boxShadow: "24px 30px 60px rgba(59,10,34,0.28)" }}>
+    <div style={{ background: "var(--cream)", border: "1px solid rgba(28,25,23,0.14)", borderRadius: 28, padding: 14, overflow: "hidden", boxShadow: "24px 30px 60px rgba(28,25,23,0.28)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 10px 15px" }}>
         <div style={{ display: "flex", gap: 8 }}>
           {["#FF7661","var(--butter)","#65C58A"].map(c => <i key={c} style={{ width: 9, height: 9, borderRadius: "50%", display: "block", background: c }} />)}
         </div>
-        <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(59,10,34,0.55)" }}>ops_console — live</span>
+        <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: "0.68rem", letterSpacing: "0.08em", color: "rgba(28,25,23,0.55)" }}>ops_console — live</span>
       </div>
-      <div style={{ background: "#260616", borderRadius: 18, padding: 18 }}>
+      <div style={{ background: "#1C1917", borderRadius: 18, padding: 18 }}>
         {[
           { label: "invoice_sync",     tag: "active",  tc: "#72D69A", tb: "rgba(101,197,138,0.13)" },
           { label: "inventory_recon",  tag: "running", tc: "#FF8064", tb: "rgba(240,73,31,0.15)" },
@@ -76,7 +76,7 @@ function OpsConsole() {
         <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 95, padding: "15px 12px", border: "1px solid rgba(251,243,228,0.1)", borderRadius: 10, marginTop: 14 }}>
           {BARS.map((h, i) => <div key={i} style={{ flex: 1, background: i % 4 === 2 ? "var(--peri)" : "var(--ember)", opacity: 0.9, borderRadius: "3px 3px 0 0", height: `${h}%` }} />)}
         </div>
-        <div style={{ marginTop: 10, background: "#12030a", borderRadius: 9, padding: "12px 13px", fontFamily: MONO, fontSize: "0.68rem", color: "rgba(251,243,228,0.62)" }}>
+        <div style={{ marginTop: 10, background: "#0C0A09", borderRadius: 9, padding: "12px 13px", fontFamily: MONO, fontSize: "0.68rem", color: "rgba(251,243,228,0.62)" }}>
           <b style={{ color: "#72D69A" }}>eigensu ▸</b>
           {" deploy --pipeline ops.core"}
           <span style={{ display: "inline-block", width: 6, height: 12, background: "var(--ember)", marginLeft: 4, verticalAlign: "-2px", opacity: tick ? 0.9 : 0, transition: "opacity .1s" }} />
@@ -154,12 +154,12 @@ function ServiceCard({ s }: { s: typeof SERVICES[0] }) {
   const { ref, on } = useReveal();
   return (
     <article ref={ref} style={{ background: "#fff", border: "2px solid var(--wine)", borderRadius: 18, padding: "26px 24px 30px", position: "relative", opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(20px)", transition: "opacity .6s, transform .6s" }}>
-      <span style={{ position: "absolute", top: 22, right: 24, fontFamily: MONO, fontSize: "0.7rem", color: "rgba(59,10,34,0.35)" }}>{s.idx}</span>
+      <span style={{ position: "absolute", top: 22, right: 24, fontFamily: MONO, fontSize: "0.7rem", color: "rgba(28,25,23,0.35)" }}>{s.idx}</span>
       <div style={{ width: 42, height: 42, borderRadius: 10, display: "grid", placeItems: "center", border: "1px solid var(--wine)", background: "var(--wine)", marginBottom: 18 }}>
         {s.icon}
       </div>
       <h3 style={{ fontFamily: HEAD, fontSize: "1.1rem", fontWeight: 700, marginBottom: 10, color: "var(--wine)" }}>{s.title}</h3>
-      <p style={{ color: "rgba(59,10,34,0.78)", fontSize: "0.9rem", lineHeight: 1.65 }}>{s.body}</p>
+      <p style={{ color: "rgba(28,25,23,0.78)", fontSize: "0.9rem", lineHeight: 1.65 }}>{s.body}</p>
       <Link href="/services" style={{ fontFamily: MONO, fontSize: "0.74rem", letterSpacing: "0.5px", color: "var(--accent)", marginTop: 16, display: "inline-flex", gap: 6, alignItems: "center" }}>Explore →</Link>
     </article>
   );

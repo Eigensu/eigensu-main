@@ -8,7 +8,7 @@ import CtaSection from "./sections/CtaSection";
 
 export default function DispatchPage() {
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+    <div className="theme-dishpatch min-h-screen" style={{ background: "var(--bg)" }}>
       <Hero />
       <ProblemSection />
       <ModulesSection />

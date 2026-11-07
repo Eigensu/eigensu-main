@@ -80,7 +80,7 @@ export function CategoryChip({ category, size = "sm" }: { category: string; size
 
 function FeaturedCard({ post }: { post: Post }) {
   return (
-    <Link href={`/blog/${post.slug}`} className="pj-featured" style={{ display: "block", background: "var(--cream)", borderRadius: 26, padding: "26px 26px 24px", boxShadow: "24px 30px 60px rgba(59,10,34,0.3)", textDecoration: "none" }}>
+    <Link href={`/blog/${post.slug}`} className="pj-featured" style={{ display: "block", background: "var(--cream)", borderRadius: 26, padding: "26px 26px 24px", boxShadow: "24px 30px 60px rgba(28,25,23,0.3)", textDecoration: "none" }}>
       <div className="flex items-center justify-between gap-3" style={{ marginBottom: 20 }}>
         <span style={{ fontFamily: MONO, fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--accent)" }}>Latest</span>
         <CategoryChip category={post.category} />
@@ -91,7 +91,7 @@ function FeaturedCard({ post }: { post: Post }) {
       </h2>
       <p style={{ color: "var(--wine-2)", fontSize: "0.9rem", lineHeight: 1.65, marginBottom: 22 }}>{post.excerpt}</p>
 
-      <div className="flex items-center justify-between gap-3" style={{ paddingTop: 16, borderTop: "1px solid rgba(59,10,34,0.14)", fontFamily: MONO, fontSize: "0.66rem", color: "var(--muted)" }}>
+      <div className="flex items-center justify-between gap-3" style={{ paddingTop: 16, borderTop: "1px solid rgba(28,25,23,0.14)", fontFamily: MONO, fontSize: "0.66rem", color: "var(--muted)" }}>
         <span>{post.date} · {post.readTime}</span>
         <span style={{ color: "var(--accent)", fontWeight: 700 }}>Read →</span>
       </div>
@@ -132,7 +132,7 @@ function PostCard({ post, i, on }: { post: Post; i: number; on: boolean }) {
       </h3>
       <p style={{ color: "var(--wine-2)", fontSize: "0.88rem", lineHeight: 1.65, flex: 1 }}>{post.excerpt}</p>
 
-      <div className="flex items-center justify-between gap-3" style={{ marginTop: 22, paddingTop: 16, borderTop: "1px solid rgba(59,10,34,0.14)" }}>
+      <div className="flex items-center justify-between gap-3" style={{ marginTop: 22, paddingTop: 16, borderTop: "1px solid rgba(28,25,23,0.14)" }}>
         <time dateTime={post.iso} style={{ fontFamily: MONO, fontSize: "0.62rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--muted)" }}>{post.date}</time>
         <span className="pj-card-arrow" style={{ fontFamily: MONO, fontSize: "0.72rem", fontWeight: 700, color: "var(--accent)" }}>Read article →</span>
       </div>
@@ -216,7 +216,7 @@ export default function BlogPage() {
                     borderRadius: 100,
                     background: isOn ? c.bg : "transparent",
                     color: isOn ? c.fg : "var(--wine-2)",
-                    border: `1.5px solid ${isOn ? c.bg : "rgba(59,10,34,0.22)"}`,
+                    border: `1.5px solid ${isOn ? c.bg : "rgba(28,25,23,0.22)"}`,
                     transition: "background .2s ease, color .2s ease, border-color .2s ease",
                   }}
                 >
@@ -259,9 +259,9 @@ export default function BlogPage() {
 
       <style>{`
         .pj-featured{ transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease; }
-        .pj-featured:hover{ transform: translateY(-5px); box-shadow: 24px 36px 70px rgba(59,10,34,.38); }
+        .pj-featured:hover{ transform: translateY(-5px); box-shadow: 24px 36px 70px rgba(28,25,23,.38); }
 
-        .pj-card:hover{ box-shadow: 0 16px 32px rgba(59,10,34,.18); transform: translateY(-4px) !important; }
+        .pj-card:hover{ box-shadow: 0 16px 32px rgba(28,25,23,.18); transform: translateY(-4px) !important; }
         .pj-card-arrow{ transition: opacity .2s ease; }
         .pj-card:hover .pj-card-arrow{ opacity: .7; }
 

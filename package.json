@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@types/three": "^0.184.1",
+    "@vercel/blob": "^2.8.2",
+    "ai": "^7.0.164",
     "face-api.js": "^0.22.2",
     "gsap": "^3.15.0",
     "lucide-react": "^1.25.0",
@@ -18,6 +20,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-icons": "^5.6.0",
+    "resend": "^6.37.0",
     "three": "^0.184.0"
   },
   "devDependencies": {

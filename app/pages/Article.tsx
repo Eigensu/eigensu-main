@@ -96,7 +96,7 @@ function BlockView({ block }: { block: Block }) {
 
     case "code":
       return (
-        <figure style={{ margin: "30px 0", background: "var(--wine)", borderRadius: 16, overflow: "hidden", boxShadow: "0 16px 34px rgba(59,10,34,0.22)" }}>
+        <figure style={{ margin: "30px 0", background: "var(--wine)", borderRadius: 16, overflow: "hidden", boxShadow: "0 16px 34px rgba(28,25,23,0.22)" }}>
           <figcaption style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 16px", borderBottom: "1px solid rgba(251,243,228,0.12)" }}>
             {["#FF7661", "var(--butter)", "#65C58A"].map(c => <i key={c} style={{ width: 9, height: 9, borderRadius: "50%", display: "block", background: c }} />)}
             <span style={{ marginLeft: 6, fontFamily: MONO, fontSize: "0.66rem", letterSpacing: "0.06em", color: "rgba(251,243,228,0.55)" }}>{block.file}</span>
@@ -176,7 +176,7 @@ function TableOfContents({ headings }: { headings: string[] }) {
                 style={{
                   display: "block",
                   padding: "8px 0 8px 14px",
-                  borderLeft: `2px solid ${isOn ? "var(--accent)" : "rgba(59,10,34,0.14)"}`,
+                  borderLeft: `2px solid ${isOn ? "var(--accent)" : "rgba(28,25,23,0.14)"}`,
                   fontFamily: BODY,
                   fontSize: "0.82rem",
                   lineHeight: 1.45,
@@ -339,7 +339,7 @@ export default function ArticlePage({ post }: { post: Post }) {
         .art-code::-webkit-scrollbar-thumb{ background:rgba(251,243,228,.2); border-radius:100px; }
 
         .art-related{ transition: transform .25s ease, box-shadow .25s ease; }
-        .art-related:hover{ transform: translateY(-4px); box-shadow: 0 16px 32px rgba(59,10,34,.18); }
+        .art-related:hover{ transform: translateY(-4px); box-shadow: 0 16px 32px rgba(28,25,23,.18); }
 
         @media (prefers-reduced-motion: reduce){
           .art-related{ transition:none !important; }

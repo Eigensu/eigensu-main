@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { GoArrowUpRight } from "react-icons/go";
+import { EigensuLogo } from "./Brand";
 
 type Theme = "dark" | "light";
 
@@ -355,21 +356,10 @@ function CardNav({
   );
 }
 
-function EigensuLogo() {
+function NavLogo() {
   return (
-    <Link
-      href="/"
-      className="flex items-center gap-2 no-underline"
-      style={{
-        color: "var(--text)",
-        fontFamily: "var(--font-logo), 'Bricolage Grotesque', sans-serif",
-        fontWeight: 800,
-        fontSize: "1.1rem",
-        letterSpacing: "1.5px",
-        textTransform: "uppercase",
-      }}
-    >
-      EIGENSU
+    <Link href="/" className="flex items-center no-underline" aria-label="Eigensu home">
+      <EigensuLogo tone="light" height={26} />
     </Link>
   );
 }
@@ -395,8 +385,9 @@ function buildNavItems(): CardNavItem[] {
       bgColor: cardB,
       textColor: text,
       links: [
-        { label: "Projects", href: "/projects", ariaLabel: "View projects" },
-        { label: "Dispatch", href: "/dispatch", ariaLabel: "View dispatch" },
+        { label: "Products",    href: "/products", ariaLabel: "View products" },
+        { label: "Custom work", href: "/projects", ariaLabel: "View custom work" },
+        { label: "DishPatch",   href: "/dispatch", ariaLabel: "View DishPatch" },
       ],
     },
     {
@@ -405,6 +396,7 @@ function buildNavItems(): CardNavItem[] {
       textColor: text,
       links: [
         { label: "About",   href: "/about",   ariaLabel: "About Eigensu" },
+        { label: "Careers", href: "/careers", ariaLabel: "Careers at Eigensu" },
         { label: "Contact", href: "/contact", ariaLabel: "Contact us" },
         { label: "Blog",    href: "/blog",    ariaLabel: "View blog" },
       ],
@@ -428,7 +420,7 @@ export default function Navigation({
 
   return (
     <CardNav
-      logo={<EigensuLogo />}
+      logo={<NavLogo />}
       items={items}
       baseColor={baseColor}
       menuColor={menuColor}
